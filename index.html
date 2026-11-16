@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1437">
+<title>Digital Contact Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b1437; --accent:#c6f432; --ink:#0b1437; --text:#fff; --font:'Poppins',system-ui,sans-serif; --ease:cubic-bezier(.2,.8,.2,1); }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:#050a1f; color:var(--text); font-family:var(--font); display:flex; justify-content:center; }
+  svg.i { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+  .app { width:100%; max-width:430px; min-height:100vh; background:var(--bg); position:relative; padding-bottom:120px; overflow:hidden; transition:background .4s; }
+
+  /* ---------- Splash ---------- */
+  .splash { position:fixed; inset:0; z-index:100; background:var(--bg); display:flex; align-items:center; justify-content:center; transition:opacity .5s, visibility .5s; }
+  .splash.gone { opacity:0; visibility:hidden; }
+  .ring { width:54px; height:54px; border-radius:50%; border:4px solid rgba(255,255,255,.12); border-top-color:var(--accent); animation:spin .9s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ---------- Hero ---------- */
+  .hero { position:relative; height:490px; background:linear-gradient(180deg,var(--accent) 0%,var(--accent) 60%,var(--bg) 100%); overflow:hidden; }
+  .blob { position:absolute; border-radius:50%; filter:blur(36px); background:rgba(255,255,255,.45); mix-blend-mode:soft-light; animation:float 9s ease-in-out infinite; }
+  .b1 { width:240px; height:240px; top:-60px; right:-70px; }
+  .b2 { width:200px; height:200px; top:140px; left:-80px; animation-delay:-4s; animation-duration:12s; }
+  @keyframes float { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(24px,32px) scale(1.15); } }
+  .grid { position:absolute; inset:0; opacity:.07; background-image:radial-gradient(var(--ink) 1.2px,transparent 1.2px); background-size:22px 22px;
+          -webkit-mask-image:linear-gradient(#000,transparent 70%); mask-image:linear-gradient(#000,transparent 70%); }
+  .photo { position:absolute; inset:0 0 38% 0; -webkit-mask-image:linear-gradient(#000 55%,transparent 100%); mask-image:linear-gradient(#000 55%,transparent 100%);
+           opacity:0; transform:scale(1.15); }
+  .ready .photo { animation:photoIn 1.3s var(--ease) forwards; }
+  @keyframes photoIn { to { opacity:1; transform:scale(1); } }
+  .photo-in { position:absolute; inset:-20px; background:center top/cover no-repeat; transform:translate3d(var(--tx,0),calc(var(--py,0px) + var(--ty,0px)),0); transition:transform .25s ease-out; }
+  .initials { position:absolute; top:70px; left:0; right:0; text-align:center; font-size:8rem; font-weight:800; color:var(--ink); opacity:.1; letter-spacing:-4px; }
+
+  .id { position:absolute; left:24px; right:24px; bottom:104px; }
+  .name { margin:0; font-size:2.7rem; line-height:1; font-weight:800; text-transform:uppercase; color:var(--ink); letter-spacing:-1px; }
+  .name .ln { display:block; overflow:hidden; padding-bottom:3px; }
+  .name .ln > span { display:inline-block; transform:translateY(110%); }
+  .ready .name .ln > span { animation:slideUp .8s var(--ease) forwards; animation-delay:calc(var(--d) * 1ms); }
+  @keyframes slideUp { to { transform:none; } }
+  .role { margin:12px 0 0; color:var(--ink); font-weight:600; font-size:.95rem; display:inline-flex; align-items:center; gap:8px;
+          background:rgba(255,255,255,.35); backdrop-filter:blur(6px); padding:6px 14px; border-radius:999px; }
+  .role::before { content:''; width:8px; height:8px; border-radius:50%; background:var(--ink); animation:pulse 1.8s infinite; }
+  @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(11,20,55,.45); } 100% { box-shadow:0 0 0 10px rgba(11,20,55,0); } }
+
+  .actions { position:absolute; left:24px; right:24px; bottom:22px; display:flex; gap:12px; }
+  .circle { position:relative; width:52px; height:52px; border-radius:50%; background:#fff; color:var(--ink); display:flex; align-items:center; justify-content:center;
+            box-shadow:0 8px 20px rgba(0,0,0,.28); transition:transform .25s var(--ease), background .2s, color .2s; text-decoration:none; }
+  .circle:hover { transform:translateY(-5px) scale(1.06); background:var(--ink); color:var(--accent); }
+  .circle:active { transform:scale(.92); }
+  .circle.hide { display:none; }
+  .circle .tip { position:absolute; bottom:-26px; font-size:.65rem; font-weight:600; color:var(--text); opacity:.75; white-space:nowrap; }
+  .pop { opacity:0; }
+  .ready .pop { animation:pop .6s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:calc(var(--d) * 1ms); }
+  @keyframes pop { 0% { opacity:0; transform:scale(.3) translateY(20px); } 100% { opacity:1; transform:none; } }
+
+  /* ---------- Sections ---------- */
+  .section { background:var(--accent); color:var(--ink); border-radius:28px; margin:34px 20px 14px; padding:24px 22px 26px; text-align:center;
+             box-shadow:0 14px 34px rgba(0,0,0,.25); }
+  .section + .section { margin-top:14px; }
+  .section h2 { margin:0 0 12px; font-size:1.2rem; font-weight:800; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .section p { margin:0; font-size:.93rem; line-height:1.65; font-weight:500; white-space:pre-line; }
+  .reveal { opacity:0; transform:translateY(34px) scale(.97); transition:opacity .7s var(--ease), transform .7s var(--ease); transition-delay:calc(var(--d,0) * 1ms); }
+  .reveal.in { opacity:1; transform:none; }
+
+  .tags { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .tags span { background:var(--ink); color:var(--accent); padding:8px 15px; border-radius:999px; font-size:.82rem; font-weight:600; opacity:0; transform:scale(.7); }
+  .in .tags span { animation:pop .5s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:calc(var(--n) * 90ms + 200ms); }
+
+  .rows { display:flex; flex-direction:column; gap:10px; text-align:left; }
+  .row-link { display:flex; align-items:center; gap:14px; padding:12px 14px; border-radius:18px; background:rgba(11,20,55,.08); color:var(--ink); text-decoration:none; font-weight:600; font-size:.9rem;
+              transition:transform .2s var(--ease), background .2s; word-break:break-word; }
+  .row-link:hover { background:rgba(11,20,55,.16); transform:translateX(4px); }
+  .row-link .ico { width:40px; height:40px; border-radius:12px; background:var(--ink); color:var(--accent); display:flex; align-items:center; justify-content:center; flex:none; }
+  .row-link small { display:block; font-weight:500; opacity:.65; font-size:.72rem; }
+
+  .socials { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
+  .soc { width:54px; height:54px; border-radius:18px; background:var(--ink); color:var(--accent); display:flex; align-items:center; justify-content:center; text-decoration:none;
+         transition:transform .25s var(--ease), background .2s, color .2s; }
+  .soc:hover { transform:translateY(-6px) rotate(-6deg); background:#fff; color:var(--ink); }
+
+  .foot { text-align:center; opacity:.45; font-size:.72rem; margin:22px 0 0; }
+
+  /* ---------- Dock ---------- */
+  .dock { position:fixed; bottom:calc(14px + env(safe-area-inset-bottom)); left:50%; transform:translate(-50%,140%); width:calc(min(430px,100%) - 28px);
+          background:rgba(16,26,69,.88); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.12); border-radius:26px; padding:10px; display:flex; align-items:center; gap:8px;
+          box-shadow:0 16px 44px rgba(0,0,0,.55); z-index:10; }
+  .ready .dock { animation:dockIn .8s .9s var(--ease) forwards; }
+  @keyframes dockIn { to { transform:translate(-50%,0); } }
+  .dbtn { width:48px; height:48px; border-radius:15px; background:#1b2860; border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .2s var(--ease), background .2s; }
+  .dbtn:hover { background:#27388a; transform:translateY(-3px); }
+  .dbtn:active { transform:scale(.9); }
+  .add { position:relative; overflow:hidden; flex:1; height:48px; border-radius:15px; background:var(--accent); color:var(--ink); border:none; font:700 .95rem var(--font); cursor:pointer;
+         display:flex; align-items:center; justify-content:center; gap:8px; transition:transform .2s var(--ease); }
+  .add:active { transform:scale(.96); }
+  .add::after { content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent); transform:skewX(-20deg); animation:shine 3.5s infinite; }
+  @keyframes shine { 0%,60% { left:-60%; } 100% { left:140%; } }
+  .edit { display:none; width:48px; height:48px; border-radius:50%; background:#fff; color:var(--ink); border:none; cursor:pointer; align-items:center; justify-content:center; transition:transform .25s var(--ease); }
+  .edit:hover { transform:rotate(15deg) scale(1.08); }
+  body.owner .edit { display:flex; }
+
+  /* ---------- Toast + overlays ---------- */
+  .toast { position:fixed; top:18px; left:50%; transform:translate(-50%,-140%); background:#111827; color:#fff; padding:12px 20px; border-radius:14px; font:600 .88rem system-ui,sans-serif;
+           z-index:200; box-shadow:0 10px 30px rgba(0,0,0,.4); transition:transform .45s var(--ease); max-width:90%; }
+  .toast.show { transform:translate(-50%,0); }
+  .toast.bad { background:#b91c1c; }
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(4px); z-index:40; display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition:.3s; }
+  .overlay.show { opacity:1; visibility:visible; }
+  .modal { background:#fff; color:#111; padding:24px; border-radius:22px; width:min(340px,90%); font-family:system-ui,sans-serif; text-align:center; transform:scale(.88) translateY(20px); transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+  .overlay.show .modal { transform:none; }
+  .modal img { width:230px; height:230px; border-radius:12px; }
+  .modal input { width:100%; padding:11px; border:1px solid #ccc; border-radius:10px; margin-top:8px; font-size:1rem; }
+
+  /* ---------- Editor ---------- */
+  .panel { position:fixed; top:0; right:0; height:100%; width:min(380px,100%); background:#fff; color:#111; z-index:50; transform:translateX(105%); transition:transform .45s var(--ease);
+           overflow-y:auto; padding:18px 18px 40px; font-family:system-ui,sans-serif; box-shadow:-10px 0 40px rgba(0,0,0,.35); }
+  .panel.open { transform:none; }
+  .panel h2 { margin:0; font-size:1.1rem; }
+  .panel label { display:block; font-size:.78rem; font-weight:600; margin:12px 0 4px; color:#555; }
+  .panel input[type=text], .panel textarea, .panel select { width:100%; padding:9px 10px; border:1px solid #ccc; border-radius:8px; font:inherit; }
+  .panel textarea { min-height:70px; resize:vertical; }
+  .row { display:flex; gap:10px; } .row > div { flex:1; }
+  .panel input[type=color] { width:100%; height:38px; border:1px solid #ccc; border-radius:8px; padding:2px; background:#fff; }
+  .panel button, .modal button { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+  .save { background:#16a34a; color:#fff; width:100%; margin-top:18px; padding:13px !important; font-size:1rem; }
+  .ghost { background:#eee; color:#111; }
+  .sec { border-top:1px solid #eee; margin-top:16px; padding-top:4px; font-weight:700; font-size:.85rem; }
+  .social-row { display:flex; gap:6px; margin-top:6px; } .social-row input { flex:1; }
+  .badge { font-size:.72rem; background:#ecfccb; color:#3f6212; padding:3px 8px; border-radius:999px; font-weight:700; }
+
+  @media (prefers-reduced-motion:reduce) {
+    *, *::before, *::after { animation-duration:.01ms !important; animation-delay:0ms !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="splash" id="splash"><div class="ring"></div></div>
+<div class="toast" id="toast"></div>
+
+<div class="app" id="app">
+  <div class="hero" id="hero">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="grid"></div>
+    <div class="initials" id="initials"></div>
+    <div class="photo"><div class="photo-in" id="photoIn"></div></div>
+    <div class="id">
+      <h1 class="name" id="name"></h1>
+      <div class="anim-wrap"><p class="role pop" style="--d:450" id="title"></p></div>
+    </div>
+    <div class="actions">
+      <a class="circle pop" style="--d:550" id="aPhone"><span data-i="phone"></span><span class="tip">Call</span></a>
+      <a class="circle pop" style="--d:650" id="aEmail"><span data-i="mail"></span><span class="tip">Email</span></a>
+      <a class="circle pop" style="--d:750" id="aSms"><span data-i="message"></span><span class="tip">Text</span></a>
+      <a class="circle pop" style="--d:850" id="aWa" target="_blank" rel="noopener"><span data-i="whatsapp"></span><span class="tip">WhatsApp</span></a>
+    </div>
+  </div>
+
+  <div class="section reveal"><h2><span data-i="user"></span>About Me</h2><p id="about"></p></div>
+  <div class="section reveal" id="achWrap" style="--d:100"><h2><span data-i="award"></span>Achievements</h2><div class="tags" id="ach"></div></div>
+  <div class="section reveal" id="contactWrap" style="--d:100"><h2><span data-i="phone"></span>Contact</h2><div class="rows" id="rows"></div></div>
+  <div class="section reveal" id="linkWrap" style="--d:100"><h2><span data-i="link"></span>Connect</h2><div class="socials" id="socials"></div></div>
+  <div class="foot">Digital Contact Card</div>
+</div>
+
+<div class="dock">
+  <button class="dbtn" id="qrBtn" title="QR code" data-i="qr"></button>
+  <button class="dbtn" id="shareBtn" title="Share" data-i="share"></button>
+  <button class="add" id="addContact"><span data-i="userplus"></span>Add to Contact</button>
+  <button class="edit" id="editBtn" title="Edit card" data-i="pencil"></button>
+</div>
+
+<div class="overlay" id="qrModal"><div class="modal"><h3 style="margin-top:0">Scan to open my card</h3><img id="qrImg" alt="QR code"><br><button class="ghost" style="margin-top:14px" id="qrClose">Close</button></div></div>
+
+<div class="overlay" id="login">
+  <div class="modal" style="text-align:left">
+    <h3 style="margin-top:0">🔒 Owner login</h3>
+    <div style="font-size:.9rem;color:#555">Enter your admin password to edit this card.</div>
+    <input type="password" id="pw" placeholder="Password" autocomplete="current-password">
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="ghost" style="flex:1" id="loginCancel">Cancel</button>
+      <button style="flex:1;background:#2563eb;color:#fff" id="loginOk">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h2>Edit your card <span class="badge">Owner</span></h2><button class="ghost" id="closePanel">Close</button></div>
+
+  <div class="sec">Profile</div>
+  <label>Name</label><input type="text" data-f="name">
+  <label>Job title</label><input type="text" data-f="title">
+  <label>About me</label><textarea data-f="about"></textarea>
+  <label>Achievements (one per line)</label><textarea data-f="achievements"></textarea>
+
+  <div class="sec">Contact</div>
+  <label>Phone</label><input type="text" data-f="phone">
+  <label>WhatsApp number</label><input type="text" data-f="whatsapp">
+  <label>Email</label><input type="text" data-f="email">
+  <label>Website</label><input type="text" data-f="website">
+  <label>Location</label><input type="text" data-f="location">
+
+  <div class="sec">Photo</div>
+  <label>Profile photo (portrait works best)</label><input type="file" accept="image/*" id="avatarFile">
+  <button class="ghost" id="clearImg" style="margin-top:8px">Remove photo</button>
+
+  <div class="sec">Colors &amp; font</div>
+  <label>Quick themes</label>
+  <div class="row">
+    <button class="ghost" data-theme="lime">Lime</button>
+    <button class="ghost" data-theme="sky">Sky</button>
+    <button class="ghost" data-theme="rose">Rose</button>
+    <button class="ghost" data-theme="gold">Gold</button>
+  </div>
+  <div class="row">
+    <div><label>Background</label><input type="color" data-t="bg"></div>
+    <div><label>Accent</label><input type="color" data-t="accent"></div>
+  </div>
+  <div class="row">
+    <div><label>Text on accent</label><input type="color" data-t="ink"></div>
+    <div><label>Text on background</label><input type="color" data-t="text"></div>
+  </div>
+  <label>Font</label>
+  <select data-t="font">
+    <option value="'Poppins', system-ui, sans-serif">Modern (Poppins)</option>
+    <option value="Georgia, serif">Classic (Georgia)</option>
+    <option value="'Trebuchet MS', sans-serif">Friendly (Trebuchet)</option>
+    <option value="'Courier New', monospace">Typewriter</option>
+  </select>
+
+  <div class="sec">Social links</div>
+  <div id="socialEditor"></div>
+  <button class="ghost" id="addSocial" style="margin-top:8px">+ Add link</button>
+  <div style="font-size:.75rem;color:#777;margin-top:6px">Icons are picked automatically from the label (Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Telegram…).</div>
+
+  <button class="save" id="saveBtn">💾 Save changes</button>
+  <button class="ghost" style="width:100%;margin-top:10px" id="lockBtn">Lock editor on this device</button>
+</div>
+
+<script>
+/* ---------- Icons ---------- */
+const P = {
+  phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+  mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+  message:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  whatsapp:'<path d="M3 21l1.65-4.8A9 9 0 1 1 8 19.4L3 21z"/><path d="M9 10c.5 2 2.5 4 5 5l1.5-1.5-2-1-1 .7c-.8-.4-1.5-1.1-1.9-1.9l.7-1-1-2L9 10z"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
+  globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>',
+  qr:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-4M14 21h.01"/>',
+  share:'<path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
+  userplus:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>',
+  user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  award:'<circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+  pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  facebook:'<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
+  instagram:'<rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',
+  linkedin:'<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+  youtube:'<path d="M22.5 6.4a2.8 2.8 0 0 0-2-2C18.8 4 12 4 12 4s-6.8 0-8.5.4a2.8 2.8 0 0 0-2 2C1 8.1 1 12 1 12s0 3.9.5 5.6a2.8 2.8 0 0 0 2 2C5.2 20 12 20 12 20s6.8 0 8.5-.4a2.8 2.8 0 0 0 2-2C23 15.9 23 12 23 12s0-3.9-.5-5.6z"/><path d="m10 15 5-3-5-3z"/>',
+  x:'<path d="M4 4l16 16M20 4 4 20"/>',
+  tiktok:'<path d="M9 12a4 4 0 1 0 4 4V3a5 5 0 0 0 5 5"/>',
+  telegram:'<path d="m22 2-11 11M22 2l-7 20-4-9-9-4z"/>',
+  github:'<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-1-2.6c3.300-.4 6.800-1.600 6.800-7.200a5.600 5.600 0 0 0-1.500-3.900 5.200 5.200 0 0 0-.1-3.800s-1.200-.4-4 1.500a13.700 13.700 0 0 0-7 0c-2.800-1.900-4-1.500-4-1.500a5.200 5.200 0 0 0-.1 3.800A5.600 5.600 0 0 0 4 9.300c0 5.600 3.500 6.800 6.800 7.200a3.400 3.400 0 0 0-1 2.600V22"/>'
+};
+const svg = (n) => `<svg class="i" viewBox="0 0 24 24">${P[n] || P.link}</svg>`;
+function socialIcon(s) {
+  const k = ((s.label || '') + ' ' + (s.url || '')).toLowerCase();
+  const map = [['facebook','facebook'],['fb.com','facebook'],['instagram','instagram'],['linkedin','linkedin'],['youtube','youtube'],['youtu.be','youtube'],
+    ['tiktok','tiktok'],['telegram','telegram'],['t.me','telegram'],['github','github'],['twitter','x'],['x.com','x'],['whatsapp','whatsapp']];
+  for (const [w, i] of map) if (k.includes(w)) return i;
+  return 'link';
+}
+document.querySelectorAll('[data-i]').forEach((el) => (el.innerHTML = svg(el.dataset.i)));
+
+/* ---------- State ---------- */
+let card = null;
+let password = sessionStorage.getItem('adminpw') || '';
+const $ = (id) => document.getElementById(id);
+const THEMES = {
+  lime: { bg:'#0b1437', accent:'#c6f432', ink:'#0b1437', text:'#ffffff' },
+  sky:  { bg:'#0a1a2f', accent:'#38bdf8', ink:'#06223a', text:'#ffffff' },
+  rose: { bg:'#2a0a1a', accent:'#fb7185', ink:'#2a0a1a', text:'#ffffff' },
+  gold: { bg:'#1c1405', accent:'#fbbf24', ink:'#1c1405', text:'#ffffff' }
+};
+
+/* Owner mode: only visible on devices where the owner logged in, or via the secret link  yoursite.com/#edit */
+function isOwner() { return localStorage.getItem('owner') === '1'; }
+function applyOwner() { document.body.classList.toggle('owner', isOwner()); }
+applyOwner();
+
+function toast(msg, bad) {
+  const t = $('toast'); t.textContent = msg; t.classList.toggle('bad', !!bad); t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ---------- Render ---------- */
+function render() {
+  const t = card.theme, r = document.documentElement.style;
+  r.setProperty('--bg', t.bg); r.setProperty('--accent', t.accent);
+  r.setProperty('--ink', t.ink); r.setProperty('--text', t.text); r.setProperty('--font', t.font);
+  document.querySelector('meta[name=theme-color]').content = t.bg;
+
+  const parts = (card.name || '').trim().split(/\s+/);
+  const first = parts.shift() || '';
+  $('name').innerHTML = '';
+  [first, parts.join(' ')].filter(Boolean).forEach((p, i) => {
+    const ln = document.createElement('span'); ln.className = 'ln';
+    const s = document.createElement('span'); s.textContent = p; s.style.setProperty('--d', 150 + i * 150);
+    ln.appendChild(s); $('name').appendChild(ln);
+  });
+  $('title').textContent = card.title; $('title').style.display = card.title ? '' : 'none';
+  $('about').textContent = card.about;
+  $('photoIn').style.backgroundImage = card.avatar ? `url(${card.avatar})` : '';
+  $('initials').textContent = card.avatar ? '' : (card.name || '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+  document.title = (card.name || 'Contact') + ' — Digital Card';
+
+  const digits = (s) => (s || '').replace(/[^\d]/g, '');
+  const act = (id, val, href) => { const el = $(id); el.classList.toggle('hide', !val); el.href = href; };
+  const tel = (card.phone || '').replace(/\s/g, '');
+  act('aPhone', card.phone, 'tel:' + tel);
+  act('aEmail', card.email, 'mailto:' + card.email);
+  act('aSms', card.phone, 'sms:' + tel);
+  act('aWa', card.whatsapp, 'https://wa.me/' + digits(card.whatsapp));
+
+  const items = (card.achievements || '').split('\n').map((s) => s.trim()).filter(Boolean);
+  $('achWrap').style.display = items.length ? '' : 'none';
+  $('ach').innerHTML = '';
+  items.forEach((i, n) => { const s = document.createElement('span'); s.textContent = i; s.style.setProperty('--n', n); $('ach').appendChild(s); });
+
+  const rows = [];
+  if (card.phone) rows.push(['phone', 'Phone', card.phone, 'tel:' + tel]);
+  if (card.email) rows.push(['mail', 'Email', card.email, 'mailto:' + card.email]);
+  if (card.website) rows.push(['globe', 'Website', card.website.replace(/^https?:\/\//, ''), card.website]);
+  if (card.location) rows.push(['pin', 'Location', card.location, 'https://www.google.com/maps/search/' + encodeURIComponent(card.location)]);
+  $('contactWrap').style.display = rows.length ? '' : 'none';
+  $('rows').innerHTML = '';
+  rows.forEach(([ic, lab, val, href]) => {
+    const a = document.createElement('a'); a.className = 'row-link'; a.href = href;
+    if (!href.startsWith('tel:') && !href.startsWith('mailto:')) { a.target = '_blank'; a.rel = 'noopener'; }
+    a.innerHTML = `<span class="ico">${svg(ic)}</span><span><small>${lab}</small></span>`;
+    a.querySelector('small').insertAdjacentText('afterend', val);
+    $('rows').appendChild(a);
+  });
+
+  const links = (card.socials || []).filter((s) => s.url);
+  $('linkWrap').style.display = links.length ? '' : 'none';
+  $('socials').innerHTML = '';
+  links.forEach((s) => {
+    const a = document.createElement('a'); a.className = 'soc'; a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.title = s.label || '';
+    a.innerHTML = svg(socialIcon(s)); $('socials').appendChild(a);
+  });
+  observe();
+}
+
+/* ---------- Scroll reveal + parallax ---------- */
+let io;
+function observe() {
+  if (!io) io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('.reveal:not(.in)').forEach((el) => io.observe(el));
+}
+addEventListener('scroll', () => document.documentElement.style.setProperty('--py', Math.min(scrollY * .25, 80) + 'px'), { passive: true });
+$('hero').addEventListener('pointermove', (e) => {
+  const b = $('hero').getBoundingClientRect();
+  const x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5;
+  const s = $('photoIn').style; s.setProperty('--tx', x * -14 + 'px'); s.setProperty('--ty', y * -10 + 'px');
+});
+$('hero').addEventListener('pointerleave', () => { const s = $('photoIn').style; s.setProperty('--tx', '0px'); s.setProperty('--ty', '0px'); });
+
+/* ---------- Dock actions ---------- */
+$('addContact').onclick = () => {
+  const vcf = ['BEGIN:VCARD','VERSION:3.0','FN:'+card.name,'TITLE:'+card.title,'TEL;TYPE=CELL:'+card.phone,
+    'EMAIL:'+card.email,'URL:'+card.website,'ADR;TYPE=WORK:;;'+(card.location||'')+';;;;','NOTE:'+(card.about||'').replace(/\n/g,' '),'END:VCARD'].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([vcf], { type: 'text/vcard' }));
+  a.download = (card.name || 'contact').replace(/\s+/g, '_') + '.vcf'; a.click();
+  toast('Contact file downloaded ✓');
+};
+$('shareBtn').onclick = async () => {
+  const data = { title: card.name, text: card.title, url: location.origin + location.pathname };
+  if (navigator.share) { try { await navigator.share(data); } catch (e) {} }
+  else { try { await navigator.clipboard.writeText(data.url); toast('Link copied ✓'); } catch (e) { toast('Copy failed', true); } }
+};
+$('qrBtn').onclick = () => {
+  $('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=460x460&margin=8&data=' + encodeURIComponent(location.origin + location.pathname);
+  $('qrModal').classList.add('show');
+};
+$('qrClose').onclick = () => $('qrModal').classList.remove('show');
+$('qrModal').onclick = (e) => { if (e.target.id === 'qrModal') $('qrModal').classList.remove('show'); };
+
+/* ---------- Editor (owner only) ---------- */
+function fillForm() {
+  document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] || ''));
+  document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t]));
+  renderSocialEditor();
+}
+const esc = (s) => String(s || '').replace(/"/g, '&quot;');
+function renderSocialEditor() {
+  const box = $('socialEditor'); box.innerHTML = '';
+  card.socials.forEach((s, idx) => {
+    const row = document.createElement('div'); row.className = 'social-row';
+    row.innerHTML = `<input type="text" placeholder="Label" value="${esc(s.label)}" style="max-width:100px"><input type="text" placeholder="https://..." value="${esc(s.url)}"><button class="ghost">✕</button>`;
+    const [l, u, x] = row.children;
+    l.oninput = () => { s.label = l.value; render(); };
+    u.oninput = () => { s.url = u.value; render(); };
+    x.onclick = () => { card.socials.splice(idx, 1); renderSocialEditor(); render(); };
+    box.appendChild(row);
+  });
+}
+document.querySelectorAll('[data-f]').forEach((i) => i.addEventListener('input', () => { card[i.dataset.f] = i.value; render(); }));
+document.querySelectorAll('[data-t]').forEach((i) => i.addEventListener('input', () => { card.theme[i.dataset.t] = i.value; render(); }));
+document.querySelectorAll('[data-theme]').forEach((b) => b.onclick = () => { Object.assign(card.theme, THEMES[b.dataset.theme]); fillForm(); render(); });
+$('addSocial').onclick = () => { card.socials.push({ label: '', url: '' }); renderSocialEditor(); };
+$('clearImg').onclick = () => { card.avatar = ''; render(); };
+
+function resize(file, max) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = img.width * k; c.height = img.height * k;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(resolve, 'image/jpeg', 0.88);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+$('avatarFile').onchange = async (e) => {
+  const file = e.target.files[0]; if (!file) return;
+  toast('Uploading photo…');
+  const blob = await resize(file, 1200);
+  const r = await fetch('/api/upload', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'image/jpeg' }, body: blob });
+  const j = await r.json();
+  if (!r.ok) return toast('Upload failed: ' + j.error, true);
+  card.avatar = j.url; render(); toast('Photo ready — press Save to publish');
+};
+
+$('saveBtn').onclick = async () => {
+  toast('Saving…');
+  const r = await fetch('/api/card', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'application/json' }, body: JSON.stringify(card) });
+  const j = await r.json();
+  if (r.ok) toast('Saved! Your live card is updated ✓'); else toast('Error: ' + j.error, true);
+};
+
+function openPanel() { fillForm(); $('panel').classList.add('open'); }
+$('closePanel').onclick = () => $('panel').classList.remove('open');
+$('lockBtn').onclick = () => {
+  localStorage.removeItem('owner'); sessionStorage.removeItem('adminpw'); password = '';
+  $('panel').classList.remove('open'); applyOwner(); toast('Editor locked on this device');
+};
+function askLogin() { $('login').classList.add('show'); setTimeout(() => $('pw').focus(), 300); }
+$('editBtn').onclick = () => (password ? openPanel() : askLogin());
+$('loginCancel').onclick = () => $('login').classList.remove('show');
+$('pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('loginOk').click(); });
+$('loginOk').onclick = async () => {
+  const pw = $('pw').value;
+  const r = await fetch('/api/card?verify=1', { method: 'POST', headers: { 'x-admin-password': pw, 'content-type': 'application/json' }, body: '{}' });
+  if (!r.ok) return toast('Wrong password', true);
+  password = pw; sessionStorage.setItem('adminpw', pw); localStorage.setItem('owner', '1'); applyOwner();
+  $('login').classList.remove('show'); $('pw').value = ''; openPanel();
+};
+
+/* ---------- Boot ---------- */
+fetch('/api/card').then((r) => r.json()).then((c) => {
+  card = c; card.socials = card.socials || []; render();
+  setTimeout(() => {
+    $('splash').classList.add('gone');
+    document.body.classList.add('ready');
+    // Secret owner link: https://your-site.vercel.app/#edit
+    if (location.hash === '#edit') { history.replaceState(null, '', location.pathname); password ? openPanel() : askLogin(); }
+  }, 350);
+});
+</script>
+</body>
+</html>
