@@ -159,3 +159,24 @@
 @media (prefers-reduced-motion:reduce) {
   #app .photo, #app .section, #app .row-link, #app .circle { transition:none !important; }
 }
+
+/* Reliable template switching + responsive typography normalization. */
+#app .id { min-width:0; box-sizing:border-box; }
+#app .name { display:block; width:100%; min-width:0; font-family:var(--name-font,var(--font)) !important; font-size:clamp(20px,min(8vw,var(--name-size,42px)),var(--name-size,42px)) !important; text-align:var(--name-align,left) !important; line-height:var(--name-line,1.08); letter-spacing:var(--name-letter,-1px); overflow-wrap:anywhere; }
+#app .name.name-layout-single { white-space:normal; text-wrap:balance; }
+#app .name.name-layout-two { max-width:min(100%,14ch); text-wrap:balance; }
+#app .name.name-layout-stacked { white-space:normal; }
+#app .id { transform:translate(var(--name-x,0px),var(--name-y,0px)); }
+#app [data-drag-key], #app #photoBox { translate:var(--drag-x,0%) var(--drag-y,0%); }
+#app.layout-split .id { transform:translate(var(--name-x,0px),var(--name-y,0px)); }
+#app.canvas-arrange [data-drag-key], #app.canvas-arrange #name, #app.canvas-arrange #photoBox { cursor:grab; outline:1px dashed rgba(90,130,220,.85); outline-offset:4px; touch-action:none; }
+#app.canvas-arrange [data-drag-key]:active, #app.canvas-arrange #name:active, #app.canvas-arrange #photoBox:active { cursor:grabbing; }
+#app.canvas-arrange [data-drag-key]::after { content:'DRAG'; position:absolute; top:5px; right:7px; z-index:20; padding:3px 6px; border-radius:4px; background:#1d4ed8; color:#fff; font:600 9px/1.2 system-ui,sans-serif; letter-spacing:.08em; pointer-events:none; }
+#app .section { min-width:0; box-sizing:border-box; }
+@media (max-width:520px) {
+  #app .id { left:16px; right:16px; max-width:calc(100% - 32px); }
+  #app .name { font-size:clamp(20px,7.4vw,var(--name-size,42px)) !important; }
+  #app.layout-editorial .id { right:42%; }
+  #app.layout-split .id { left:52%; right:12px; }
+  #app .section { overflow-wrap:anywhere; }
+}

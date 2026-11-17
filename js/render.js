@@ -2,7 +2,9 @@
 /* ---------- Render ---------- */
 function render() {
   const t = card.theme, r = document.documentElement.style;
-  $('app').classList.remove('layout-classic','layout-centered','layout-minimal','layout-editorial','layout-tap','layout-split','layout-stacked','layout-signature','layout-compact','profile-circle','profile-full','profile-portrait','profile-square','profile-side');
+  // Remove every previous template class before applying the selected one.
+  // This prevents old layout rules stacking when users switch templates.
+  [...$('app').classList].forEach((c) => { if (c.startsWith('layout-') || c.startsWith('profile-')) $('app').classList.remove(c); });
   const supportedLayouts = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact','frame','banner','portrait-focus'];
   const chosenLayout = supportedLayouts.includes(card.layout) ? card.layout : 'tap';
   $('app').classList.add('layout-' + chosenLayout);
@@ -27,6 +29,13 @@ function render() {
   document.querySelector('meta[name=theme-color]').content = t.bg || '#050505';
 
   $('name').textContent = card.name || '';
+  // Restore saved drag positions for movable canvas elements.
+  const dragTargets = { photo: $('photoBox'), about: $('about')?.closest('.section'), contact: $('contactWrap'), socials: $('linkWrap') };
+  Object.entries(dragTargets).forEach(([key, el]) => {
+    if (!el) return; const pos = card.dragPositions?.[key] || { x: 0, y: 0 };
+    el.style.setProperty('--drag-x', `${Number(pos.x) || 0}%`); el.style.setProperty('--drag-y', `${Number(pos.y) || 0}%`);
+    el.classList.toggle('drag-positioned', !!(pos.x || pos.y));
+  });
   // Professional title is intentionally shown in About Me, not over the hero image.
   $('title').textContent = ''; $('title').style.display = 'none';
   $('aboutTitle').textContent = card.title || ''; $('aboutTitle').style.display = card.title ? '' : 'none';

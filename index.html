@@ -32,9 +32,9 @@
     </div>
   </div>
 
-  <div class="section reveal"><h2><span data-i="user"></span>About Me</h2><p id="aboutTitle" class="about-title"></p><p id="about"></p></div>
-  <div class="section reveal" id="contactWrap" style="--d:100"><h2><span data-i="phone"></span>Contact</h2><div class="rows" id="rows"></div></div>
-  <div class="section reveal" id="linkWrap" style="--d:100"><h2><span data-i="link"></span>Connect</h2><div class="socials" id="socials"></div></div>
+  <div class="section reveal" data-drag-key="about"><h2><span data-i="user"></span>About Me</h2><p id="aboutTitle" class="about-title"></p><p id="about"></p></div>
+  <div class="section reveal" data-drag-key="contact" id="contactWrap" style="--d:100"><h2><span data-i="phone"></span>Contact</h2><div class="rows" id="rows"></div></div>
+  <div class="section reveal" data-drag-key="socials" id="linkWrap" style="--d:100"><h2><span data-i="link"></span>Connect</h2><div class="socials" id="socials"></div></div>
   <div class="foot">Digital Contact Card</div>
 </div>
 
@@ -170,7 +170,8 @@
         <option value="banner">Wide banner</option>
         <option value="portrait-focus">Portrait focus</option>
       </select>
-      <div class="hint">Choose a complete card composition. Each layout adapts to portrait, landscape and square photos, with live preview.</div>
+      <div class="hint">Choose a complete card composition. Your existing templates are preserved and enhanced. Switch layouts without losing your name typography settings.</div>
+      <button class="ghost" id="dragModeBtn" type="button" aria-pressed="false">↔ Arrange elements on card</button><div class="hint" id="dragModeHint">Turn on arrange mode, then drag the name, photo and sections directly on the card. Turn it off when finished.</div>
       <button class="ghost" id="resetDesign" type="button">↺ Reset design settings</button>
       <div class="row">
         <div><label>Background</label><input type="color" data-t="bg"></div>

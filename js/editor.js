@@ -94,3 +94,62 @@ document.querySelectorAll('[data-tab]').forEach((b) => b.onclick = () => {
 
 // Restore a clean default visual setup without changing profile/contact information.
 if ($('resetDesign')) $('resetDesign').addEventListener('click', () => { card.layout='tap'; card.profileStyle='full'; card.roundness=8; card.sectionSpace=24; card.nameX=0; card.nameY=0; card.nameAlign='left'; card.nameSize=42; card.nameFont='inherit'; card.nameLayout='natural'; card.nameLine=1; card.nameLetter=-1; card.titleSize=15; card.theme={...THEMES.monochrome}; fillForm(); render(); toast('Design settings reset — save to publish'); });
+
+
+/* Direct-manipulation canvas editor: drag name, portrait and content sections. */
+(function initCanvasDrag() {
+  const app = $('app'); const toggle = $('dragModeBtn');
+  if (!app || !toggle) return;
+  let enabled = false, active = null;
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  const targets = () => [
+    { key: 'name', el: $('name')?.closest('.id') },
+    { key: 'photo', el: $('photoBox') },
+    { key: 'about', el: $('about')?.closest('.section') },
+    { key: 'contact', el: $('contactWrap') },
+    { key: 'socials', el: $('linkWrap') }
+  ].filter(x => x.el);
+  const setEnabled = (v) => {
+    enabled = v; app.classList.toggle('canvas-arrange', enabled);
+    toggle.setAttribute('aria-pressed', String(enabled));
+    toggle.textContent = enabled ? '✓ Finish arranging' : '↔ Arrange elements on card';
+    if (!enabled) active = null;
+    toast(enabled ? 'Arrange mode on — drag an element' : 'Arrange mode off');
+  };
+  toggle.addEventListener('click', () => setEnabled(!enabled));
+  app.addEventListener('pointerdown', (e) => {
+    if (!enabled || !document.body.classList.contains('editing')) return;
+    const item = targets().find(x => x.el === e.target || x.el.contains(e.target));
+    if (!item) return;
+    // Do not hijack links or buttons within a section.
+    if (e.target.closest('a,button,input,select,textarea')) return;
+    const rect = item.el.getBoundingClientRect();
+    active = { ...item, startX: e.clientX, startY: e.clientY, lastX: e.clientX, lastY: e.clientY, rect };
+    item.el.setPointerCapture?.(e.pointerId); e.preventDefault();
+  });
+  app.addEventListener('pointermove', (e) => {
+    if (!active || !enabled) return;
+    const dx = e.clientX - active.lastX, dy = e.clientY - active.lastY;
+    active.lastX = e.clientX; active.lastY = e.clientY;
+    if (active.key === 'name') {
+      card.nameX = clamp((card.nameX || 0) + dx, -180, 180);
+      card.nameY = clamp((card.nameY || 0) + dy, -180, 180);
+      if ($('nameX')) $('nameX').value = clamp(card.nameX, -40, 40);
+      if ($('nameY')) $('nameY').value = clamp(card.nameY, -80, 80);
+      updateStyleValues();
+      document.documentElement.style.setProperty('--name-x', card.nameX + 'px');
+      document.documentElement.style.setProperty('--name-y', card.nameY + 'px');
+    } else {
+      card.dragPositions ||= {}; const pos = card.dragPositions[active.key] || { x: 0, y: 0 };
+      const bounds = app.getBoundingClientRect();
+      pos.x = clamp((pos.x || 0) + dx / Math.max(bounds.width, 1) * 100, -35, 35);
+      pos.y = clamp((pos.y || 0) + dy / Math.max(bounds.height, 1) * 100, -25, 25);
+      card.dragPositions[active.key] = pos;
+      active.el.style.setProperty('--drag-x', pos.x + '%'); active.el.style.setProperty('--drag-y', pos.y + '%');
+    }
+  });
+  const end = () => { if (active) { active = null; toast('Position updated — save changes to publish'); } };
+  app.addEventListener('pointerup', end); app.addEventListener('pointercancel', end);
+  // Keep arrange mode out of the public-facing card after the editor closes.
+  $('closePanel')?.addEventListener('click', () => { if (!hasUnsavedChanges()) setEnabled(false); });
+})();
