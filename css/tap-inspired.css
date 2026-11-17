@@ -42,3 +42,15 @@ body { background:#f3f4f6; color:#111; }
 .layout-tap .add { background:#080808; border-radius:6px; }
 .layout-tap .dbtn, .layout-tap .edit { border-radius:6px; }
 @media (min-width:600px) { .layout-tap .hero { height:560px; } }
+
+/* Additional selectable image template: rounded portrait card */
+.layout-tap.profile-portrait .hero { height:clamp(500px,140vw,600px); }
+.layout-tap.profile-portrait .photo { inset:22px 18px auto 18px; width:auto; height:clamp(285px,82vw,360px); transform:none; border-radius:12px; border:1px solid rgba(255,255,255,.12); box-shadow:0 14px 34px rgba(0,0,0,.22); -webkit-mask-image:none; mask-image:none; opacity:1; }
+.layout-tap.profile-portrait .photo-in { inset:0; transform:none; }
+.layout-tap.profile-portrait .photo-in img { object-fit:cover; }
+.layout-tap.profile-portrait .id { bottom:112px; }
+.layout-tap.profile-portrait .name { text-shadow:0 2px 18px rgba(0,0,0,.28); }
+.layout-tap.profile-circle .photo { opacity:1; }
+.design-note { display:flex; flex-direction:column; gap:4px; padding:13px 14px; border:1px solid #e8e8e8; border-radius:8px; background:#fafafa; color:#171717; }
+.design-note strong { font-size:.9rem; }
+.design-note span { color:#777; font-size:.75rem; line-height:1.4; }

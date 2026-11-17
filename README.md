@@ -34,3 +34,7 @@ Scripts load in the order above (see `index.html`). Corner sizes are set once in
 ### Recent design updates
 - Minimal section and contact-row borders with reduced shadows.
 - Optional AI photo background removal via remove.bg (requires `REMOVEBG_API_KEY` in Vercel).
+
+
+## Current design
+The legacy gradient layouts have been retired. The card now uses the professional Tap-inspired minimal layout by default. Owners can select three image templates in the Photo editor: Full-width cover, Circle portrait, and Rounded portrait card.

@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/tap-inspired.css">
+<link rel="stylesheet" href="css/tap-inspired.css">
 </head>
 <body>
 <div class="splash" id="splash"><div class="ring"></div></div>
@@ -102,9 +103,13 @@
         <div class="pv-hint">Drag to move · pinch or scroll to zoom</div>
         <div class="pv-hint" id="pvQ"></div>
       </div>
-      <label>Profile photo style</label>
-      <select id="profileStyle"><option value="circle">Circle portrait</option><option value="full">Full image / cover</option></select>
-      <div class="hint">Circle portrait frames your photo in a round profile. Full image uses your photo as a large cover across the top.</div>
+      <label>Image template</label>
+      <select id="profileStyle">
+        <option value="full">Full-width cover</option>
+        <option value="circle">Circle portrait</option>
+        <option value="portrait">Rounded portrait card</option>
+      </select>
+      <div class="hint">Choose how your profile photo appears. The new Tap-inspired design stays consistent while you switch image templates.</div>
       <label>Profile photo</label>
       <div class="photo-up">
         <div class="thumb" id="thumb"></div>
