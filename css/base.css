@@ -1,0 +1,7 @@
+/* base.css */
+:root { --r-xs:8px; --r-sm:10px; --r-md:12px; --r-lg:16px; --bg:#0b1437; --accent:#c6f432; --ink:#0b1437; --text:#fff; --font:'Poppins',system-ui,sans-serif; --ease:cubic-bezier(.2,.8,.2,1); }
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body { margin:0; background:#050a1f; color:var(--text); font-family:var(--font); display:flex; justify-content:center; }
+svg.i { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+.app { width:100%; max-width:430px; min-height:100vh; min-height:100dvh; background:var(--bg); position:relative; padding-bottom:130px; overflow:hidden; transition:background .4s; }

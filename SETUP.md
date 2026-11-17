@@ -47,4 +47,4 @@ After that your edit link is `https://yourdomain.com/#edit` and your QR code use
 - **"Wrong password"**: you haven't redeployed since adding `ADMIN_PASSWORD`, or you typed it differently. Redeploy and retry.
 - **Saving or uploading fails**: the Blob store is not connected to the project. Repeat Step 3, then redeploy.
 - **Edits don't show for visitors**: refresh the page. The card always loads the latest saved version.
-- **Photo looks cropped**: use a portrait photo with your face in the upper half.
+- **Photo looks cropped or blurry**: use a portrait photo (at least 1200 px wide) with your face in the upper half. In the editor, open the Photo tab to drag, zoom and brighten it; the quality line under the preview tells you if it is sharp.

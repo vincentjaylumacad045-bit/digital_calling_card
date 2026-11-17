@@ -1,0 +1,13 @@
+/* overlays.css */
+/* ---------- Toast + overlays ---------- */
+.toast { position:fixed; top:calc(14px + env(safe-area-inset-top)); left:50%; transform:translate(-50%,-160%); background:#111827; color:#fff; padding:12px 20px; border-radius:var(--r-sm); font:600 .88rem system-ui,sans-serif;
+         z-index:200; box-shadow:0 10px 30px rgba(0,0,0,.4); transition:transform .45s var(--ease); max-width:92%; text-align:center; }
+.toast.show { transform:translate(-50%,0); }
+.toast.bad { background:#b91c1c; }
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(4px); z-index:60; display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition:.3s; }
+.overlay.show { opacity:1; visibility:visible; }
+.modal { background:#fff; color:#111; padding:24px; border-radius:var(--r-lg); width:min(340px,90%); font-family:system-ui,sans-serif; text-align:center; transform:scale(.88) translateY(20px); transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+.overlay.show .modal { transform:none; }
+.modal img { width:min(230px,70vw); height:min(230px,70vw); border-radius:var(--r-sm); }
+.modal input { width:100%; padding:13px; border:1px solid #ccc; border-radius:var(--r-sm); margin-top:8px; font-size:16px; }
+.modal button { padding:12px 14px; border-radius:var(--r-sm); border:none; cursor:pointer; font-weight:600; font-size:.95rem; }
