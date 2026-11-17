@@ -65,19 +65,3 @@ $('camBtn').onclick = () => $('camFile').click();
 $('avatarFile').onchange = (e) => { handleFile(e.target.files[0]); e.target.value = ''; };
 $('camFile').onchange = (e) => { handleFile(e.target.files[0]); e.target.value = ''; };
 
-// AI background removal: requires REMOVEBG_API_KEY in Vercel.
-$('removeBg').onclick = async () => {
-  if (!lastPhotoBlob) { toast('Choose a photo first, then remove its background.', true); return; }
-  const btn = $('removeBg'); btn.disabled = true; btn.textContent = 'Removing background…';
-  try {
-    const r = await fetch('/api/remove-background', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'image/jpeg' }, body: lastPhotoBlob });
-    if (!r.ok) { let j = {}; try { j = await r.json(); } catch (_) {} throw new Error(j.error || 'Background removal failed'); }
-    const png = await r.blob();
-    const up = await fetch('/api/upload', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'image/png' }, body: png });
-    const j = await up.json(); if (!up.ok) throw new Error(j.error || 'Could not save transparent image');
-    lastPhotoBlob = png; card.avatar = j.url; card.photoSrcW = 0; card.photoSrcH = 0;
-    card.photoZoom = 100; card.photoX = 50; card.photoY = 0; pendingAutoFit = true;
-    syncPhotoControls(); render(); toast('Background removed ✓ Press Save to publish');
-  } catch (e) { toast(e.message || 'Background removal failed', true); }
-  finally { btn.disabled = false; btn.textContent = '✂ Remove photo background (AI)'; }
-};

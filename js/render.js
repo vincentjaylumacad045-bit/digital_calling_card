@@ -2,8 +2,9 @@
 /* ---------- Render ---------- */
 function render() {
   const t = card.theme, r = document.documentElement.style;
-  $('app').classList.remove('layout-classic','layout-centered','layout-minimal','layout-editorial','layout-tap','profile-circle','profile-full','profile-portrait','profile-square','profile-side');
-  const chosenLayout = ['tap','classic','centered','minimal','editorial'].includes(card.layout) ? card.layout : 'tap';
+  $('app').classList.remove('layout-classic','layout-centered','layout-minimal','layout-editorial','layout-tap','layout-split','layout-stacked','layout-signature','layout-compact','profile-circle','profile-full','profile-portrait','profile-square','profile-side');
+  const supportedLayouts = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact'];
+  const chosenLayout = supportedLayouts.includes(card.layout) ? card.layout : 'tap';
   $('app').classList.add('layout-' + chosenLayout);
   const imageStyle = ['circle','full','portrait','square','side'].includes(card.profileStyle) ? card.profileStyle : 'full';
   $('app').classList.add('profile-' + imageStyle);

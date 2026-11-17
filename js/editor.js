@@ -14,7 +14,7 @@ function fillForm() {
   document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] || ''));
   document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t] || ({bg:'#050505',accent:'#d1d5db',ink:'#111827',text:'#ffffff',font:"'DM Sans', sans-serif",surface:'#ffffff',sectionText:'#171717',muted:'#707070',buttonBg:'#080808',buttonText:'#ffffff',border:'#e9e9e9'}[i.dataset.t] || '')));
   syncPhotoControls();
-  if ($('layoutSelect')) $('layoutSelect').value = card.layout || 'tap';
+  if ($('layoutSelect')) $('layoutSelect').value = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact'].includes(card.layout) ? card.layout : 'tap';
   $('profileStyle').value = card.profileStyle || 'full';
   renderSocialEditor();
 }
@@ -39,7 +39,7 @@ function updateStyleValues() {
 }
 [['roundness','roundness'],['sectionSpace','sectionSpace'],['nameX','nameX'],['nameY','nameY'],['nameSize','nameSize'],['titleSize','titleSize']].forEach(([id,key]) => { if ($(id)) $(id).addEventListener('input', () => { card[key] = +$(id).value; updateStyleValues(); render(); }); });
 if ($('nameAlign')) $('nameAlign').addEventListener('change', () => { card.nameAlign = $('nameAlign').value; render(); });
-if ($('layoutSelect')) $('layoutSelect').addEventListener('change', () => { card.layout = $('layoutSelect').value; render(); });
+if ($('layoutSelect')) $('layoutSelect').addEventListener('change', () => { card.layout = $('layoutSelect').value; render(); toast('Layout changed — save to publish'); });
 $('profileStyle').addEventListener('change', () => { card.profileStyle = $('profileStyle').value; render(); });
 document.querySelectorAll('[data-theme]').forEach((b) => b.onclick = () => { Object.assign(card.theme, THEMES[b.dataset.theme]); fillForm(); render(); });
 $('addSocial').onclick = () => { card.socials.push({ label: '', url: '' }); renderSocialEditor(); };
@@ -83,3 +83,6 @@ document.querySelectorAll('[data-tab]').forEach((b) => b.onclick = () => {
   document.querySelectorAll('[data-pane]').forEach((p) => p.classList.toggle('active', p.dataset.pane === b.dataset.tab));
   document.querySelector('.pbody').scrollTop = 0;
 });
+
+// Restore a clean default visual setup without changing profile/contact information.
+if ($('resetDesign')) $('resetDesign').addEventListener('click', () => { card.layout='tap'; card.profileStyle='full'; card.roundness=8; card.sectionSpace=24; card.nameX=0; card.nameY=0; card.nameAlign='left'; card.nameSize=42; card.titleSize=15; card.theme={...THEMES.monochrome}; fillForm(); render(); toast('Design settings reset — save to publish'); });

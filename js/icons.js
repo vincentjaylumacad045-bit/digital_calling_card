@@ -22,7 +22,7 @@ const P = {
   telegram:'<path d="m22 2-11 11M22 2l-7 20-4-9-9-4z"/>',
   github:'<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-1-2.6c3.3-.4 6.8-1.6 6.8-7.2a5.6 5.6 0 0 0-1.5-3.9 5.2 5.2 0 0 0-.1-3.8s-1.2-.4-4 1.5a13.7 13.7 0 0 0-7 0c-2.8-1.9-4-1.5-4-1.5a5.2 5.2 0 0 0-.1 3.8A5.6 5.6 0 0 0 4 9.3c0 5.6 3.5 6.8 6.8 7.2a3.4 3.4 0 0 0-1 2.6V22"/>'
 };
-const svg = (n) => `<svg class="i" viewBox="0 0 24 24">${P[n] || P.link}</svg>`;
+const svg = (n) => `<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${P[n] || P.link}</svg>`;
 function socialIcon(s) {
   const k = ((s.label || '') + ' ' + (s.url || '')).toLowerCase();
   const map = [['facebook','facebook'],['fb.com','facebook'],['instagram','instagram'],['linkedin','linkedin'],['youtube','youtube'],['youtu.be','youtube'],

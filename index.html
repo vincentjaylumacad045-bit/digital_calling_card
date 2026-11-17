@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/tap-inspired.css">
-<link rel="stylesheet" href="css/tap-inspired.css">
+<link rel="stylesheet" href="css/layouts.css">
 </head>
 <body>
 <div class="splash" id="splash"><div class="ring"></div></div>
@@ -129,7 +129,7 @@
       </div>
       <input type="file" accept="image/*" id="avatarFile" hidden>
       <input type="file" accept="image/*" capture="user" id="camFile" hidden>
-      <div class="hint">Resize with the image size slider, drag to reposition, or pinch on touch screens. AI background removal requires a remove.bg API key configured in Vercel (REMOVEBG_API_KEY). Use a portrait photo with your face in the upper half. New photos show whole (not zoomed). Small photos are enlarged and sharpened automatically; <b>Best sharpness</b> picks the biggest size that stays crisp.</div>
+      <div class="hint">Resize with the image size slider, drag to reposition, or pinch on touch screens. Use a portrait photo with your face in the upper half. New photos show whole (not zoomed). Small photos are enlarged and sharpened automatically; <b>Best sharpness</b> picks the biggest size that stays crisp.</div>
       <label>Profile image size / zoom <span class="val" id="zoomV"></span></label><input type="range" min="30" max="400" step="1" id="zoom">
       <label>Move left / right <span class="val" id="posxV"></span></label><input type="range" min="0" max="100" step="1" id="posx">
       <label>Move up / down <span class="val" id="posyV"></span></label><input type="range" min="0" max="100" step="1" id="posy">
@@ -137,7 +137,6 @@
       <label>Brightness <span class="val" id="brightV"></span></label><input type="range" min="60" max="150" step="1" id="bright">
       <label>Contrast <span class="val" id="contrastV"></span></label><input type="range" min="60" max="150" step="1" id="contrast">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
-        <button class="primary" id="removeBg" style="grid-column:1/-1">✂ Remove photo background (AI)</button>
         <button class="primary" id="sharpImg" style="grid-column:1/-1">✦ Best sharpness</button>
         <button class="ghost" id="fillImg">⤢ Fill frame</button>
         <button class="ghost" id="resetImg">↺ Fit whole photo</button>
@@ -168,8 +167,13 @@
         <option value="centered">Centered profile</option>
         <option value="minimal">Minimal clean</option>
         <option value="editorial">Editorial split</option>
+        <option value="split">Modern split</option>
+        <option value="stacked">Stacked portrait</option>
+        <option value="signature">Signature luxury</option>
+        <option value="compact">Compact profile</option>
       </select>
-      <div class="hint">Switch layouts instantly. Your live preview updates as you edit.</div>
+      <div class="hint">Choose a complete layout. The photo, name, action buttons and content sections rearrange together in the live preview.</div>
+      <button class="ghost" id="resetDesign" type="button">↺ Reset design settings</button>
       <div class="row">
         <div><label>Background</label><input type="color" data-t="bg"></div>
         <div><label>Accent</label><input type="color" data-t="accent"></div>

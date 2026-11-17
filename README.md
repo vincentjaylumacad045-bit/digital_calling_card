@@ -33,7 +33,6 @@ Scripts load in the order above (see `index.html`). Corner sizes are set once in
 
 ### Recent design updates
 - Minimal section and contact-row borders with reduced shadows.
-- Optional AI photo background removal via remove.bg (requires `REMOVEBG_API_KEY` in Vercel).
 
 
 ## Current design
