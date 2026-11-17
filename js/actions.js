@@ -31,6 +31,8 @@ $('lockBtn').onclick = () => {
 function askLogin() { $('login').classList.add('show'); setTimeout(() => $('pw').focus(), 300); }
 $('editBtn').onclick = () => (password ? openPanel() : askLogin());
 $('loginCancel').onclick = () => $('login').classList.remove('show');
+$('adminLoginForm').addEventListener('submit', (e) => { e.preventDefault(); $('loginOk').click(); });
+if ($('togglePw')) $('togglePw').onclick = () => { const field = $('pw'); const show = field.type === 'password'; field.type = show ? 'text' : 'password'; $('togglePw').textContent = show ? 'Hide' : 'Show'; $('togglePw').setAttribute('aria-label', show ? 'Hide password' : 'Show password'); };
 $('pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('loginOk').click(); });
 $('loginOk').onclick = async () => {
   const pw = $('pw').value;

@@ -93,3 +93,32 @@ body { background:#f3f4f6; color:#111; }
 .pfoot { padding-left:18px; padding-right:18px; }
 .pfoot .save { background:#111827; }
 .design-note { border-color:#e6e9ee; border-radius:9px; background:#f8fafc; }
+
+
+/* Full-site theme binding: all visible surfaces follow the owner's selected palette */
+body, .app { background:var(--bg,#050505); color:var(--text,#fff); }
+.layout-tap .hero { background:var(--bg,#050505); }
+.layout-tap .name { color:var(--text,#fff); }
+.layout-tap .role { color:color-mix(in srgb,var(--text,#fff) 82%,transparent); }
+.layout-tap .section { background:var(--surface,#fff); color:var(--section-text,#171717); border-color:var(--border-color,#e9e9e9); }
+.layout-tap .section h2 { color:var(--section-text,#171717); }
+.layout-tap .section p, .layout-tap .row-link small, .layout-tap .foot { color:var(--muted,#707070); }
+.layout-tap .row-link { background:color-mix(in srgb,var(--surface,#fff) 94%,var(--section-text,#171717)); color:var(--section-text,#171717); border-color:var(--border-color,#e9e9e9); }
+.layout-tap .circle, .layout-tap .soc, .layout-tap .row-link .ico, .layout-tap .add { background:var(--button-bg,#080808); color:var(--button-text,#fff); }
+.layout-tap .dock { background:color-mix(in srgb,var(--surface,#fff) 96%,transparent); border-color:var(--border-color,#e9e9e9); }
+.layout-tap .dbtn, .layout-tap .edit { background:var(--button-bg,#080808); color:var(--button-text,#fff); }
+.layout-tap .section { border-top:1px solid var(--border-color,#e9e9e9); }
+
+
+/* Complete palette propagation: theme changes recolor the whole card, not only labels */
+body { background:var(--bg,#050505); color:var(--text,#fff); }
+.app { background:var(--surface,#fff); color:var(--section-text,#171717); }
+.app .hero { background:var(--bg,#050505); }
+.app .section, .app .contact-section, .app .links-section { background:var(--surface,#fff); color:var(--section-text,#171717); border-color:var(--border-color,#e9e9e9); }
+.app .section h2, .app .section strong { color:var(--section-text,#171717); }
+.app .section p, .app .section small, .app .foot { color:var(--muted,#707070); }
+.app .row-link { background:var(--surface,#fff); color:var(--section-text,#171717); border-color:var(--border-color,#e9e9e9); }
+.app .row-link .ico, .app .soc, .app .circle, .app .add, .app .dbtn, .app .edit { background:var(--button-bg,#080808); color:var(--button-text,#fff); border-color:var(--border-color,#e9e9e9); }
+.app .dock { background:var(--surface,#fff); border-color:var(--border-color,#e9e9e9); }
+.app .role { color:var(--text,#fff); }
+.app .section a { color:var(--section-text,#171717); }

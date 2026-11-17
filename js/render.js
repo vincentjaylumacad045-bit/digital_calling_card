@@ -3,7 +3,8 @@
 function render() {
   const t = card.theme, r = document.documentElement.style;
   $('app').classList.remove('layout-classic','layout-centered','layout-minimal','layout-editorial','layout-tap','profile-circle','profile-full','profile-portrait','profile-square','profile-side');
-  $('app').classList.add('layout-tap');
+  const chosenLayout = ['tap','classic','centered','minimal','editorial'].includes(card.layout) ? card.layout : 'tap';
+  $('app').classList.add('layout-' + chosenLayout);
   const imageStyle = ['circle','full','portrait','square','side'].includes(card.profileStyle) ? card.profileStyle : 'full';
   $('app').classList.add('profile-' + imageStyle);
   r.setProperty('--bg', t.bg || '#050505'); r.setProperty('--accent', t.accent || '#d1d5db');

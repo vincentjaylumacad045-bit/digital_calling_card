@@ -53,16 +53,23 @@
 
 <div class="overlay" id="qrModal"><div class="modal"><h3 style="margin-top:0">Scan to open my card</h3><img id="qrImg" alt="QR code"><br><button style="margin-top:14px;background:#eef0f3" id="qrClose">Close</button></div></div>
 
-<div class="overlay" id="login">
-  <div class="modal" style="text-align:left">
-    <h3 style="margin-top:0">🔒 Owner login</h3>
-    <div style="font-size:.9rem;color:#555">Enter your admin password to edit this card.</div>
-    <input type="password" id="pw" placeholder="Password" autocomplete="current-password">
-    <div style="display:flex;gap:10px;margin-top:14px">
-      <button style="flex:1;background:#eef0f3" id="loginCancel">Cancel</button>
-      <button style="flex:1;background:#2563eb;color:#fff" id="loginOk">Unlock</button>
+<div class="overlay" id="login" aria-label="Administrator sign in">
+  <form class="modal admin-login" id="adminLoginForm">
+    <div class="admin-mark" aria-hidden="true">DC</div>
+    <div class="admin-eyebrow">DIGITAL CALLING CARD</div>
+    <h3>Welcome back</h3>
+    <p class="admin-copy">Sign in to manage your profile, appearance and contact details.</p>
+    <label class="admin-password-label" for="pw">Administrator password</label>
+    <div class="password-wrap">
+      <input type="password" id="pw" placeholder="Enter your password" autocomplete="current-password">
+      <button type="button" class="password-toggle" id="togglePw" aria-label="Show password">Show</button>
     </div>
-  </div>
+    <div class="admin-login-actions">
+      <button type="button" id="loginCancel">Cancel</button>
+      <button type="submit" id="loginOk">Sign in <span aria-hidden="true">→</span></button>
+    </div>
+    <div class="admin-secure-note"><span aria-hidden="true">●</span> Secure owner access</div>
+  </form>
 </div>
 
 <!-- Editor -->
