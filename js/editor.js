@@ -14,8 +14,13 @@ function fillForm() {
   document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] ?? ''));
   document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t] ?? ({bg:'#050505',accent:'#d1d5db',ink:'#111827',text:'#ffffff',font:"'DM Sans', sans-serif",surface:'#ffffff',sectionText:'#171717',muted:'#707070',buttonBg:'#080808',buttonText:'#ffffff',border:'#e9e9e9'}[i.dataset.t] || '')));
   syncPhotoControls();
-  if ($('layoutSelect')) $('layoutSelect').value = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact'].includes(card.layout) ? card.layout : 'tap';
+  if ($('layoutSelect')) $('layoutSelect').value = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact','frame','banner','portrait-focus'].includes(card.layout) ? card.layout : 'tap';
   $('profileStyle').value = card.profileStyle || 'full';
+  if ($('nameFont')) $('nameFont').value = card.nameFont || 'inherit';
+  if ($('nameLayout')) $('nameLayout').value = card.nameLayout || 'natural';
+  if ($('nameAlign')) $('nameAlign').value = card.nameAlign || 'left';
+  [['nameX',0],['nameY',0],['nameSize',42],['titleSize',15],['nameLine',1],['nameLetter',-1],['roundness',card.roundness ?? 8],['sectionSpace',card.sectionSpace ?? 24]].forEach(([id, fallback]) => { if ($(id)) $(id).value = card[id] ?? fallback; });
+  updateStyleValues();
   renderSocialEditor();
 }
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -34,11 +39,14 @@ function renderSocialEditor() {
 document.querySelectorAll('[data-f]').forEach((i) => i.addEventListener('input', () => { card[i.dataset.f] = i.value; render(); }));
 document.querySelectorAll('[data-t]').forEach((i) => { const update = () => { card.theme[i.dataset.t] = i.value; render(); }; i.addEventListener('input', update); i.addEventListener('change', update); });
 function updateStyleValues() {
-  const pairs = [['roundness','roundV','px'],['sectionSpace','spaceV','px'],['nameX','nameXV','px'],['nameY','nameYV','px'],['nameSize','nameSizeV','px'],['titleSize','titleSizeV','px']];
+  const pairs = [['roundness','roundV','px'],['sectionSpace','spaceV','px'],['nameX','nameXV','px'],['nameY','nameYV','px'],['nameSize','nameSizeV','px'],['titleSize','titleSizeV','px'],['nameLetter','nameLetterV','px']];
+  if ($('nameLineV') && $('nameLine')) $('nameLineV').textContent = Number($('nameLine').value).toFixed(2);
   pairs.forEach(([id,out,unit]) => { if ($(id) && $(out)) $(out).textContent = $(id).value + unit; });
 }
 [['roundness','roundness'],['sectionSpace','sectionSpace'],['nameX','nameX'],['nameY','nameY'],['nameSize','nameSize'],['titleSize','titleSize']].forEach(([id,key]) => { if ($(id)) $(id).addEventListener('input', () => { card[key] = +$(id).value; updateStyleValues(); render(); }); });
 if ($('nameAlign')) $('nameAlign').addEventListener('change', () => { card.nameAlign = $('nameAlign').value; render(); });
+if ($('nameFont')) $('nameFont').addEventListener('change', () => { card.nameFont = $('nameFont').value; render(); });
+if ($('nameLayout')) $('nameLayout').addEventListener('change', () => { card.nameLayout = $('nameLayout').value; render(); });
 if ($('layoutSelect')) $('layoutSelect').addEventListener('change', () => { card.layout = $('layoutSelect').value; render(); toast('Layout changed — save to publish'); });
 $('profileStyle').addEventListener('change', () => { card.profileStyle = $('profileStyle').value; render(); });
 document.querySelectorAll('[data-theme]').forEach((b) => b.onclick = () => { Object.assign(card.theme, THEMES[b.dataset.theme]); fillForm(); render(); });
@@ -85,4 +93,4 @@ document.querySelectorAll('[data-tab]').forEach((b) => b.onclick = () => {
 });
 
 // Restore a clean default visual setup without changing profile/contact information.
-if ($('resetDesign')) $('resetDesign').addEventListener('click', () => { card.layout='tap'; card.profileStyle='full'; card.roundness=8; card.sectionSpace=24; card.nameX=0; card.nameY=0; card.nameAlign='left'; card.nameSize=42; card.titleSize=15; card.theme={...THEMES.monochrome}; fillForm(); render(); toast('Design settings reset — save to publish'); });
+if ($('resetDesign')) $('resetDesign').addEventListener('click', () => { card.layout='tap'; card.profileStyle='full'; card.roundness=8; card.sectionSpace=24; card.nameX=0; card.nameY=0; card.nameAlign='left'; card.nameSize=42; card.nameFont='inherit'; card.nameLayout='natural'; card.nameLine=1; card.nameLetter=-1; card.titleSize=15; card.theme={...THEMES.monochrome}; fillForm(); render(); toast('Design settings reset — save to publish'); });

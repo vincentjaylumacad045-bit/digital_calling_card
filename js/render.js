@@ -3,7 +3,7 @@
 function render() {
   const t = card.theme, r = document.documentElement.style;
   $('app').classList.remove('layout-classic','layout-centered','layout-minimal','layout-editorial','layout-tap','layout-split','layout-stacked','layout-signature','layout-compact','profile-circle','profile-full','profile-portrait','profile-square','profile-side');
-  const supportedLayouts = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact'];
+  const supportedLayouts = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact','frame','banner','portrait-focus'];
   const chosenLayout = supportedLayouts.includes(card.layout) ? card.layout : 'tap';
   $('app').classList.add('layout-' + chosenLayout);
   const imageStyle = ['circle','full','portrait','square','side'].includes(card.profileStyle) ? card.profileStyle : 'full';
@@ -15,23 +15,22 @@ function render() {
   r.setProperty('--card-radius', (card.roundness ?? 8) + 'px'); r.setProperty('--section-space', (card.sectionSpace ?? 24) + 'px');
   r.setProperty('--name-x', (card.nameX || 0) + 'px'); r.setProperty('--name-y', (card.nameY || 0) + 'px');
   r.setProperty('--name-size', (card.nameSize || 42) + 'px'); r.setProperty('--title-size', (card.titleSize || 15) + 'px');
+  r.setProperty('--name-line', card.nameLine || 1); r.setProperty('--name-letter', (card.nameLetter ?? -1) + 'px');
+  r.setProperty('--name-font', card.nameFont && card.nameFont !== 'inherit' ? card.nameFont : (t.font || "'DM Sans', sans-serif"));
   $('name').style.textAlign = card.nameAlign || 'left';
   $('app').style.setProperty('--name-align', card.nameAlign || 'left');
-  $('name').style.fontFamily = t.font || "'DM Sans', sans-serif";
+  $('name').style.fontFamily = card.nameFont && card.nameFont !== 'inherit' ? card.nameFont : (t.font || "'DM Sans', sans-serif");
+  $('name').className = 'name name-layout-' + (['natural','single','two','stacked'].includes(card.nameLayout) ? (card.nameLayout || 'natural') : 'natural');
+  $('name').style.lineHeight = card.nameLine || 1; $('name').style.letterSpacing = (card.nameLetter ?? -1) + 'px';
   $('name').style.fontSize = (card.nameSize || 42) + 'px';
   $('title').style.fontSize = (card.titleSize || 15) + 'px';
   document.querySelector('meta[name=theme-color]').content = t.bg || '#050505';
 
-  const parts = (card.name || '').trim().split(/\s+/);
-  const first = parts.shift() || '';
-  $('name').innerHTML = '';
-  [first, parts.join(' ')].filter(Boolean).forEach((p, i) => {
-    const ln = document.createElement('span'); ln.className = 'ln';
-    const s = document.createElement('span'); s.textContent = p; s.style.setProperty('--d', 150 + i * 150);
-    ln.appendChild(s); $('name').appendChild(ln);
-  });
-  $('title').textContent = card.title; $('title').style.display = card.title ? '' : 'none';
-  $('about').textContent = card.about;
+  $('name').textContent = card.name || '';
+  // Professional title is intentionally shown in About Me, not over the hero image.
+  $('title').textContent = ''; $('title').style.display = 'none';
+  $('aboutTitle').textContent = card.title || ''; $('aboutTitle').style.display = card.title ? '' : 'none';
+  $('about').textContent = card.about || '';
 
   renderPhoto();
   $('thumb').style.backgroundImage = card.avatar ? `url(${card.avatar})` : '';

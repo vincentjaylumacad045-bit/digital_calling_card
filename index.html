@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <div class="section reveal"><h2><span data-i="user"></span>About Me</h2><p id="about"></p></div>
+  <div class="section reveal"><h2><span data-i="user"></span>About Me</h2><p id="aboutTitle" class="about-title"></p><p id="about"></p></div>
   <div class="section reveal" id="contactWrap" style="--d:100"><h2><span data-i="phone"></span>Contact</h2><div class="rows" id="rows"></div></div>
   <div class="section reveal" id="linkWrap" style="--d:100"><h2><span data-i="link"></span>Connect</h2><div class="socials" id="socials"></div></div>
   <div class="foot">Digital Contact Card</div>
@@ -70,23 +70,24 @@
 <div class="panel" id="panel">
   <div class="handle" id="handle"></div>
   <div class="ptop">
-    <h2>Edit card <span class="badge">Live preview</span></h2>
+    <h2><span class="editor-brandmark">DC</span><span class="editor-heading"><strong>Design Studio</strong><small>Digital calling card editor</small></span></h2>
     <div style="display:flex;gap:8px">
-      <button class="ibtn" id="expand" title="Bigger / smaller">⤢</button><button class="ibtn" id="lockBtnTop" title="Save and lock editor">🔒</button>
+      <span class="editor-live"><i></i> LIVE</span><button class="ibtn" id="expand" title="Bigger / smaller" aria-label="Expand editor">⤢</button><button class="ibtn" id="lockBtnTop" title="Save and lock editor" aria-label="Save and lock editor">🔒</button>
     </div>
   </div>
   <div class="tabs" id="tabs">
-    <button class="active" data-tab="profile">Profile</button>
-    <button data-tab="contact">Contact</button>
-    <button data-tab="photo">Photo</button>
-    <button data-tab="style">Style</button>
-    <button data-tab="links">Links</button>
+    <button class="active" data-tab="profile"><span>01</span> Profile</button>
+    <button data-tab="contact"><span>02</span> Contact</button>
+    <button data-tab="photo"><span>03</span> Photo</button>
+    <button data-tab="style"><span>04</span> Design</button>
+    <button data-tab="links"><span>05</span> Links</button>
   </div>
 
   <div class="pbody">
+    <div class="editor-intro"><div><span class="editor-kicker">YOUR BRAND, YOUR STYLE</span><h3>Make it yours.</h3><p>Personalize your profile and see every change on your card instantly.</p></div><span class="editor-spark" aria-hidden="true">✦</span></div>
     <div class="pane active" data-pane="profile">
       <label>Name</label><input type="text" data-f="name" autocomplete="off">
-      <label>Job title</label><input type="text" data-f="title" autocomplete="off">
+      <label>Professional title</label><input type="text" data-f="title" autocomplete="off" placeholder="e.g. Attorney at Law"><div class="hint">Your professional title will appear inside the About Me section, not over the profile photo.</div>
       <label>About me</label><textarea data-f="about"></textarea>
     </div>
 
@@ -112,7 +113,7 @@
         <option value="square">Square profile</option>
         <option value="side">Side-by-side editorial</option>
       </select>
-      <div class="hint">Choose how your profile photo appears. The new Tap-inspired design stays consistent while you switch image templates.</div>
+      <div class="hint">Choose a photo treatment independently of the card layout. Images are automatically cropped responsively; adjust zoom and position to frame any photo.</div>
       <label>Profile photo</label>
       <div class="photo-up">
         <div class="thumb" id="thumb"></div>
@@ -165,8 +166,11 @@
         <option value="stacked">Stacked portrait</option>
         <option value="signature">Signature luxury</option>
         <option value="compact">Compact profile</option>
+        <option value="frame">Framed portrait</option>
+        <option value="banner">Wide banner</option>
+        <option value="portrait-focus">Portrait focus</option>
       </select>
-      <div class="hint">Choose a complete layout. The photo, name, action buttons and content sections rearrange together in the live preview.</div>
+      <div class="hint">Choose a complete card composition. Each layout adapts to portrait, landscape and square photos, with live preview.</div>
       <button class="ghost" id="resetDesign" type="button">↺ Reset design settings</button>
       <div class="row">
         <div><label>Background</label><input type="color" data-t="bg"></div>
@@ -205,12 +209,29 @@
       <label>Corner roundness <span class="val" id="roundV">8px</span></label><input type="range" min="0" max="28" step="1" id="roundness">
       <label>Section spacing <span class="val" id="spaceV">24px</span></label><input type="range" min="12" max="48" step="1" id="sectionSpace">
       <div class="design-note" style="margin-top:14px"><strong>Text layout controls</strong><span>Adjust name and title position directly. Changes appear immediately on the live card.</span></div>
+      <label>Name font family</label>
+      <select id="nameFont">
+        <option value="inherit">Use website font</option>
+        <option value="'DM Sans', sans-serif">DM Sans</option>
+        <option value="'Manrope', sans-serif">Manrope</option>
+        <option value="'Montserrat', sans-serif">Montserrat</option>
+        <option value="'Poppins', sans-serif">Poppins</option>
+        <option value="'Playfair Display', serif">Playfair Display</option>
+        <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+        <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="'Space Grotesk', sans-serif">Space Grotesk</option>
+      </select>
+      <label>Name paragraph layout</label>
+      <select id="nameLayout"><option value="natural">Natural wrap</option><option value="single">Single line (shrink to fit)</option><option value="two">Two-line name</option><option value="stacked">Stack each word</option></select>
       <label>Name alignment</label>
       <select id="nameAlign"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
       <label>Name horizontal position <span class="val" id="nameXV">0px</span></label><input type="range" min="-40" max="40" step="1" id="nameX">
       <label>Name vertical position <span class="val" id="nameYV">0px</span></label><input type="range" min="-80" max="80" step="1" id="nameY">
-      <label>Name size <span class="val" id="nameSizeV">42px</span></label><input type="range" min="24" max="64" step="1" id="nameSize">
-      <label>Job title size <span class="val" id="titleSizeV">15px</span></label><input type="range" min="11" max="24" step="1" id="titleSize">
+      <label>Name size <span class="val" id="nameSizeV">42px</span></label><input type="range" min="20" max="72" step="1" id="nameSize">
+      <label>Name line spacing <span class="val" id="nameLineV">1.0</span></label><input type="range" min="0.8" max="1.5" step="0.05" id="nameLine">
+      <label>Name letter spacing <span class="val" id="nameLetterV">-1px</span></label><input type="range" min="-3" max="5" step="0.5" id="nameLetter">
+      <label>Professional title size <span class="val" id="titleSizeV">15px</span></label><input type="range" min="11" max="24" step="1" id="titleSize">
     </div>
 
     <div class="pane" data-pane="links">
