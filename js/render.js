@@ -2,12 +2,18 @@
 /* ---------- Render ---------- */
 function render() {
   const t = card.theme, r = document.documentElement.style;
-  $('app').classList.remove('layout-classic','layout-centered','layout-minimal','layout-editorial','layout-tap','profile-circle','profile-full','profile-portrait');
+  $('app').classList.remove('layout-classic','layout-centered','layout-minimal','layout-editorial','layout-tap','profile-circle','profile-full','profile-portrait','profile-square','profile-side');
   $('app').classList.add('layout-tap');
-  const imageStyle = ['circle','full','portrait'].includes(card.profileStyle) ? card.profileStyle : 'full';
+  const imageStyle = ['circle','full','portrait','square','side'].includes(card.profileStyle) ? card.profileStyle : 'full';
   $('app').classList.add('profile-' + imageStyle);
-  r.setProperty('--bg', t.bg); r.setProperty('--accent', t.accent);
-  r.setProperty('--ink', t.ink); r.setProperty('--text', t.text); r.setProperty('--font', t.font);
+  r.setProperty('--bg', t.bg || '#050505'); r.setProperty('--accent', t.accent || '#d1d5db');
+  r.setProperty('--ink', t.ink || '#111827'); r.setProperty('--text', t.text || '#ffffff'); r.setProperty('--font', t.font || "'DM Sans', sans-serif");
+  r.setProperty('--surface', t.surface || '#ffffff'); r.setProperty('--section-text', t.sectionText || '#171717'); r.setProperty('--muted', t.muted || '#707070');
+  r.setProperty('--button-bg', t.buttonBg || '#080808'); r.setProperty('--button-text', t.buttonText || '#ffffff'); r.setProperty('--border-color', t.border || '#e9e9e9');
+  r.setProperty('--card-radius', (card.roundness ?? 8) + 'px'); r.setProperty('--section-space', (card.sectionSpace ?? 24) + 'px');
+  r.setProperty('--name-x', (card.nameX || 0) + 'px'); r.setProperty('--name-y', (card.nameY || 0) + 'px');
+  r.setProperty('--name-size', (card.nameSize || 42) + 'px'); r.setProperty('--title-size', (card.titleSize || 15) + 'px');
+  $('name').style.textAlign = card.nameAlign || 'left';
   document.querySelector('meta[name=theme-color]').content = t.bg;
 
   const parts = (card.name || '').trim().split(/\s+/);

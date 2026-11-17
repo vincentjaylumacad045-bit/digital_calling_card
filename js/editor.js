@@ -12,7 +12,7 @@ function syncPhotoControls() {
 }
 function fillForm() {
   document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] || ''));
-  document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t]));
+  document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t] || ({bg:'#050505',accent:'#d1d5db',ink:'#111827',text:'#ffffff',font:"'DM Sans', sans-serif",surface:'#ffffff',sectionText:'#171717',muted:'#707070',buttonBg:'#080808',buttonText:'#ffffff',border:'#e9e9e9'}[i.dataset.t] || '')));
   syncPhotoControls();
   if ($('layoutSelect')) $('layoutSelect').value = 'tap';
   $('profileStyle').value = card.profileStyle || 'full';
@@ -33,6 +33,12 @@ function renderSocialEditor() {
 }
 document.querySelectorAll('[data-f]').forEach((i) => i.addEventListener('input', () => { card[i.dataset.f] = i.value; render(); }));
 document.querySelectorAll('[data-t]').forEach((i) => i.addEventListener('input', () => { card.theme[i.dataset.t] = i.value; render(); }));
+function updateStyleValues() {
+  const pairs = [['roundness','roundV','px'],['sectionSpace','spaceV','px'],['nameX','nameXV','px'],['nameY','nameYV','px'],['nameSize','nameSizeV','px'],['titleSize','titleSizeV','px']];
+  pairs.forEach(([id,out,unit]) => { if ($(id) && $(out)) $(out).textContent = $(id).value + unit; });
+}
+[['roundness','roundness'],['sectionSpace','sectionSpace'],['nameX','nameX'],['nameY','nameY'],['nameSize','nameSize'],['titleSize','titleSize']].forEach(([id,key]) => { if ($(id)) $(id).addEventListener('input', () => { card[key] = +$(id).value; updateStyleValues(); render(); }); });
+if ($('nameAlign')) $('nameAlign').addEventListener('change', () => { card.nameAlign = $('nameAlign').value; render(); });
 if ($('layoutSelect')) $('layoutSelect').addEventListener('change', () => { card.layout = 'tap'; render(); });
 $('profileStyle').addEventListener('change', () => { card.profileStyle = $('profileStyle').value; render(); });
 document.querySelectorAll('[data-theme]').forEach((b) => b.onclick = () => { Object.assign(card.theme, THEMES[b.dataset.theme]); fillForm(); render(); });

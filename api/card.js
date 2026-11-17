@@ -23,7 +23,9 @@ const DEFAULT_CARD = {
     accent: '#c6f432',
     ink: '#0b1437',
     text: '#ffffff',
-    font: "'Poppins', 'Inter', system-ui, sans-serif"
+    font: "'DM Sans', sans-serif",
+    surface: '#ffffff', sectionText: '#171717', muted: '#707070',
+    buttonBg: '#080808', buttonText: '#ffffff', border: '#e9e9e9'
   }
 };
 

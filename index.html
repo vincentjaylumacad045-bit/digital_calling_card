@@ -7,7 +7,7 @@
 <title>Digital Contact Card</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/hero.css">
 <link rel="stylesheet" href="css/sections.css">
@@ -108,6 +108,8 @@
         <option value="full">Full-width cover</option>
         <option value="circle">Circle portrait</option>
         <option value="portrait">Rounded portrait card</option>
+        <option value="square">Square profile</option>
+        <option value="side">Side-by-side editorial</option>
       </select>
       <div class="hint">Choose how your profile photo appears. The new Tap-inspired design stays consistent while you switch image templates.</div>
       <label>Profile photo</label>
@@ -169,7 +171,7 @@
         <div><label>Text on accent</label><input type="color" data-t="ink"></div>
         <div><label>Text on background</label><input type="color" data-t="text"></div>
       </div>
-      <label>Font</label>
+      <label>Font family</label>
       <select data-t="font">
         <option value="'Poppins', system-ui, sans-serif">Modern (Poppins)</option>
         <option value="Georgia, serif">Classic (Georgia)</option>
@@ -181,7 +183,29 @@
         <option value="'Playfair Display', serif">Playfair Display</option>
         <option value="'Roboto Mono', monospace">Roboto Mono</option>
         <option value="'Courier New', monospace">Typewriter</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="'Cormorant Garamond', Georgia, serif">Cormorant Garamond</option>
+        <option value="'Libre Baskerville', Georgia, serif">Libre Baskerville</option>
       </select>
+      <label>Card content background</label><input type="color" data-t="surface">
+      <div class="row">
+        <div><label>Section text</label><input type="color" data-t="sectionText"></div>
+        <div><label>Muted text</label><input type="color" data-t="muted"></div>
+      </div>
+      <div class="row">
+        <div><label>Button color</label><input type="color" data-t="buttonBg"></div>
+        <div><label>Button text</label><input type="color" data-t="buttonText"></div>
+      </div>
+      <label>Border color</label><input type="color" data-t="border">
+      <label>Corner roundness <span class="val" id="roundV">8px</span></label><input type="range" min="0" max="28" step="1" id="roundness">
+      <label>Section spacing <span class="val" id="spaceV">24px</span></label><input type="range" min="12" max="48" step="1" id="sectionSpace">
+      <div class="design-note" style="margin-top:14px"><strong>Text layout controls</strong><span>Adjust name and title position directly. Changes appear immediately on the live card.</span></div>
+      <label>Name alignment</label>
+      <select id="nameAlign"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
+      <label>Name horizontal position <span class="val" id="nameXV">0px</span></label><input type="range" min="-40" max="40" step="1" id="nameX">
+      <label>Name vertical position <span class="val" id="nameYV">0px</span></label><input type="range" min="-80" max="80" step="1" id="nameY">
+      <label>Name size <span class="val" id="nameSizeV">42px</span></label><input type="range" min="24" max="64" step="1" id="nameSize">
+      <label>Job title size <span class="val" id="titleSizeV">15px</span></label><input type="range" min="11" max="24" step="1" id="titleSize">
     </div>
 
     <div class="pane" data-pane="links">
