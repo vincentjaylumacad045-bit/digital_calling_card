@@ -16,7 +16,7 @@ const DEFAULT_CARD = {
     { label: 'Instagram', url: 'https://instagram.com/' }
   ],
   avatar: '',
-  layout: 'centered',
+  layout: 'classic',
   theme: {
     bg: '#0b1437',
     accent: '#c6f432',

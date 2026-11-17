@@ -26,3 +26,17 @@
   .dbtn:hover { background:#27388a; transform:translateY(-3px); }
   .edit:hover { transform:rotate(15deg) scale(1.08); }
 }
+
+
+/* Refined action and contact icon treatment */
+.circle { border:1px solid rgba(255,255,255,.55); background:linear-gradient(145deg,#fff 0%,#eaf6ff 100%); box-shadow:0 10px 24px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.9); }
+.circle svg { width:22px; height:22px; stroke-width:2.1; }
+.row-link .ico { border-radius:14px; box-shadow:0 5px 14px rgba(0,0,0,.14); }
+.row-link .ico svg, .soc svg { width:22px; height:22px; stroke-width:2; }
+.soc { border:1px solid rgba(255,255,255,.22); box-shadow:0 8px 20px rgba(0,0,0,.18); }
+
+/* Minimal, premium section cards */
+.section { border:1px solid rgba(255,255,255,.10); border-radius:14px; box-shadow:none; background:color-mix(in srgb,var(--accent) 92%,transparent); }
+.row-link { border:1px solid rgba(255,255,255,.10); box-shadow:none; border-radius:12px; }
+.row-link .ico { border-radius:10px; }
+.soc { border:1px solid rgba(255,255,255,.14); box-shadow:none; border-radius:14px; }

@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="css/dock.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/editor.css">
+<link rel="stylesheet" href="css/tap-inspired.css">
 </head>
 <body>
 <div class="splash" id="splash"><div class="ring"></div></div>
@@ -101,6 +102,9 @@
         <div class="pv-hint">Drag to move · pinch or scroll to zoom</div>
         <div class="pv-hint" id="pvQ"></div>
       </div>
+      <label>Profile photo style</label>
+      <select id="profileStyle"><option value="circle">Circle portrait</option><option value="full">Full image / cover</option></select>
+      <div class="hint">Circle portrait frames your photo in a round profile. Full image uses your photo as a large cover across the top.</div>
       <label>Profile photo</label>
       <div class="photo-up">
         <div class="thumb" id="thumb"></div>
@@ -111,7 +115,7 @@
       </div>
       <input type="file" accept="image/*" id="avatarFile" hidden>
       <input type="file" accept="image/*" capture="user" id="camFile" hidden>
-      <div class="hint">Resize with the image size slider, drag to reposition, or pinch on touch screens. Use a portrait photo with your face in the upper half. New photos show whole (not zoomed). Small photos are enlarged and sharpened automatically; <b>Best sharpness</b> picks the biggest size that stays crisp.</div>
+      <div class="hint">Resize with the image size slider, drag to reposition, or pinch on touch screens. AI background removal requires a remove.bg API key configured in Vercel (REMOVEBG_API_KEY). Use a portrait photo with your face in the upper half. New photos show whole (not zoomed). Small photos are enlarged and sharpened automatically; <b>Best sharpness</b> picks the biggest size that stays crisp.</div>
       <label>Profile image size / zoom <span class="val" id="zoomV"></span></label><input type="range" min="30" max="400" step="1" id="zoom">
       <label>Move left / right <span class="val" id="posxV"></span></label><input type="range" min="0" max="100" step="1" id="posx">
       <label>Move up / down <span class="val" id="posyV"></span></label><input type="range" min="0" max="100" step="1" id="posy">
@@ -119,6 +123,7 @@
       <label>Brightness <span class="val" id="brightV"></span></label><input type="range" min="60" max="150" step="1" id="bright">
       <label>Contrast <span class="val" id="contrastV"></span></label><input type="range" min="60" max="150" step="1" id="contrast">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+        <button class="primary" id="removeBg" style="grid-column:1/-1">✂ Remove photo background (AI)</button>
         <button class="primary" id="sharpImg" style="grid-column:1/-1">✦ Best sharpness</button>
         <button class="ghost" id="fillImg">⤢ Fill frame</button>
         <button class="ghost" id="resetImg">↺ Fit whole photo</button>
@@ -144,6 +149,7 @@
       </div>
       <label>Layout design</label>
       <select id="layoutSelect">
+        <option value="tap">Tap-inspired / Professional</option>
         <option value="classic">Classic gradient</option>
         <option value="centered">Centered profile</option>
         <option value="minimal">Minimal clean</option>

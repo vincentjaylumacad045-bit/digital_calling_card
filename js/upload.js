@@ -42,11 +42,13 @@ async function shrink(file, max, quality) {
   return new Promise((res, rej) => c.toBlob((bl) => { if (!bl) return rej(new Error('Could not read the image')); bl.srcW = w; bl.srcH = h; res(bl); }, 'image/jpeg', quality));
 }
 let pendingAutoFit = false;
+let lastPhotoBlob = null;
 async function handleFile(file) {
   if (!file) return;
   try {
     toast('Uploading photo…');
     let blob = await shrink(file, 2560, 0.95);
+    lastPhotoBlob = blob;
     if (blob.size > 3.8 * 1024 * 1024) blob = await shrink(file, 2000, 0.88);   // stay under host upload limit
     if (Math.max(blob.srcW, blob.srcH) < 700 && !confirm(`This photo is small (${blob.srcW}×${blob.srcH}px), so it will look blurry.\n\nFor a sharp card, pick the original, bigger photo.\n\nUse this one anyway?`)) { toast('Cancelled — pick a bigger photo', true); return; }
     const r = await fetch('/api/upload', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'image/jpeg' }, body: blob });
@@ -62,3 +64,20 @@ $('pickBtn').onclick = () => $('avatarFile').click();
 $('camBtn').onclick = () => $('camFile').click();
 $('avatarFile').onchange = (e) => { handleFile(e.target.files[0]); e.target.value = ''; };
 $('camFile').onchange = (e) => { handleFile(e.target.files[0]); e.target.value = ''; };
+
+// AI background removal: requires REMOVEBG_API_KEY in Vercel.
+$('removeBg').onclick = async () => {
+  if (!lastPhotoBlob) { toast('Choose a photo first, then remove its background.', true); return; }
+  const btn = $('removeBg'); btn.disabled = true; btn.textContent = 'Removing background…';
+  try {
+    const r = await fetch('/api/remove-background', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'image/jpeg' }, body: lastPhotoBlob });
+    if (!r.ok) { let j = {}; try { j = await r.json(); } catch (_) {} throw new Error(j.error || 'Background removal failed'); }
+    const png = await r.blob();
+    const up = await fetch('/api/upload', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'image/png' }, body: png });
+    const j = await up.json(); if (!up.ok) throw new Error(j.error || 'Could not save transparent image');
+    lastPhotoBlob = png; card.avatar = j.url; card.photoSrcW = 0; card.photoSrcH = 0;
+    card.photoZoom = 100; card.photoX = 50; card.photoY = 0; pendingAutoFit = true;
+    syncPhotoControls(); render(); toast('Background removed ✓ Press Save to publish');
+  } catch (e) { toast(e.message || 'Background removal failed', true); }
+  finally { btn.disabled = false; btn.textContent = '✂ Remove photo background (AI)'; }
+};

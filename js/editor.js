@@ -14,7 +14,8 @@ function fillForm() {
   document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] || ''));
   document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t]));
   syncPhotoControls();
-  $('layoutSelect').value = card.layout || 'centered';
+  $('layoutSelect').value = card.layout || 'tap';
+  $('profileStyle').value = card.profileStyle || 'circle';
   renderSocialEditor();
 }
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -33,6 +34,7 @@ function renderSocialEditor() {
 document.querySelectorAll('[data-f]').forEach((i) => i.addEventListener('input', () => { card[i.dataset.f] = i.value; render(); }));
 document.querySelectorAll('[data-t]').forEach((i) => i.addEventListener('input', () => { card.theme[i.dataset.t] = i.value; render(); }));
 $('layoutSelect').addEventListener('change', () => { card.layout = $('layoutSelect').value; render(); });
+$('profileStyle').addEventListener('change', () => { card.profileStyle = $('profileStyle').value; render(); });
 document.querySelectorAll('[data-theme]').forEach((b) => b.onclick = () => { Object.assign(card.theme, THEMES[b.dataset.theme]); fillForm(); render(); });
 $('addSocial').onclick = () => { card.socials.push({ label: '', url: '' }); renderSocialEditor(); };
 $('clearImg').onclick = () => { card.avatar = ''; render(); toast('Photo removed — press Save to publish'); };

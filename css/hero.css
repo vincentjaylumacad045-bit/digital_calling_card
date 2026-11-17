@@ -72,3 +72,16 @@
 .layout-centered .section { border-radius:22px; }
 .layout-minimal .section { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--text); border-color:color-mix(in srgb,var(--accent) 35%,transparent); box-shadow:none; }
 .layout-editorial .section { border-radius:8px 20px 8px 20px; }
+
+
+/* Cleaner profile presentation and independent portrait framing */
+.grid, .blob { display:none !important; }
+.layout-centered .hero { height:clamp(480px,128vw,535px); }
+.layout-centered .id { bottom:116px; }
+.layout-centered .name { margin-top:0; line-height:1.04; letter-spacing:-1.35px; }
+.layout-centered .actions { bottom:22px; }
+.profile-full .photo { inset:0 0 28% 0 !important; width:auto !important; height:auto !important; transform:none !important; border:0 !important; border-radius:0 !important; box-shadow:none !important; opacity:1 !important; -webkit-mask-image:linear-gradient(#000 68%,transparent 100%) !important; mask-image:linear-gradient(#000 68%,transparent 100%) !important; }
+.profile-full .photo-in { inset:-12px !important; }
+.profile-full.layout-centered .id { bottom:116px; }
+.profile-full.layout-centered .name { text-shadow:0 2px 18px rgba(0,0,0,.18); }
+.profile-circle .photo { border-radius:50%; }

@@ -48,3 +48,7 @@ After that your edit link is `https://yourdomain.com/#edit` and your QR code use
 - **Saving or uploading fails**: the Blob store is not connected to the project. Repeat Step 3, then redeploy.
 - **Edits don't show for visitors**: refresh the page. The card always loads the latest saved version.
 - **Photo looks cropped or blurry**: use a portrait photo (at least 1200 px wide) with your face in the upper half. In the editor, open the Photo tab to drag, zoom and brighten it; the quality line under the preview tells you if it is sharp.
+
+
+### AI background removal (optional)
+Add a `REMOVEBG_API_KEY` environment variable in Vercel Project Settings → Environment Variables. Get the key from remove.bg. The owner must be logged in to use the “Remove photo background (AI)” button. This service may consume remove.bg credits; the feature will show a setup message if the key is missing. Redeploy after adding the variable.

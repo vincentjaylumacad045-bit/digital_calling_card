@@ -31,4 +31,6 @@ Scripts load in the order above (see `index.html`). Corner sizes are set once in
 - Live preview updates while editing. Profile image sizing remains adjustable with the zoom slider, drag positioning, and touch pinch-to-zoom controls.
 
 
-The default public card layout is now **Centered Profile**, so the redesigned appearance is visible immediately on first load (not only after opening the editor). Older saved cards without a layout also fall back to Centered Profile.
+### Recent design updates
+- Minimal section and contact-row borders with reduced shadows.
+- Optional AI photo background removal via remove.bg (requires `REMOVEBG_API_KEY` in Vercel).
