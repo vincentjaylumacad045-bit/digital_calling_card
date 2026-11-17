@@ -11,8 +11,8 @@ function syncPhotoControls() {
   $('brightV').textContent = $('bright').value + '%'; $('contrastV').textContent = $('contrast').value + '%'; $('fadeV').textContent = $('fade').value + '%';
 }
 function fillForm() {
-  document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] || ''));
-  document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t] || ({bg:'#050505',accent:'#d1d5db',ink:'#111827',text:'#ffffff',font:"'DM Sans', sans-serif",surface:'#ffffff',sectionText:'#171717',muted:'#707070',buttonBg:'#080808',buttonText:'#ffffff',border:'#e9e9e9'}[i.dataset.t] || '')));
+  document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] ?? ''));
+  document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t] ?? ({bg:'#050505',accent:'#d1d5db',ink:'#111827',text:'#ffffff',font:"'DM Sans', sans-serif",surface:'#ffffff',sectionText:'#171717',muted:'#707070',buttonBg:'#080808',buttonText:'#ffffff',border:'#e9e9e9'}[i.dataset.t] || '')));
   syncPhotoControls();
   if ($('layoutSelect')) $('layoutSelect').value = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact'].includes(card.layout) ? card.layout : 'tap';
   $('profileStyle').value = card.profileStyle || 'full';
@@ -32,7 +32,7 @@ function renderSocialEditor() {
   });
 }
 document.querySelectorAll('[data-f]').forEach((i) => i.addEventListener('input', () => { card[i.dataset.f] = i.value; render(); }));
-document.querySelectorAll('[data-t]').forEach((i) => i.addEventListener('input', () => { card.theme[i.dataset.t] = i.value; render(); }));
+document.querySelectorAll('[data-t]').forEach((i) => { const update = () => { card.theme[i.dataset.t] = i.value; render(); }; i.addEventListener('input', update); i.addEventListener('change', update); });
 function updateStyleValues() {
   const pairs = [['roundness','roundV','px'],['sectionSpace','spaceV','px'],['nameX','nameXV','px'],['nameY','nameYV','px'],['nameSize','nameSizeV','px'],['titleSize','titleSizeV','px']];
   pairs.forEach(([id,out,unit]) => { if ($(id) && $(out)) $(out).textContent = $(id).value + unit; });

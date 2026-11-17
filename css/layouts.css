@@ -76,3 +76,14 @@
 #app .row-link .ico { display:grid; place-items:center; flex:none; }
 #app .soc { display:grid; place-items:center; transition:transform .18s ease,opacity .18s ease; }
 #app .soc:hover { transform:translateY(-2px); opacity:.86; }
+
+/* Global editor overrides: apply typography, alignment and spacing consistently to EVERY layout. */
+#app .id { transform:translate(var(--name-x,0px),var(--name-y,0px)); }
+#app .name { font-family:var(--font) !important; font-size:clamp(24px,var(--name-size,42px),64px) !important; text-align:inherit; }
+#app .role { font-family:var(--font); font-size:var(--title-size,15px) !important; }
+#app .section { margin-bottom:var(--section-space,24px); }
+#app.layout-tap .name, #app.layout-classic .name, #app.layout-centered .name,
+#app.layout-minimal .name, #app.layout-editorial .name, #app.layout-split .name,
+#app.layout-stacked .name, #app.layout-signature .name, #app.layout-compact .name { text-align:var(--name-align,left); }
+#app .hero { transition:background .25s ease; }
+#app .section, #app .row-link, #app .circle, #app .soc { transition:background-color .2s ease,color .2s ease,border-color .2s ease,border-radius .2s ease; }

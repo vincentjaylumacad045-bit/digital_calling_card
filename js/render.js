@@ -16,7 +16,11 @@ function render() {
   r.setProperty('--name-x', (card.nameX || 0) + 'px'); r.setProperty('--name-y', (card.nameY || 0) + 'px');
   r.setProperty('--name-size', (card.nameSize || 42) + 'px'); r.setProperty('--title-size', (card.titleSize || 15) + 'px');
   $('name').style.textAlign = card.nameAlign || 'left';
-  document.querySelector('meta[name=theme-color]').content = t.bg;
+  $('app').style.setProperty('--name-align', card.nameAlign || 'left');
+  $('name').style.fontFamily = t.font || "'DM Sans', sans-serif";
+  $('name').style.fontSize = (card.nameSize || 42) + 'px';
+  $('title').style.fontSize = (card.titleSize || 15) + 'px';
+  document.querySelector('meta[name=theme-color]').content = t.bg || '#050505';
 
   const parts = (card.name || '').trim().split(/\s+/);
   const first = parts.shift() || '';
@@ -37,9 +41,6 @@ function render() {
   const digits = (s) => (s || '').replace(/[^\d]/g, '');
   const act = (id, val, href) => { const el = $(id); el.classList.toggle('hide', !val); el.href = href; };
   const tel = (card.phone || '').replace(/\s/g, '');
-  act('aPhone', card.phone, 'tel:' + tel);
-  act('aEmail', card.email, 'mailto:' + card.email);
-  act('aSms', card.phone, 'sms:' + tel);
   act('aWa', card.whatsapp, 'https://wa.me/' + digits(card.whatsapp));
 
   const rows = [];

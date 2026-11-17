@@ -1,33 +1,48 @@
-/* js/actions.js */
-$('saveBtn').onclick = async () => {
-  toast('Saving…');
+/* Editor save, dirty-state protection and locking */
+let savedSnapshot = '';
+function currentSnapshot() { return JSON.stringify(card); }
+function markSaved() { savedSnapshot = currentSnapshot(); }
+function hasUnsavedChanges() { return !!savedSnapshot && currentSnapshot() !== savedSnapshot; }
+async function saveCard(showToast = true) {
+  if (showToast) toast('Saving…');
   try {
     const r = await fetch('/api/card', { method: 'POST', headers: { 'x-admin-password': password, 'content-type': 'application/json' }, body: JSON.stringify(card) });
     const j = await r.json();
-    if (r.ok) toast('Saved! Your live card is updated ✓'); else toast('Error: ' + (j.error || 'could not save'), true);
-  } catch (e) { toast('No connection. Try again.', true); }
-};
-
-/* Open / close the editor sheet */
+    if (!r.ok) { toast('Error: ' + (j.error || 'could not save'), true); return false; }
+    markSaved(); if (showToast) toast('Saved! Your live card is updated ✓'); return true;
+  } catch (e) { if (showToast) toast('No connection. Try again.', true); return false; }
+}
+$('saveBtn').onclick = () => saveCard(true);
 function openPanel() {
-  fillForm();
+  fillForm(); markSaved();
   document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
   $('panel').classList.add('open'); document.body.classList.add('editing'); scrollTo(0, 0);
 }
 function closePanel() {
-  $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full');
+  if (hasUnsavedChanges()) {
+    const choice = confirm('You have unsaved changes. Save before exiting the editor?');
+    if (!choice) return;
+    saveCard(true).then((ok) => { if (ok) finishClose(); }); return;
+  }
+  finishClose();
 }
-function toggleFull() {
-  const full = $('panel').classList.toggle('full'); document.body.classList.toggle('sheet-full', full);
-}
+function finishClose() { $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full'); }
+function toggleFull() { const full = $('panel').classList.toggle('full'); document.body.classList.toggle('sheet-full', full); }
 $('closePanel').onclick = closePanel;
 $('expand').onclick = toggleFull;
 $('handle').onclick = toggleFull;
-$('lockBtn').onclick = () => {
+async function lockEditor() {
+  if (hasUnsavedChanges()) {
+    if (!confirm('Save your changes and lock the editor?')) return;
+    const ok = await saveCard(true); if (!ok) return;
+  }
   localStorage.removeItem('owner'); sessionStorage.removeItem('adminpw'); password = '';
-  closePanel(); applyOwner(); toast('Editor locked on this device');
-};
-
+  finishClose(); applyOwner(); toast('Changes saved. Editor locked.');
+}
+$('lockBtn').onclick = lockEditor;
+// Lock action is available from the editor header/footer even when another tab is selected.
+if ($('lockBtnTop')) $('lockBtnTop').onclick = lockEditor;
+addEventListener('beforeunload', (e) => { if ($('panel')?.classList.contains('open') && hasUnsavedChanges()) { e.preventDefault(); e.returnValue = ''; } });
 function askLogin() { $('login').classList.add('show'); setTimeout(() => $('pw').focus(), 300); }
 $('editBtn').onclick = () => (password ? openPanel() : askLogin());
 $('loginCancel').onclick = () => $('login').classList.remove('show');

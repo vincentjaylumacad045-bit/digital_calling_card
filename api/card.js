@@ -40,6 +40,10 @@ function authorized(req) {
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
   // Anyone can VIEW the card
   if (req.method === 'GET') {
@@ -65,6 +69,14 @@ export default async function handler(req, res) {
     if (req.query.verify) return res.status(200).json({ ok: true });
     try {
       const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      if (!data || typeof data !== 'object' || Array.isArray(data)) return res.status(400).json({ error: 'Invalid card data' });
+      const serialized = JSON.stringify(data);
+      if (serialized.length > 500000) return res.status(413).json({ error: 'Card data is too large' });
+      const allowedLayouts = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact'];
+      const allowedProfiles = ['circle','full','portrait','square','side'];
+      if (data.layout && !allowedLayouts.includes(data.layout)) return res.status(400).json({ error: 'Invalid layout' });
+      if (data.profileStyle && !allowedProfiles.includes(data.profileStyle)) return res.status(400).json({ error: 'Invalid profile image style' });
+      if (data.theme && (typeof data.theme !== 'object' || Array.isArray(data.theme))) return res.status(400).json({ error: 'Invalid theme settings' });
       await put('card.json', JSON.stringify(data), {
         access: 'public',
         addRandomSuffix: false,
