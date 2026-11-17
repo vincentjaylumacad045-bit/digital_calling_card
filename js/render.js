@@ -41,7 +41,6 @@ function render() {
   const digits = (s) => (s || '').replace(/[^\d]/g, '');
   const act = (id, val, href) => { const el = $(id); el.classList.toggle('hide', !val); el.href = href; };
   const tel = (card.phone || '').replace(/\s/g, '');
-  act('aWa', card.whatsapp, 'https://wa.me/' + digits(card.whatsapp));
 
   const rows = [];
   if (card.phone) rows.push(['phone', 'Phone', card.phone, 'tel:' + tel]);
