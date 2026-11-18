@@ -46,13 +46,18 @@
 .copy.done { background:var(--accent); color:var(--ink); border-color:var(--accent); }
 @media (hover:hover) { .row-link:hover { border-color:color-mix(in srgb,var(--s-text) 30%,transparent); transform:translateX(3px); } .copy:hover { color:var(--s-text); border-color:color-mix(in srgb,var(--s-text) 30%,transparent); } }
 
-/* Links */
-.socials { display:flex; flex-wrap:wrap; gap:8px; }
-.soc { display:inline-flex; align-items:center; gap:10px; padding:11px 18px 11px 14px; border-radius:99px; background:var(--button-bg); color:var(--button-text);
-  text-decoration:none; font-size:.9rem; font-weight:650; transition:transform .4s var(--spring); }
-.soc svg { width:19px; height:19px; }
-.soc:active { transform:scale(.94); }
-@media (hover:hover) { .soc:hover { transform:translateY(-3px) rotate(-1.5deg); } }
+/* Links: a tidy list, one row per link */
+.socials { display:flex; flex-direction:column; gap:8px; }
+.soc { display:flex; align-items:center; gap:14px; padding:11px 12px 11px 11px; min-height:62px; border-radius:var(--card-radius); background:var(--s-soft); border:1px solid var(--s-line); color:var(--s-text); text-decoration:none;
+  transition:transform .35s var(--spring), border-color .2s, background .2s; }
+.soc .ico { width:40px; height:40px; border-radius:calc(var(--card-radius) * .7 + 3px); display:grid; place-items:center; flex:none; background:var(--button-bg); color:var(--button-text); }
+.soc .txt { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.soc b { font-size:.96rem; font-weight:650; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.soc small { font-size:.74rem; color:var(--s-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.soc .go { width:30px; height:30px; flex:none; display:grid; place-items:center; border-radius:50%; color:var(--s-muted); transition:transform .35s var(--spring), background .2s, color .2s; }
+.soc .go svg { width:18px; height:18px; }
+.soc:active { transform:scale(.985); }
+@media (hover:hover) { .soc:hover { border-color:color-mix(in srgb,var(--s-text) 30%,transparent); } .soc:hover .go { background:var(--accent); color:var(--ink); transform:translateX(3px); } }
 .foot { padding:26px 0 0; text-align:center; font-size:.74rem; color:var(--s-muted); opacity:.8; }
 
 /* Sticky mini header */

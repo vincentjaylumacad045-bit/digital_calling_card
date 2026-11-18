@@ -13,8 +13,8 @@ api/         card.js (read/save card) · upload.js (photo upload)
 ```
 
 ## Design (v2)
-- **Six layouts:** Studio, Cards, Editorial, Minimal, Poster, Compact. Cards saved with older layout names are mapped automatically.
-- **Five photo shapes** (Full, Circle, Portrait, Square, Side) that work with every layout.
+- **Ten layouts:** Studio, Cards, Editorial, Minimal, Poster, Compact, Glass, Duo, Story, Bento. Cards saved with older layout names are mapped automatically.
+- **Ten photo shapes** (Full, Circle, Portrait, Square, Side, Arch, Hexagon, Organic, Polaroid, Wide) that work with every layout.
 - **Motion:** one orchestrated intro (curtain, photo reveal, name rise, quick-action pop, sheet slide-up), scroll-linked header, sticky mini header, view-transition morphs when switching layout/theme. Set to Cinematic / Subtle / Off in the editor; reduced-motion is always respected.
 - **Quick actions** (Call, WhatsApp, Email, Directions, Website), copy buttons on every contact row, Highlights badges.
 

@@ -189,8 +189,9 @@ $('app').addEventListener('click', (e) => {
 
 /* ===== Visitor preview ===== */
 function setPreview(on) {
-  document.body.classList.toggle('previewing', on);
-  if (on) { document.querySelectorAll('.section').forEach((el) => el.classList.add('in')); scrollTo({ top: 0 }); }
+  if (on === document.body.classList.contains('previewing')) return;
+  holdScroll(() => document.body.classList.toggle('previewing', on));
+  if (on) document.querySelectorAll('.section').forEach((el) => el.classList.add('in'));
   const reflow = () => { if (typeof layoutPhoto === 'function') layoutPhoto(); }; setTimeout(reflow, 60); setTimeout(reflow, 400);
 }
 $('previewBtn').onclick = () => setPreview(true);

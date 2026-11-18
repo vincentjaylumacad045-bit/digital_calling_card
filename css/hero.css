@@ -40,21 +40,30 @@
 .role::before { content:''; width:22px; height:2px; border-radius:2px; background:var(--accent); flex:none; }
 
 /* ----- Other photo shapes: the header becomes a flowing stack so long names never collide with the photo ----- */
-.profile-circle .hero, .profile-portrait .hero, .profile-square .hero, .profile-side .hero {
+.profile-flow .hero {
   height:auto; display:flex; flex-direction:column; gap:24px; padding:calc(env(safe-area-inset-top) + 36px) var(--pad) calc(var(--overlap) + 30px); }
-.profile-circle .photo, .profile-portrait .photo, .profile-square .photo, .profile-side .photo { position:relative; inset:auto; flex:none; }
-.profile-circle .id, .profile-portrait .id, .profile-square .id, .profile-side .id { position:relative; inset:auto; opacity:1; transform:translate(var(--name-x,0px),var(--name-y,0px)); }
-.profile-circle .initials, .profile-portrait .initials, .profile-square .initials, .profile-side .initials { display:none; }
+.profile-flow .photo { position:relative; inset:auto; flex:none; }
+.profile-flow .id { position:relative; inset:auto; opacity:1; transform:translate(var(--name-x,0px),var(--name-y,0px)); }
+.profile-flow .initials { display:none; }
 .profile-circle .photo { --pd:clamp(176px,54vw,230px); width:var(--pd); height:var(--pd); margin:0 auto; border-radius:50%;
   box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 85%,transparent),0 30px 60px -18px rgba(0,0,0,.6); }
 .profile-portrait .photo { width:100%; aspect-ratio:4/4.6; border-radius:calc(var(--card-radius) * 1.5 + 6px); box-shadow:0 30px 60px -22px rgba(0,0,0,.6); }
 .profile-square .photo { width:min(72%,270px); aspect-ratio:1; margin:0 auto; border-radius:calc(var(--card-radius) * 1.4 + 4px); box-shadow:0 30px 60px -22px rgba(0,0,0,.6); }
-.profile-circle, .profile-square { --align:center; --role-j:center; }
-.profile-circle .role::before, .profile-square .role::before { display:none; }
+.profile-circle, .profile-square, .profile-arch, .profile-hexagon, .profile-blob, .profile-polaroid { --align:center; --role-j:center; }
+.profile-circle .role::before, .profile-square .role::before, .profile-arch .role::before, .profile-hexagon .role::before, .profile-blob .role::before, .profile-polaroid .role::before { display:none; }
 .profile-side .hero { display:grid; grid-template-columns:minmax(0,1fr) 42%; align-items:end; column-gap:16px; padding-top:calc(env(safe-area-inset-top) + 44px); }
 .profile-side .photo { grid-column:2; grid-row:1; aspect-ratio:3/4.1; border-radius:calc(var(--card-radius) * 1.3 + 4px); box-shadow:0 26px 54px -20px rgba(0,0,0,.6); }
 .profile-side .id { grid-column:1; grid-row:1; align-self:end; }
 .profile-side .name { font-size:min(var(--name-size,var(--name-size-default,clamp(2.3rem,11vw,3.1rem))),11vw); }
+
+/* ----- More photo shapes ----- */
+.profile-arch .photo { width:min(76%,290px); aspect-ratio:3/3.9; margin:0 auto; border-radius:999px 999px calc(var(--card-radius) * 1.2 + 4px) calc(var(--card-radius) * 1.2 + 4px); box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 85%,transparent),0 30px 60px -20px rgba(0,0,0,.6); }
+.profile-hexagon .photo { width:min(74%,280px); aspect-ratio:1/1.1; margin:0 auto; overflow:visible; filter:drop-shadow(0 24px 30px rgba(0,0,0,.45)); }
+.profile-hexagon .photo-in { clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); background:color-mix(in srgb,var(--accent) 35%,var(--bg)); }
+.profile-blob .photo { width:min(76%,285px); aspect-ratio:1; margin:0 auto; border-radius:42% 58% 55% 45% / 48% 42% 58% 52%; box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 85%,transparent),0 30px 60px -20px rgba(0,0,0,.6); }
+.profile-polaroid .photo { width:min(78%,290px); aspect-ratio:.84; margin:0 auto; border-radius:6px; background:#fff; transform:rotate(-3deg); box-shadow:0 30px 60px -20px rgba(0,0,0,.65); }
+.profile-polaroid .photo-in { inset:11px 11px 46px 11px; background:#d9dde6; }
+.profile-wide .photo { width:100%; aspect-ratio:16/10.5; border-radius:calc(var(--card-radius) * 1.4 + 4px); box-shadow:0 30px 60px -22px rgba(0,0,0,.6); }
 
 /* ----- The intro: one orchestrated sequence, run once per visit (body.intro is removed after it plays) ----- */
 .intro .motion-cinematic .photo { animation:photoReveal 1.25s var(--out-expo) .2s both; }

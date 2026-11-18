@@ -14,12 +14,22 @@ async function saveCard(showToast = true) {
   } catch (e) { if (showToast) toast('No connection. Try again.', true); return false; }
 }
 $('saveBtn').onclick = () => saveCard(true);
+/* Keep the card where the visitor was looking when the editor opens or closes (phones zoom the card out while editing) */
+function holdScroll(change) {
+  const probe = document.elementFromPoint(innerWidth / 2, 110), anchor = probe && probe.closest('.section,.quick,.hero,.foot');
+  const before = anchor ? anchor.getBoundingClientRect().top : 0, ratio = scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight);
+  change(); void document.body.offsetHeight;
+  const html = document.documentElement, prev = html.style.scrollBehavior; html.style.scrollBehavior = 'auto';
+  if (anchor) scrollBy(0, anchor.getBoundingClientRect().top - before);
+  else scrollTo(0, ratio * Math.max(0, html.scrollHeight - innerHeight));
+  html.style.scrollBehavior = prev;
+}
 function openPanel() {
   card.theme = { ...THEME_FALLBACK, ...(card.theme || {}) };
-  markSaved(); document.body.classList.add('editing'); document.body.classList.remove('scrolled');
-  fillForm(); historyReset(); updateStatus(); checkDraft();
+  markSaved(); fillForm();
   document.querySelectorAll('.section').forEach((el) => el.classList.add('in'));
-  $('panel').classList.add('open'); scrollTo(0, 0);
+  holdScroll(() => { document.body.classList.add('editing'); document.body.classList.remove('scrolled'); $('panel').classList.add('open'); });
+  historyReset(); updateStatus(); checkDraft();
   setTimeout(() => { if (typeof layoutPhoto === 'function') layoutPhoto(); }, 80);
 }
 function closePanel() {
@@ -29,7 +39,7 @@ function closePanel() {
   }
   finishClose();
 }
-function finishClose() { setPreview(false); $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full'); }
+function finishClose() { setPreview(false); holdScroll(() => { $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full'); }); }
 function toggleFull() { const full = $('panel').classList.toggle('full'); document.body.classList.toggle('sheet-full', full); }
 $('closePanel').onclick = closePanel;
 $('expand').onclick = toggleFull;

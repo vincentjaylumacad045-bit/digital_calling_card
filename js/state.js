@@ -32,12 +32,16 @@ const LAYOUTS = [
   { id:'editorial', name:'Editorial', hint:'Large serif name, hairlines, and label-and-value rows.' },
   { id:'minimal', name:'Minimal', hint:'One continuous page with no boxes. Calm and quiet.' },
   { id:'poster', name:'Poster', hint:'Loud type on your accent color with an angled photo edge.' },
-  { id:'compact', name:'Compact', hint:'Small portrait beside your name. Contact details come first.' }
+  { id:'compact', name:'Compact', hint:'Small portrait beside your name. Contact details come first.' },
+  { id:'glass', name:'Glass', hint:'Your photo stays fixed while frosted panels slide over it.' },
+  { id:'duo', name:'Duo', hint:'Two-tone header with the portrait sitting on the color break.' },
+  { id:'story', name:'Story', hint:'Tall, full-screen photo with your quick actions floating on it.' },
+  { id:'bento', name:'Bento', hint:'A big call button beside tidy tiles. Modern and tactile.' }
 ];
 /* Layout names saved by older versions map onto the new set so existing cards keep working */
 const LEGACY_LAYOUTS = { classic:'cards', centered:'cards', split:'editorial', stacked:'cards', signature:'editorial', frame:'cards', banner:'tap', 'portrait-focus':'tap' };
 const normLayout = (l) => (LAYOUTS.some((x) => x.id === l) ? l : (LEGACY_LAYOUTS[l] || 'tap'));
-const PROFILE_STYLES = ['full', 'circle', 'portrait', 'square', 'side'];
+const PROFILE_STYLES = ['full', 'circle', 'portrait', 'square', 'side', 'arch', 'hexagon', 'blob', 'polaroid', 'wide'];
 
 /* ---------- Sections and quick actions ---------- */
 const SECTION_DEFS = [

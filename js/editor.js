@@ -11,6 +11,13 @@ function syncPhotoControls() {
   $('brightV').textContent = $('bright').value + '%'; $('contrastV').textContent = $('contrast').value + '%'; $('fadeV').textContent = $('fade').value + '%';
 }
 
+/* When the frame changes shape, fill it with the photo (unless the owner already zoomed in themselves) so no empty bars show */
+function autoFrame() {
+  setTimeout(() => {
+    if (!card.avatar) return; const g = photoGeom(); if (!g || (card.photoZoom || 100) > 100 || g.fill <= 1.02) return;
+    card.photoZoom = Math.min(400, Math.ceil(g.fill * 100)); card.photoX = 50; card.photoY = 0; syncPhotoControls(); renderPhoto();
+  }, 200);
+}
 /* ===== Layout picker (thumbnails drawn as tiny wireframes) ===== */
 const LAYOUT_THUMBS = {
   tap: '<rect width="60" height="80" fill="#2c3b5e"/><rect y="38" width="60" height="42" rx="7" fill="#fff"/><rect x="6" y="26" width="30" height="5" rx="2" fill="#fff"/><rect x="6" y="44" width="10" height="9" rx="2" fill="#dfe5ef"/><rect x="19" y="44" width="10" height="9" rx="2" fill="#dfe5ef"/><rect x="32" y="44" width="10" height="9" rx="2" fill="#dfe5ef"/><rect x="45" y="44" width="10" height="9" rx="2" fill="#dfe5ef"/><rect x="6" y="59" width="40" height="3" rx="1.5" fill="#c9d1de"/><rect x="6" y="66" width="32" height="3" rx="1.5" fill="#dfe5ef"/>',
@@ -18,6 +25,10 @@ const LAYOUT_THUMBS = {
   editorial: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="38" fill="#c3cbd9"/><rect x="5" y="42" width="38" height="7" rx="2" fill="#172033"/><rect x="5" y="55" width="10" height="2.5" rx="1" fill="#8f9bb0"/><rect x="20" y="55" width="34" height="2.5" rx="1" fill="#c9d1de"/><rect x="5" y="62" width="50" height=".8" fill="#dfe5ef"/><rect x="5" y="66" width="10" height="2.5" rx="1" fill="#8f9bb0"/><rect x="20" y="66" width="30" height="2.5" rx="1" fill="#c9d1de"/><rect x="5" y="73" width="50" height=".8" fill="#dfe5ef"/>',
   minimal: '<rect width="60" height="80" fill="#10192e"/><rect width="60" height="40" fill="#24324f" opacity=".7"/><rect x="6" y="30" width="26" height="5" rx="2" fill="#fff"/><circle cx="12" cy="48" r="4" fill="none" stroke="#6d7ea1"/><circle cx="25" cy="48" r="4" fill="none" stroke="#6d7ea1"/><circle cx="38" cy="48" r="4" fill="none" stroke="#6d7ea1"/><rect x="6" y="60" width="44" height="2.5" rx="1" fill="#34456a"/><rect x="6" y="67" width="34" height="2.5" rx="1" fill="#34456a"/>',
   poster: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="50" fill="#c6f432"/><rect y="12" width="60" height="28" fill="#2c3b5e"/><polygon points="0,40 60,32 60,50 0,50" fill="#c6f432"/><rect x="5" y="39" width="36" height="9" rx="1.5" fill="#0b1437"/><rect x="5" y="56" width="22" height="9" rx="2" fill="#e8edf5"/><rect x="31" y="56" width="22" height="9" rx="2" fill="#e8edf5"/><rect x="5" y="69" width="48" height="3" rx="1.5" fill="#c9d1de"/>',
+  glass: '<rect width="60" height="80" fill="#2c3b5e"/><circle cx="38" cy="22" r="11" fill="#4a5d86"/><rect x="5" y="30" width="30" height="5" rx="2" fill="#fff"/><rect x="5" y="44" width="50" height="14" rx="4" fill="#fff" opacity=".28"/><rect x="5" y="61" width="50" height="14" rx="4" fill="#fff" opacity=".28"/>',
+  duo: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="26" fill="#c6f432"/><circle cx="30" cy="25" r="13" fill="#2c3b5e" stroke="#fff" stroke-width="3"/><rect x="14" y="43" width="32" height="5" rx="2" fill="#172033"/><rect x="6" y="54" width="22" height="7" rx="3.5" fill="#e8edf5"/><rect x="32" y="54" width="22" height="7" rx="3.5" fill="#e8edf5"/><rect x="6" y="66" width="48" height="3" rx="1.5" fill="#c9d1de"/>',
+  story: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="62" fill="#2c3b5e"/><rect x="5" y="36" width="34" height="6" rx="2" fill="#fff"/><rect x="5" y="49" width="10" height="9" rx="2.5" fill="#fff" opacity=".4"/><rect x="18" y="49" width="10" height="9" rx="2.5" fill="#fff" opacity=".4"/><rect x="31" y="49" width="10" height="9" rx="2.5" fill="#fff" opacity=".4"/><rect x="44" y="49" width="10" height="9" rx="2.5" fill="#fff" opacity=".4"/><rect y="62" width="60" height="18" rx="6" fill="#fff"/>',
+  bento: '<rect width="60" height="80" fill="#1d2a4a"/><rect width="60" height="26" fill="#2c3b5e"/><rect x="5" y="16" width="26" height="5" rx="2" fill="#fff"/><rect x="5" y="31" width="26" height="22" rx="4" fill="#c6f432"/><rect x="34" y="31" width="21" height="10" rx="3" fill="#fff"/><rect x="34" y="43" width="21" height="10" rx="3" fill="#fff"/><rect x="5" y="56" width="50" height="9" rx="4" fill="#fff"/><rect x="5" y="68" width="50" height="9" rx="4" fill="#fff"/>',
   compact: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="26" fill="#2c3b5e"/><circle cx="14" cy="13" r="7" fill="#c9d1de"/><rect x="25" y="9" width="26" height="4.5" rx="2" fill="#fff"/><rect x="25" y="16" width="18" height="2.5" rx="1" fill="#8f9bb0"/><rect x="5" y="32" width="50" height="11" rx="3" fill="#eef1f6"/><rect x="5" y="46" width="50" height="11" rx="3" fill="#eef1f6"/><rect x="5" y="60" width="50" height="11" rx="3" fill="#eef1f6"/>'
 };
 function renderLayoutPicker() {
@@ -25,7 +36,7 @@ function renderLayoutPicker() {
   LAYOUTS.forEach((l) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'lay-opt'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', l.id === cur);
     b.innerHTML = `<svg viewBox="0 0 60 80" aria-hidden="true">${LAYOUT_THUMBS[l.id]}</svg><span>${l.name}</span>`;
-    b.onclick = () => { card.layout = l.id; withTransition(render); renderLayoutPicker(); };
+    b.onclick = () => { card.layout = l.id; withTransition(render); renderLayoutPicker(); autoFrame(); };
     box.appendChild(b);
   });
   $('layHint').textContent = (LAYOUTS.find((l) => l.id === cur) || LAYOUTS[0]).hint;
@@ -112,13 +123,18 @@ function fillForm() {
 /* ===== Links ===== */
 function renderSocialEditor() {
   const box = $('socialEditor'); box.innerHTML = '';
+  if (!card.socials.length) { box.innerHTML = '<div class="empty-links">No links yet. Add one below or tap a network.</div>'; return; }
   card.socials.forEach((s, idx) => {
     const row = document.createElement('div'); row.className = 'social-row';
-    row.innerHTML = `<input type="text" placeholder="Name" aria-label="Link name" value="${esc(s.label)}"><input type="text" inputmode="url" autocapitalize="off" placeholder="https://..." aria-label="Link address" value="${esc(s.url)}"><button type="button" aria-label="Remove link">${svg('close')}</button>`;
-    const [l, u, x] = row.children;
-    l.oninput = () => { s.label = l.value; render(); };
-    u.oninput = () => { s.url = u.value; render(); };
-    x.onclick = () => { card.socials.splice(idx, 1); renderSocialEditor(); render(); };
+    row.innerHTML = `<span class="s-ico">${svg(socialIcon(s))}</span><div class="s-fields"><input type="text" placeholder="Name, e.g. Instagram" aria-label="Link name" value="${esc(s.label)}"><input type="text" inputmode="url" autocapitalize="off" placeholder="https://..." aria-label="Link address" value="${esc(s.url)}"></div><div class="s-tools"></div>`;
+    const [ico, fields, tools] = row.children, [l, u] = fields.children;
+    const refreshIcon = () => { ico.innerHTML = svg(socialIcon(s)); };
+    l.oninput = () => { s.label = l.value; refreshIcon(); render(); };
+    u.oninput = () => { s.url = u.value; refreshIcon(); render(); };
+    const mk = (icon, label, fn, off) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', label); b.title = label; b.innerHTML = svg(icon); b.disabled = !!off; b.onclick = fn; tools.appendChild(b); };
+    const move = (d) => { const j = idx + d; [card.socials[idx], card.socials[j]] = [card.socials[j], card.socials[idx]]; renderSocialEditor(); render(); };
+    mk('up', 'Move link up', () => move(-1), idx === 0); mk('down', 'Move link down', () => move(1), idx === card.socials.length - 1);
+    mk('close', 'Remove link', () => { card.socials.splice(idx, 1); renderSocialEditor(); render(); });
     box.appendChild(row);
   });
 }
@@ -145,7 +161,7 @@ document.querySelectorAll('[data-t]').forEach((i) => {
 $('nameFont').addEventListener('change', () => { card.nameFont = $('nameFont').value; render(); renderPairs(); });
 $('nameLayout').addEventListener('change', () => { card.nameLayout = $('nameLayout').value; render(); });
 $('titlePlace').addEventListener('change', () => { card.titlePlacement = $('titlePlace').value; withTransition(render); });
-document.querySelectorAll('#shapePick [data-shape]').forEach((b) => b.onclick = () => { card.profileStyle = b.dataset.shape; withTransition(render); renderShapePick(); });
+document.querySelectorAll('#shapePick [data-shape]').forEach((b) => b.onclick = () => { card.profileStyle = b.dataset.shape; withTransition(render); renderShapePick(); autoFrame(); });
 document.querySelectorAll('#motionSeg [data-motion]').forEach((b) => b.onclick = () => { card.motion = b.dataset.motion; render(); renderSegs(); if (card.motion !== 'off') replayIntro(); });
 document.querySelectorAll('#alignSeg [data-align]').forEach((b) => b.onclick = () => { if (b.dataset.align === 'auto') delete card.nameAlign; else card.nameAlign = b.dataset.align; render(); renderSegs(); });
 $('matchPhoto').onclick = paletteFromPhoto;

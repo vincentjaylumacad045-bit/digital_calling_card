@@ -73,7 +73,8 @@ function render() {
   /* Template classes: remove every previous one first so layouts never stack */
   [...app.classList].forEach((c) => { if (/^(layout|profile|motion)-/.test(c)) app.classList.remove(c); });
   app.classList.add('layout-' + normLayout(card.layout));
-  app.classList.add('profile-' + (PROFILE_STYLES.includes(card.profileStyle) ? card.profileStyle : 'full'));
+  const shape = PROFILE_STYLES.includes(card.profileStyle) ? card.profileStyle : 'full';
+  app.classList.add('profile-' + shape); if (shape !== 'full') app.classList.add('profile-flow');
   app.classList.add('motion-' + (['cinematic', 'subtle', 'off'].includes(card.motion) ? card.motion : 'cinematic'));
   app.classList.toggle('title-in-about', card.titlePlacement === 'about');
 
@@ -124,9 +125,15 @@ function render() {
   links.forEach((s) => {
     const a = document.createElement('a'); a.className = 'soc'; a.target = '_blank'; a.rel = 'noopener';
     a.href = /^https?:\/\//i.test(s.url) ? s.url : 'https://' + s.url;
-    let name = s.label; if (!name) { try { name = new URL(a.href).hostname.replace(/^www\./, ''); } catch (e) { name = 'Link'; } }
-    a.innerHTML = svg(socialIcon(s)); const sp = document.createElement('span'); sp.textContent = name; a.appendChild(sp);
-    $('socials').appendChild(a);
+    let host = '', handle = '';
+    try { const u = new URL(a.href); host = u.hostname.replace(/^www\./, ''); handle = (host + u.pathname).replace(/\/$/, ''); } catch (e) { handle = s.url; }
+    const ico = document.createElement('span'); ico.className = 'ico'; ico.innerHTML = svg(socialIcon(s));
+    const txt = document.createElement('span'); txt.className = 'txt';
+    const b = document.createElement('b'); b.textContent = s.label || host || 'Link';
+    const sm = document.createElement('small'); sm.textContent = handle;
+    txt.append(b, sm);
+    const go = document.createElement('span'); go.className = 'go'; go.innerHTML = svg('chevron');
+    a.append(ico, txt, go); $('socials').appendChild(a);
   });
 
   /* Sections: owner-controlled order and visibility, hidden when empty */

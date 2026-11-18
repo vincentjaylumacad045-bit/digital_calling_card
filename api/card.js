@@ -72,8 +72,8 @@ export default async function handler(req, res) {
       if (!data || typeof data !== 'object' || Array.isArray(data)) return res.status(400).json({ error: 'Invalid card data' });
       const serialized = JSON.stringify(data);
       if (serialized.length > 500000) return res.status(413).json({ error: 'Card data is too large' });
-      const allowedLayouts = ['tap','cards','editorial','minimal','poster','compact','classic','centered','split','stacked','signature','frame','banner','portrait-focus'];
-      const allowedProfiles = ['circle','full','portrait','square','side'];
+      const allowedLayouts = ['tap','cards','editorial','minimal','poster','compact','classic','centered','split','stacked','signature','frame','banner','portrait-focus','glass','duo','story','bento'];
+      const allowedProfiles = ['circle','full','portrait','square','side','arch','hexagon','blob','polaroid','wide'];
       if (data.layout && !allowedLayouts.includes(data.layout)) return res.status(400).json({ error: 'Invalid layout' });
       if (data.profileStyle && !allowedProfiles.includes(data.profileStyle)) return res.status(400).json({ error: 'Invalid profile image style' });
       if (data.motion && !['cinematic','subtle','off'].includes(data.motion)) return res.status(400).json({ error: 'Invalid motion setting' });

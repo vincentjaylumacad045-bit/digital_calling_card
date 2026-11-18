@@ -80,12 +80,14 @@
 .thumb { width:84px; height:84px; flex:none; border-radius:12px; border:1px solid #e3e8ef; background:#eef0f4 center/cover no-repeat; }
 .photo-btns { flex:1; display:flex; flex-direction:column; gap:8px; }
 .shape-pick { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+@media (max-width:360px) { .shape-pick { grid-template-columns:repeat(4,1fr); } }
 .shape-pick button { display:flex; flex-direction:column; align-items:center; gap:5px; min-height:64px !important; padding:8px 2px !important; background:#fff; color:#6b7689; border:1px solid #dde2ea !important; font-size:.66rem !important; }
 .pbody .shape-pick svg { width:28px; height:28px; fill:currentColor; opacity:.9; }
 .shape-pick button[aria-checked="true"] { background:#172033; color:#fff; border-color:#172033 !important; box-shadow:0 6px 14px rgba(23,32,51,.22); }
 
 /* Layout picker */
 .lay-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+@media (min-width:701px) { .lay-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
 .lay-opt { display:flex; flex-direction:column; align-items:center; gap:7px; padding:8px 6px 9px !important; min-height:0 !important; background:#fff; border:1.5px solid #e2e7ee !important; color:#526076; font-size:.72rem !important; border-radius:14px !important; }
 .pbody .lay-opt svg { width:100%; height:auto; aspect-ratio:3/4; border-radius:8px; background:#f0f3f8; display:block; }
 .lay-opt[aria-checked="true"] { border-color:#172033 !important; color:#172033; box-shadow:0 0 0 3px rgba(23,32,51,.1); }
@@ -138,10 +140,16 @@
 .design-note span { color:#8792a3; font-size:.72rem; line-height:1.45; }
 
 /* Links */
-.social-row { display:flex; gap:6px; margin-top:8px; padding:8px; border:1px solid var(--e-line); border-radius:14px; background:#fff; }
-.social-row input { flex:1; min-width:0; min-height:40px !important; padding:8px 10px !important; font-size:15px !important; border-radius:10px !important; }
-.social-row input:first-child { max-width:34%; }
-.pbody .social-row button { width:40px; flex:none; padding:0; background:#f3f5f9; color:#526076; }
+.social-row { display:flex; align-items:center; gap:10px; margin-top:8px; padding:10px; border:1px solid var(--e-line); border-radius:16px; background:#fff; }
+.s-ico { width:42px; height:42px; flex:none; display:grid; place-items:center; border-radius:12px; background:#172033; color:#fff; }
+.s-ico svg { width:20px; height:20px; }
+.s-fields { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
+.social-row input { width:100%; min-width:0; min-height:38px !important; padding:7px 10px !important; font-size:15px !important; border-radius:10px !important; }
+.s-tools { display:flex; flex-direction:column; gap:4px; flex:none; }
+.pbody .s-tools button { width:32px; min-height:0; height:26px; padding:0; border-radius:8px; background:#f3f5f9; color:#526076; display:grid; place-items:center; }
+.pbody .s-tools button svg { width:15px; height:15px; }
+.pbody .s-tools button:disabled { opacity:.3; }
+.empty-links { padding:18px; text-align:center; border:1.5px dashed #d3d9e3; border-radius:16px; color:#8792a3; font-size:.8rem; }
 .quick-add { display:flex; flex-wrap:wrap; gap:6px; }
 .pbody .quick-add button { min-height:36px; padding:0 13px 0 10px; border-radius:99px; background:#fff; border:1px solid #dde2ea; color:#344258; font-size:.78rem; }
 .pbody .quick-add button svg { width:16px; height:16px; }
@@ -196,3 +204,4 @@ body.editing:not(.previewing) [data-edit] { cursor:pointer; }
 @keyframes vtIn { from { opacity:0; transform:scale(1.012); } }
 
 .pbody:not([data-tab="profile"]) .strength { display:none; }
+.pbody .quick-add button { display:inline-flex; align-items:center; gap:7px; }
