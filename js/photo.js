@@ -1,6 +1,7 @@
 /* js/photo.js */
 /* ---------- Photo framing: exact, in %, so the image is always drawn at its real size (sharp) ---------- */
-const heroPx = () => (Math.min(document.documentElement.clientWidth, 430) + 24) * Math.min(window.devicePixelRatio || 1, 2);
+/* Real width of the photo frame on this screen, in device pixels (so the sharpness estimate matches what is drawn) */
+const heroPx = () => (($('photoIn') && $('photoIn').offsetWidth) || Math.min(document.documentElement.clientWidth, 430)) * Math.min(window.devicePixelRatio || 1, 3);
 /* Largest size (max 100% = whole photo) at which this photo still looks sharp on this screen */
 function sharpZoom() {
   const g = photoGeom(); if (!g) return 100;
@@ -39,6 +40,7 @@ function renderPhoto() {
   else { img.removeAttribute('src'); pv.removeAttribute('src'); }
   img.hidden = pv.hidden = !card.avatar; $('pvWrap').hidden = !card.avatar;
   layoutPhoto();
+  if (typeof touchHistory === 'function') touchHistory();
 }
 $('photoImg').addEventListener('load', () => { if (pendingAutoFit) { pendingAutoFit = false; card.photoZoom = sharpZoom(); syncPhotoControls(); } layoutPhoto(); });
 new ResizeObserver(layoutPhoto).observe($('photoIn'));

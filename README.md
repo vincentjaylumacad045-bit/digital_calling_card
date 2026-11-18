@@ -2,38 +2,25 @@
 
 An animated one-page contact card. Everyone can view it. Only you (with your password) can edit it.
 
-**Start here: [SETUP.md](SETUP.md)** for the step-by-step guide.
-
-## Files
-- `index.html` – the card and the owner editor
-- `api/card.js` – loads the card (public) and saves it (password required)
-- `api/upload.js` – uploads your photo (password required)
-
-## Quick facts
-- Edit link: `https://your-site.vercel.app/#edit`
-- Required: a Vercel Blob store connected to the project, plus an `ADMIN_PASSWORD` environment variable.
+**Start here: [SETUP.md](SETUP.md)** for the step-by-step guide. Edit link: `https://your-site.vercel.app/#edit`
 
 ## Project structure
 ```
-index.html        page markup only
-css/              base · hero · sections · dock · overlays · editor
-js/               icons → state → photo → render → dock → editor → upload → actions → boot
-api/              card.js (read/save card) · upload.js (photo upload)
+index.html   card markup + Design Studio editor
+css/         base · hero · sections · layouts · dock · overlays · editor
+js/          icons → state → photo → render → dock → studio → editor → upload → actions → motion → boot
+api/         card.js (read/save card) · upload.js (photo upload)
 ```
-Scripts load in the order above (see `index.html`). Corner sizes are set once in `css/base.css` (`--r-xs`, `--r-sm`, `--r-md`, `--r-lg`).
 
+## Design (v2)
+- **Six layouts:** Studio, Cards, Editorial, Minimal, Poster, Compact. Cards saved with older layout names are mapped automatically.
+- **Five photo shapes** (Full, Circle, Portrait, Square, Side) that work with every layout.
+- **Motion:** one orchestrated intro (curtain, photo reveal, name rise, quick-action pop, sheet slide-up), scroll-linked header, sticky mini header, view-transition morphs when switching layout/theme. Set to Cinematic / Subtle / Off in the editor; reduced-motion is always respected.
+- **Quick actions** (Call, WhatsApp, Email, Directions, Website), copy buttons on every contact row, Highlights badges.
 
-## Design editor upgrades
+## Design Studio (editor) features
+Undo/redo (Ctrl+Z), draft recovery, visitor preview, click-any-element-to-edit, card strength checklist, visual layout picker,
+section order and visibility, quick-action toggles, title placement, match colors to photo, readability checker with auto-fix,
+17 themes, type pairings, quick-add social links, save status indicator, Ctrl+S.
 
-- Expanded palette with 13 ready-made color themes plus custom background, accent, and text colors.
-- Four selectable layouts: Classic, Centered, Minimal, and Editorial.
-- Additional typography choices (DM Sans, Manrope, Montserrat, Space Grotesk, Playfair Display, and Roboto Mono).
-- Live preview updates while editing. Profile image sizing remains adjustable with the zoom slider, drag positioning, and touch pinch-to-zoom controls.
-
-
-### Recent design updates
-- Minimal section and contact-row borders with reduced shadows.
-
-
-## Current design
-The legacy gradient layouts have been retired. The card now uses the professional Tap-inspired minimal layout by default. Owners can select three image templates in the Photo editor: Full-width cover, Circle portrait, and Rounded portrait card.
+Corner sizes are controlled by the Corner roundness slider (`--card-radius`).

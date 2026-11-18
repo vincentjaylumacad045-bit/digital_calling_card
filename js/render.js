@@ -1,92 +1,147 @@
 /* js/render.js */
-/* ---------- Render ---------- */
-function render() {
-  const t = card.theme, r = document.documentElement.style;
-  // Remove every previous template class before applying the selected one.
-  // This prevents old layout rules stacking when users switch templates.
-  [...$('app').classList].forEach((c) => { if (c.startsWith('layout-') || c.startsWith('profile-')) $('app').classList.remove(c); });
-  const supportedLayouts = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact','frame','banner','portrait-focus'];
-  const chosenLayout = supportedLayouts.includes(card.layout) ? card.layout : 'tap';
-  $('app').classList.add('layout-' + chosenLayout);
-  const imageStyle = ['circle','full','portrait','square','side'].includes(card.profileStyle) ? card.profileStyle : 'full';
-  $('app').classList.add('profile-' + imageStyle);
-  r.setProperty('--bg', t.bg || '#050505'); r.setProperty('--accent', t.accent || '#d1d5db');
-  r.setProperty('--ink', t.ink || '#111827'); r.setProperty('--text', t.text || '#ffffff'); r.setProperty('--font', t.font || "'DM Sans', sans-serif");
-  r.setProperty('--surface', t.surface || '#ffffff'); r.setProperty('--section-text', t.sectionText || '#171717'); r.setProperty('--muted', t.muted || '#707070');
-  r.setProperty('--button-bg', t.buttonBg || '#080808'); r.setProperty('--button-text', t.buttonText || '#ffffff'); r.setProperty('--border-color', t.border || '#e9e9e9');
-  r.setProperty('--card-radius', (card.roundness ?? 8) + 'px'); r.setProperty('--section-space', (card.sectionSpace ?? 24) + 'px');
-  r.setProperty('--name-x', (card.nameX || 0) + 'px'); r.setProperty('--name-y', (card.nameY || 0) + 'px');
-  r.setProperty('--name-size', (card.nameSize || 42) + 'px'); r.setProperty('--title-size', (card.titleSize || 15) + 'px');
-  r.setProperty('--name-line', card.nameLine || 1); r.setProperty('--name-letter', (card.nameLetter ?? -1) + 'px');
-  r.setProperty('--name-font', card.nameFont && card.nameFont !== 'inherit' ? card.nameFont : (t.font || "'DM Sans', sans-serif"));
-  $('name').style.textAlign = card.nameAlign || 'left';
-  $('app').style.setProperty('--name-align', card.nameAlign || 'left');
-  $('name').style.fontFamily = card.nameFont && card.nameFont !== 'inherit' ? card.nameFont : (t.font || "'DM Sans', sans-serif");
-  $('name').className = 'name name-layout-' + (['natural','single','two','stacked'].includes(card.nameLayout) ? (card.nameLayout || 'natural') : 'natural');
-  $('name').style.lineHeight = card.nameLine || 1; $('name').style.letterSpacing = (card.nameLetter ?? -1) + 'px';
-  $('name').style.fontSize = (card.nameSize || 42) + 'px';
-  $('title').style.fontSize = (card.titleSize || 15) + 'px';
-  document.querySelector('meta[name=theme-color]').content = t.bg || '#050505';
+/* ---------- Render: turns the card data into the page ---------- */
+const digits = (s) => (s || '').replace(/[^\d]/g, '');
+const initialsOf = (name) => (name || '').split(/\s+/).filter(Boolean).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+const SERIF_NAME_FONTS = /Playfair|Cormorant|Baskerville|Georgia|Instrument/i;
 
-  $('name').textContent = card.name || '';
-  // Restore saved drag positions for movable canvas elements.
-  const dragTargets = { photo: $('photoBox'), about: $('about')?.closest('.section'), contact: $('contactWrap'), socials: $('linkWrap') };
-  Object.entries(dragTargets).forEach(([key, el]) => {
-    if (!el) return; const pos = card.dragPositions?.[key] || { x: 0, y: 0 };
-    el.style.setProperty('--drag-x', `${Number(pos.x) || 0}%`); el.style.setProperty('--drag-y', `${Number(pos.y) || 0}%`);
-    el.classList.toggle('drag-positioned', !!(pos.x || pos.y));
+function renderName() {
+  const el = $('name'), text = (card.name || '').trim();
+  el.className = 'name name-layout-' + (['natural', 'single', 'two', 'stacked'].includes(card.nameLayout) ? card.nameLayout : 'natural');
+  el.setAttribute('data-edit', 'name');
+  el.textContent = '';
+  text.split(/\s+/).filter(Boolean).forEach((word, i, all) => {
+    const w = document.createElement('span'), inner = document.createElement('span');
+    w.className = 'w'; inner.textContent = word; inner.style.setProperty('--i', i); w.style.setProperty('--i', i);
+    w.appendChild(inner); el.appendChild(w);
+    if (i < all.length - 1) el.appendChild(document.createTextNode(' '));
   });
-  // Professional title is intentionally shown in About Me, not over the hero image.
-  $('title').textContent = ''; $('title').style.display = 'none';
-  $('aboutTitle').textContent = card.title || ''; $('aboutTitle').style.display = card.title ? '' : 'none';
+}
+
+function renderQuick() {
+  const tel = (card.phone || '').replace(/\s/g, '');
+  const sources = {
+    call: card.phone && ['phone', 'Call', 'tel:' + tel],
+    whatsapp: digits(card.whatsapp) && ['whatsapp', 'WhatsApp', 'https://wa.me/' + digits(card.whatsapp)],
+    email: card.email && ['mail', 'Email', 'mailto:' + card.email],
+    map: card.location && ['pin', 'Directions', 'https://www.google.com/maps/search/' + encodeURIComponent(card.location)],
+    web: card.website && ['globe', 'Website', /^https?:\/\//.test(card.website) ? card.website : 'https://' + card.website]
+  };
+  const enabled = Array.isArray(card.quick) ? card.quick : DEFAULT_QUICK;
+  const items = QUICK_DEFS.filter((d) => enabled.includes(d.key) && sources[d.key]).map((d) => ({ d, src: sources[d.key] }));
+  const q = $('quick'); q.innerHTML = ''; q.style.setProperty('--n', Math.max(1, Math.min(items.length, 4)));
+  items.forEach(({ d, src }, i) => {
+    const a = document.createElement('a'); a.className = 'qa'; a.href = src[2]; a.style.setProperty('--i', i); a.setAttribute('data-edit', 'contact');
+    if (!/^(tel|mailto):/.test(src[2])) { a.target = '_blank'; a.rel = 'noopener'; }
+    a.innerHTML = `<span class="qi">${svg(src[0])}</span><span class="ql"></span>`;
+    a.querySelector('.ql').textContent = d.label;
+    q.appendChild(a);
+  });
+}
+
+function renderContactRows() {
+  const tel = (card.phone || '').replace(/\s/g, '');
+  const web = card.website ? (/^https?:\/\//.test(card.website) ? card.website : 'https://' + card.website) : '';
+  const rows = [];
+  if (card.phone) rows.push(['phone', 'Phone', card.phone, 'tel:' + tel]);
+  if (digits(card.whatsapp)) rows.push(['whatsapp', 'WhatsApp', card.whatsapp, 'https://wa.me/' + digits(card.whatsapp)]);
+  if (card.email) rows.push(['mail', 'Email', card.email, 'mailto:' + card.email]);
+  if (card.website) rows.push(['globe', 'Website', card.website.replace(/^https?:\/\//, '').replace(/\/$/, ''), web]);
+  if (card.location) rows.push(['pin', 'Location', card.location, 'https://www.google.com/maps/search/' + encodeURIComponent(card.location)]);
+  const box = $('rows'); box.innerHTML = '';
+  rows.forEach(([ic, lab, val, href]) => {
+    const wrap = document.createElement('div'); wrap.className = 'row-wrap';
+    const a = document.createElement('a'); a.className = 'row-link'; a.href = href;
+    if (!/^(tel|mailto):/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
+    const ico = document.createElement('span'); ico.className = 'ico'; ico.innerHTML = svg(ic);
+    const txt = document.createElement('span'); txt.className = 'txt';
+    const sm = document.createElement('small'); sm.textContent = lab;
+    const v = document.createElement('span'); v.className = 'val'; v.textContent = val;
+    txt.append(sm, v); a.append(ico, txt);
+    const cp = document.createElement('button'); cp.type = 'button'; cp.className = 'copy'; cp.setAttribute('aria-label', 'Copy ' + lab.toLowerCase()); cp.innerHTML = svg('copy');
+    cp.onclick = async () => {
+      try { await navigator.clipboard.writeText(val); } catch (e) { return toast('Copy failed', true); }
+      cp.classList.add('done'); cp.innerHTML = svg('check'); toast(lab + ' copied');
+      setTimeout(() => { cp.classList.remove('done'); cp.innerHTML = svg('copy'); }, 1500);
+    };
+    wrap.append(a, cp); box.appendChild(wrap);
+  });
+  return rows.length;
+}
+
+function render() {
+  const t = card.theme || {}, root = document.documentElement.style, app = $('app');
+  /* Template classes: remove every previous one first so layouts never stack */
+  [...app.classList].forEach((c) => { if (/^(layout|profile|motion)-/.test(c)) app.classList.remove(c); });
+  app.classList.add('layout-' + normLayout(card.layout));
+  app.classList.add('profile-' + (PROFILE_STYLES.includes(card.profileStyle) ? card.profileStyle : 'full'));
+  app.classList.add('motion-' + (['cinematic', 'subtle', 'off'].includes(card.motion) ? card.motion : 'cinematic'));
+  app.classList.toggle('title-in-about', card.titlePlacement === 'about');
+
+  /* Theme tokens */
+  const set = (k, v) => root.setProperty(k, v), unset = (k) => root.removeProperty(k);
+  set('--bg', t.bg || THEME_FALLBACK.bg); set('--accent', t.accent || THEME_FALLBACK.accent); set('--ink', t.ink || THEME_FALLBACK.ink); set('--text', t.text || THEME_FALLBACK.text);
+  set('--font', t.font || THEME_FALLBACK.font); set('--surface', t.surface || THEME_FALLBACK.surface); set('--section-text', t.sectionText || THEME_FALLBACK.sectionText);
+  set('--muted', t.muted || THEME_FALLBACK.muted); set('--button-bg', t.buttonBg || THEME_FALLBACK.buttonBg); set('--button-text', t.buttonText || THEME_FALLBACK.buttonText);
+  set('--border-color', t.border || THEME_FALLBACK.border);
+  set('--card-radius', (card.roundness ?? 14) + 'px'); set('--section-space', (card.sectionSpace ?? 26) + 'px');
+  set('--name-x', (card.nameX || 0) + 'px'); set('--name-y', (card.nameY || 0) + 'px');
+  set('--title-size', (card.titleSize || 16) + 'px');
+
+  /* Name typography: only values the owner changed are set; everything else comes from the layout */
+  typeof card.nameSize === 'number' ? set('--name-size', card.nameSize + 'px') : unset('--name-size');
+  typeof card.nameLine === 'number' ? set('--name-line', card.nameLine) : unset('--name-line');
+  typeof card.nameLetter === 'number' ? set('--name-letter', card.nameLetter + 'px') : unset('--name-letter');
+  if (card.nameFont && card.nameFont !== 'inherit') { set('--name-font', card.nameFont); set('--name-weight', SERIF_NAME_FONTS.test(card.nameFont) ? 500 : 700); }
+  else { unset('--name-font'); unset('--name-weight'); }
+  if (['left', 'center', 'right'].includes(card.nameAlign)) { set('--name-align', card.nameAlign); set('--role-j', { left:'flex-start', center:'center', right:'flex-end' }[card.nameAlign]); }
+  else { unset('--name-align'); unset('--role-j'); }
+  const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = t.bg || THEME_FALLBACK.bg;
+
+  /* Identity */
+  renderName();
+  const titleInAbout = card.titlePlacement === 'about';
+  $('title').textContent = titleInAbout ? '' : (card.title || '');
+  $('aboutTitle').textContent = titleInAbout ? (card.title || '') : '';
   $('about').textContent = card.about || '';
+  $('initials').textContent = card.avatar ? '' : initialsOf(card.name);
+  document.title = (card.name || 'Contact') + (card.title ? ' · ' + card.title : '');
+  const desc = document.querySelector('meta[name=description]'); if (desc) desc.content = [card.name, card.title, card.location].filter(Boolean).join(' · ');
 
   renderPhoto();
   $('thumb').style.backgroundImage = card.avatar ? `url(${card.avatar})` : '';
-  $('initials').textContent = card.avatar ? '' : (card.name || '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-  document.title = (card.name || 'Contact') + ' — Digital Card';
+  $('miniName').textContent = card.name || '';
+  $('miniAv').style.backgroundImage = card.avatar ? `url(${card.avatar})` : ''; $('miniAv').textContent = card.avatar ? '' : initialsOf(card.name);
 
-  const digits = (s) => (s || '').replace(/[^\d]/g, '');
-  const act = (id, val, href) => { const el = $(id); el.classList.toggle('hide', !val); el.href = href; };
-  const tel = (card.phone || '').replace(/\s/g, '');
+  renderQuick();
+  const contactCount = renderContactRows();
 
-  const rows = [];
-  if (card.phone) rows.push(['phone', 'Phone', card.phone, 'tel:' + tel]);
-  if (card.email) rows.push(['mail', 'Email', card.email, 'mailto:' + card.email]);
-  if (card.website) rows.push(['globe', 'Website', card.website.replace(/^https?:\/\//, ''), /^https?:\/\//.test(card.website) ? card.website : 'https://' + card.website]);
-  if (card.location) rows.push(['pin', 'Location', card.location, 'https://www.google.com/maps/search/' + encodeURIComponent(card.location)]);
-  $('contactWrap').style.display = rows.length ? '' : 'none';
-  $('rows').innerHTML = '';
-  rows.forEach(([ic, lab, val, href]) => {
-    const a = document.createElement('a'); a.className = 'row-link'; a.href = href;
-    if (!href.startsWith('tel:') && !href.startsWith('mailto:')) { a.target = '_blank'; a.rel = 'noopener'; }
-    const ico = document.createElement('span'); ico.className = 'ico'; ico.innerHTML = svg(ic);
-    const txt = document.createElement('span');
-    const sm = document.createElement('small'); sm.textContent = lab;
-    txt.appendChild(sm); txt.appendChild(document.createTextNode(val));
-    a.appendChild(ico); a.appendChild(txt); $('rows').appendChild(a);
-  });
+  const chips = (card.achievements || '').split('\n').map((s) => s.trim()).filter(Boolean).slice(0, 12);
+  $('chips').innerHTML = '';
+  chips.forEach((c) => { const li = document.createElement('li'); li.className = 'chip'; li.textContent = c; $('chips').appendChild(li); });
 
   const links = (card.socials || []).filter((s) => s.url);
-  $('linkWrap').style.display = links.length ? '' : 'none';
   $('socials').innerHTML = '';
   links.forEach((s) => {
-    const a = document.createElement('a'); a.className = 'soc'; a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.title = s.label || '';
-    a.innerHTML = svg(socialIcon(s)); $('socials').appendChild(a);
+    const a = document.createElement('a'); a.className = 'soc'; a.target = '_blank'; a.rel = 'noopener';
+    a.href = /^https?:\/\//i.test(s.url) ? s.url : 'https://' + s.url;
+    let name = s.label; if (!name) { try { name = new URL(a.href).hostname.replace(/^www\./, ''); } catch (e) { name = 'Link'; } }
+    a.innerHTML = svg(socialIcon(s)); const sp = document.createElement('span'); sp.textContent = name; a.appendChild(sp);
+    $('socials').appendChild(a);
+  });
+
+  /* Sections: owner-controlled order and visibility, hidden when empty */
+  const has = { about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, links: links.length > 0 };
+  getSections().forEach((s, idx) => {
+    const el = document.querySelector(`[data-sec="${s.key}"]`); if (!el) return;
+    el.style.order = idx; el.hidden = !(s.visible && has[s.key]);
   });
   observe();
+  if (typeof touchHistory === 'function') touchHistory();
 }
 
-/* ---------- Scroll reveal + parallax ---------- */
+/* ---------- Section underline reveal (structural, once per section) ---------- */
 let io;
 function observe() {
-  if (!io) io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
-  document.querySelectorAll('.reveal:not(.in)').forEach((el) => io.observe(el));
+  if (!io) io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .2 });
+  document.querySelectorAll('.section:not(.in)').forEach((el) => io.observe(el));
 }
-addEventListener('scroll', () => document.documentElement.style.setProperty('--py', Math.round(Math.min(scrollY * .25, 80)) + 'px'), { passive: true });
-$('hero').addEventListener('pointermove', (e) => {
-  if (e.pointerType !== 'mouse') return;
-  const b = $('hero').getBoundingClientRect();
-  const x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5;
-  const s = $('photoIn').style; s.setProperty('--tx', Math.round(x * -14) + 'px'); s.setProperty('--ty', Math.round(y * -10) + 'px');
-});

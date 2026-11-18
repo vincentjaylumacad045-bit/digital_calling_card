@@ -56,7 +56,7 @@ async function handleFile(file) {
     if (!r.ok) throw new Error(j.error || 'Upload failed');
     card.avatar = j.url; card.photoSrcW = blob.srcW; card.photoSrcH = blob.srcH;
     card.photoZoom = 100; card.photoX = 50; card.photoY = 0; pendingAutoFit = true;
-    syncPhotoControls(); render();
+    render(); fillForm();
     toast('Photo ready ✓ Adjust it, then press Save');
   } catch (e) { toast(e.message || 'Upload failed', true); }
 }

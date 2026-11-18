@@ -5,7 +5,7 @@ const DEFAULT_CARD = {
   name: 'Kevin Smith',
   title: 'Sr. Marketing Manager',
   about: 'I am John Doe, working as marketing manager at D. Agency.',
-  achievements: 'Creative\nDedicated\nResults-driven',
+  achievements: 'Creative direction\nBrand strategy\nEnglish · Filipino',
   phone: '+63 900 000 0000',
   email: 'you@example.com',
   whatsapp: '+63 900 000 0000',
@@ -23,7 +23,7 @@ const DEFAULT_CARD = {
     accent: '#c6f432',
     ink: '#0b1437',
     text: '#ffffff',
-    font: "'DM Sans', sans-serif",
+    font: "'Schibsted Grotesk', system-ui, sans-serif",
     surface: '#ffffff', sectionText: '#171717', muted: '#707070',
     buttonBg: '#080808', buttonText: '#ffffff', border: '#e9e9e9'
   }
@@ -72,10 +72,13 @@ export default async function handler(req, res) {
       if (!data || typeof data !== 'object' || Array.isArray(data)) return res.status(400).json({ error: 'Invalid card data' });
       const serialized = JSON.stringify(data);
       if (serialized.length > 500000) return res.status(413).json({ error: 'Card data is too large' });
-      const allowedLayouts = ['tap','classic','centered','minimal','editorial','split','stacked','signature','compact'];
+      const allowedLayouts = ['tap','cards','editorial','minimal','poster','compact','classic','centered','split','stacked','signature','frame','banner','portrait-focus'];
       const allowedProfiles = ['circle','full','portrait','square','side'];
       if (data.layout && !allowedLayouts.includes(data.layout)) return res.status(400).json({ error: 'Invalid layout' });
       if (data.profileStyle && !allowedProfiles.includes(data.profileStyle)) return res.status(400).json({ error: 'Invalid profile image style' });
+      if (data.motion && !['cinematic','subtle','off'].includes(data.motion)) return res.status(400).json({ error: 'Invalid motion setting' });
+      if (data.sections && !Array.isArray(data.sections)) return res.status(400).json({ error: 'Invalid sections' });
+      if (data.quick && !Array.isArray(data.quick)) return res.status(400).json({ error: 'Invalid quick actions' });
       if (data.theme && (typeof data.theme !== 'object' || Array.isArray(data.theme))) return res.status(400).json({ error: 'Invalid theme settings' });
       await put('card.json', JSON.stringify(data), {
         access: 'public',

@@ -4,99 +4,152 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#0b1437">
+<meta name="description" content="Digital contact card">
 <title>Digital Contact Card</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Schibsted+Grotesk:wght@400..800&family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/hero.css">
 <link rel="stylesheet" href="css/sections.css">
+<link rel="stylesheet" href="css/layouts.css">
 <link rel="stylesheet" href="css/dock.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/editor.css">
-<link rel="stylesheet" href="css/tap-inspired.css">
-<link rel="stylesheet" href="css/layouts.css">
 </head>
 <body>
-<div class="splash" id="splash"><div class="ring"></div></div>
-<div class="toast" id="toast"></div>
+<div class="splash" id="splash" aria-hidden="true"><div class="bar"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Compact header that slides in once the hero scrolls away -->
+<div class="mini" id="mini">
+  <span class="mini-av" id="miniAv" aria-hidden="true"></span>
+  <span class="mini-name" id="miniName"></span>
+</div>
 
 <div class="app" id="app">
-  <div class="hero" id="hero">
-    <div class="blob b1"></div><div class="blob b2"></div><div class="grid"></div>
-    <div class="initials" id="initials"></div>
-    <div class="photo" id="photoBox"><div class="photo-in" id="photoIn"><img id="photoImg" alt="" decoding="async" hidden></div></div>
-    <div class="id">
-      <h1 class="name" id="name"></h1>
-      <p class="role pop" style="--d:450" id="title"></p>
+  <header class="hero" id="hero">
+    <div class="initials" id="initials" aria-hidden="true"></div>
+    <div class="photo" id="photoBox" data-edit="photo"><div class="photo-in" id="photoIn"><img id="photoImg" alt="" decoding="async" hidden></div></div>
+    <div class="id" id="idBlock">
+      <h1 class="name" id="name" data-edit="name"></h1>
+      <p class="role" id="title" data-edit="title"></p>
     </div>
+  </header>
+
+  <main class="sheet" id="sheet">
+    <nav class="quick" id="quick" aria-label="Quick actions"></nav>
+    <div class="sections" id="sections">
+      <section class="section" data-sec="about" data-edit="about">
+        <h2>About</h2>
+        <p class="about-title" id="aboutTitle"></p>
+        <p class="about-text" id="about"></p>
+      </section>
+      <section class="section" data-sec="highlights" data-edit="highlights">
+        <h2>Highlights</h2>
+        <ul class="chips" id="chips"></ul>
+      </section>
+      <section class="section" data-sec="contact" id="contactWrap" data-edit="contact">
+        <h2>Contact</h2>
+        <div class="rows" id="rows"></div>
+      </section>
+      <section class="section" data-sec="links" id="linkWrap" data-edit="links">
+        <h2>Links</h2>
+        <div class="socials" id="socials"></div>
+      </section>
+    </div>
+    <footer class="foot">Digital Contact Card</footer>
+  </main>
+</div>
+
+<div class="dock" id="dock">
+  <button class="dbtn" id="qrBtn" type="button" title="QR code" aria-label="Show QR code" data-i="qr"></button>
+  <button class="dbtn" id="shareBtn" type="button" title="Share" aria-label="Share card" data-i="share"></button>
+  <button class="add" id="addContact" type="button"><span data-i="userplus"></span>Save contact</button>
+  <button class="edit" id="editBtn" type="button" title="Edit card" aria-label="Edit card" data-i="pencil"></button>
+</div>
+
+<button class="preview-pill" id="previewBack" type="button"><span data-i="pencil"></span>Back to editing</button>
+
+<div class="overlay" id="qrModal" aria-label="QR code">
+  <div class="modal qr-modal">
+    <div class="qr-head"><span class="qr-av" id="qrAv"></span><div><strong id="qrName"></strong><small id="qrRole"></small></div></div>
+    <div class="qr-box"><img id="qrImg" alt="QR code that opens this card"></div>
+    <p class="qr-hint">Point a phone camera at the code to open this card.</p>
+    <div class="qr-actions"><button type="button" id="qrCopy"><span data-i="copy"></span>Copy link</button><button type="button" id="qrDl"><span data-i="download"></span>Save image</button></div>
+    <button class="qr-close" id="qrClose" type="button" aria-label="Close" data-i="close"></button>
   </div>
-
-  <div class="section reveal" data-drag-key="about"><h2><span data-i="user"></span>About Me</h2><p id="aboutTitle" class="about-title"></p><p id="about"></p></div>
-  <div class="section reveal" data-drag-key="contact" id="contactWrap" style="--d:100"><h2><span data-i="phone"></span>Contact</h2><div class="rows" id="rows"></div></div>
-  <div class="section reveal" data-drag-key="socials" id="linkWrap" style="--d:100"><h2><span data-i="link"></span>Connect</h2><div class="socials" id="socials"></div></div>
-  <div class="foot">Digital Contact Card</div>
 </div>
-
-<div class="dock">
-  <button class="dbtn" id="qrBtn" title="QR code" data-i="qr"></button>
-  <button class="dbtn" id="shareBtn" title="Share" data-i="share"></button>
-  <button class="add" id="addContact"><span data-i="userplus"></span>Add to Contact</button>
-  <button class="edit" id="editBtn" title="Edit card" data-i="pencil"></button>
-</div>
-
-<div class="overlay" id="qrModal"><div class="modal"><h3 style="margin-top:0">Scan to open my card</h3><img id="qrImg" alt="QR code"><br><button style="margin-top:14px;background:#eef0f3" id="qrClose">Close</button></div></div>
 
 <div class="overlay" id="login" aria-label="Administrator sign in">
   <form class="modal admin-login" id="adminLoginForm">
     <div class="admin-mark" aria-hidden="true">DC</div>
-    <div class="admin-eyebrow">DIGITAL CALLING CARD</div>
     <h3>Welcome back</h3>
-    <p class="admin-copy">Sign in to manage your profile, appearance and contact details.</p>
-    <label class="admin-password-label" for="pw">Administrator password</label>
+    <p class="admin-copy">Sign in to edit your card.</p>
+    <label class="admin-password-label" for="pw">Password</label>
     <div class="password-wrap">
       <input type="password" id="pw" placeholder="Enter your password" autocomplete="current-password">
       <button type="button" class="password-toggle" id="togglePw" aria-label="Show password">Show</button>
     </div>
     <div class="admin-login-actions">
       <button type="button" id="loginCancel">Cancel</button>
-      <button type="submit" id="loginOk">Sign in <span aria-hidden="true">→</span></button>
+      <button type="submit" id="loginOk">Sign in</button>
     </div>
-    <div class="admin-secure-note"><span aria-hidden="true">●</span> Secure owner access</div>
   </form>
 </div>
 
-<!-- Editor -->
-<div class="panel" id="panel">
+<!-- ===================== Design Studio (owner editor) ===================== -->
+<div class="panel" id="panel" aria-label="Design Studio">
   <div class="handle" id="handle"></div>
   <div class="ptop">
-    <h2><span class="editor-brandmark">DC</span><span class="editor-heading"><strong>Design Studio</strong><small>Digital calling card editor</small></span></h2>
-    <div style="display:flex;gap:8px">
-      <span class="editor-live"><i></i> LIVE</span><button class="ibtn" id="expand" title="Bigger / smaller" aria-label="Expand editor">⤢</button><button class="ibtn" id="lockBtnTop" title="Save and lock editor" aria-label="Save and lock editor">🔒</button>
+    <div class="p-title">
+      <span class="editor-brandmark">DC</span>
+      <span class="editor-heading"><strong>Design Studio</strong><span class="save-state" id="saveState" data-state="saved">Saved</span></span>
+    </div>
+    <div class="p-tools">
+      <button class="ibtn" id="undoBtn" type="button" title="Undo (Ctrl+Z)" aria-label="Undo" data-i="undo" disabled></button>
+      <button class="ibtn" id="redoBtn" type="button" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" data-i="redo" disabled></button>
+      <button class="ibtn" id="previewBtn" type="button" title="Preview as a visitor" aria-label="Preview as a visitor" data-i="eye"></button>
+      <button class="ibtn" id="expand" type="button" title="Bigger / smaller" aria-label="Expand editor" data-i="expand"></button>
+      <button class="ibtn" id="lockBtnTop" type="button" title="Save and lock editor" aria-label="Save and lock editor" data-i="lock"></button>
     </div>
   </div>
-  <div class="tabs" id="tabs">
-    <button class="active" data-tab="profile"><span>01</span> Profile</button>
-    <button data-tab="contact"><span>02</span> Contact</button>
-    <button data-tab="photo"><span>03</span> Photo</button>
-    <button data-tab="style"><span>04</span> Design</button>
-    <button data-tab="links"><span>05</span> Links</button>
+  <div class="tabs" id="tabs" role="tablist">
+    <button class="active" data-tab="profile" role="tab"><span data-i="user"></span>Profile</button>
+    <button data-tab="contact" role="tab"><span data-i="phone"></span>Contact</button>
+    <button data-tab="photo" role="tab"><span data-i="image"></span>Photo</button>
+    <button data-tab="layout" role="tab"><span data-i="layout"></span>Layout</button>
+    <button data-tab="style" role="tab"><span data-i="palette"></span>Style</button>
+    <button data-tab="links" role="tab"><span data-i="link"></span>Links</button>
   </div>
 
-  <div class="pbody">
-    <div class="editor-intro"><div><span class="editor-kicker">YOUR BRAND, YOUR STYLE</span><h3>Make it yours.</h3><p>Personalize your profile and see every change on your card instantly.</p></div><span class="editor-spark" aria-hidden="true">✦</span></div>
+  <div class="pbody" id="pbody" data-tab="profile">
+    <div class="draft-bar" id="draftBar" hidden>
+      <span id="draftText">You have unsaved changes from an earlier session.</span>
+      <div><button type="button" id="draftRestore">Restore</button><button type="button" id="draftDiscard">Discard</button></div>
+    </div>
+
+    <div class="strength" id="strength">
+      <div class="strength-top"><strong>Card strength</strong><span id="strengthPct">0%</span></div>
+      <div class="strength-bar"><i id="strengthFill"></i></div>
+      <div class="strength-tips" id="strengthTips"></div>
+    </div>
+
     <div class="pane active" data-pane="profile">
-      <label>Name</label><input type="text" data-f="name" autocomplete="off">
-      <label>Professional title</label><input type="text" data-f="title" autocomplete="off" placeholder="e.g. Attorney at Law"><div class="hint">Your professional title will appear inside the About Me section, not over the profile photo.</div>
-      <label>About me</label><textarea data-f="about"></textarea>
+      <label for="f_name">Name</label><input type="text" id="f_name" data-f="name" autocomplete="off">
+      <label for="f_title">Professional title</label><input type="text" id="f_title" data-f="title" autocomplete="off" placeholder="e.g. Attorney at Law">
+      <label for="f_about">About me</label><textarea id="f_about" data-f="about" placeholder="Two or three sentences about what you do and who you help."></textarea>
+      <label for="f_ach">Highlights <span class="val">one per line</span></label><textarea id="f_ach" data-f="achievements" placeholder="Licensed since 2015&#10;Free first consultation&#10;English · Filipino · Bisaya"></textarea>
+      <div class="hint">Highlights show as short badges under your About section. Keep each one brief.</div>
     </div>
 
     <div class="pane" data-pane="contact">
-      <label>Phone</label><input type="text" inputmode="tel" data-f="phone">
-      <label>WhatsApp number</label><input type="text" inputmode="tel" data-f="whatsapp">
-      <label>Email</label><input type="text" inputmode="email" data-f="email" autocapitalize="off">
-      <label>Website</label><input type="text" inputmode="url" data-f="website" autocapitalize="off">
-      <label>Location</label><input type="text" data-f="location">
+      <label for="f_phone">Phone</label><input type="text" id="f_phone" inputmode="tel" data-f="phone">
+      <label for="f_wa">WhatsApp number</label><input type="text" id="f_wa" inputmode="tel" data-f="whatsapp" placeholder="+63 900 000 0000">
+      <label for="f_email">Email</label><input type="text" id="f_email" inputmode="email" data-f="email" autocapitalize="off">
+      <label for="f_web">Website</label><input type="text" id="f_web" inputmode="url" data-f="website" autocapitalize="off">
+      <label for="f_loc">Location</label><input type="text" id="f_loc" data-f="location">
+      <div class="hint">Visitors can tap a row to call, message or open it, and copy any value with the copy button.</div>
     </div>
 
     <div class="pane" data-pane="photo">
@@ -105,114 +158,129 @@
         <div class="pv-hint">Drag to move · pinch or scroll to zoom</div>
         <div class="pv-hint" id="pvQ"></div>
       </div>
-      <label>Image template</label>
-      <select id="profileStyle">
-        <option value="full">Full-width cover</option>
-        <option value="circle">Circle portrait</option>
-        <option value="portrait">Rounded portrait card</option>
-        <option value="square">Square profile</option>
-        <option value="side">Side-by-side editorial</option>
-      </select>
-      <div class="hint">Choose a photo treatment independently of the card layout. Images are automatically cropped responsively; adjust zoom and position to frame any photo.</div>
+      <label>Photo shape</label>
+      <div class="shape-pick" id="shapePick" role="radiogroup" aria-label="Photo shape">
+        <button type="button" data-shape="full" role="radio"><svg viewBox="0 0 40 40"><rect x="4" y="3" width="32" height="34" rx="3"/></svg>Full</button>
+        <button type="button" data-shape="circle" role="radio"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14"/></svg>Circle</button>
+        <button type="button" data-shape="portrait" role="radio"><svg viewBox="0 0 40 40"><rect x="8" y="3" width="24" height="34" rx="5"/></svg>Portrait</button>
+        <button type="button" data-shape="square" role="radio"><svg viewBox="0 0 40 40"><rect x="7" y="7" width="26" height="26" rx="5"/></svg>Square</button>
+        <button type="button" data-shape="side" role="radio"><svg viewBox="0 0 40 40"><rect x="4" y="8" width="13" height="3" rx="1.5"/><rect x="4" y="14" width="10" height="3" rx="1.5"/><rect x="21" y="5" width="15" height="22" rx="3"/></svg>Side</button>
+      </div>
       <label>Profile photo</label>
       <div class="photo-up">
         <div class="thumb" id="thumb"></div>
-        <div style="flex:1;display:flex;flex-direction:column;gap:8px">
-          <button class="primary" id="pickBtn">📁 Choose photo</button>
-          <button class="ghost" id="camBtn">📷 Take photo</button>
+        <div class="photo-btns">
+          <button class="primary" id="pickBtn" type="button"><span data-i="image"></span>Choose photo</button>
+          <button class="ghost" id="camBtn" type="button">Take photo</button>
         </div>
       </div>
       <input type="file" accept="image/*" id="avatarFile" hidden>
       <input type="file" accept="image/*" capture="user" id="camFile" hidden>
-      <div class="hint">Resize with the image size slider, drag to reposition, or pinch on touch screens. Use a portrait photo with your face in the upper half. New photos show whole (not zoomed). Small photos are enlarged and sharpened automatically; <b>Best sharpness</b> picks the biggest size that stays crisp.</div>
-      <label>Profile image size / zoom <span class="val" id="zoomV"></span></label><input type="range" min="30" max="400" step="1" id="zoom">
+      <div class="hint">Use a portrait photo with your face in the upper half. Small photos are enlarged and sharpened automatically. <b>Best sharpness</b> picks the biggest size that stays crisp.</div>
+      <label>Zoom <span class="val" id="zoomV"></span></label><input type="range" min="30" max="400" step="1" id="zoom">
       <label>Move left / right <span class="val" id="posxV"></span></label><input type="range" min="0" max="100" step="1" id="posx">
       <label>Move up / down <span class="val" id="posyV"></span></label><input type="range" min="0" max="100" step="1" id="posy">
       <label>Bottom fade <span class="val" id="fadeV"></span></label><input type="range" min="0" max="80" step="1" id="fade">
       <label>Brightness <span class="val" id="brightV"></span></label><input type="range" min="60" max="150" step="1" id="bright">
       <label>Contrast <span class="val" id="contrastV"></span></label><input type="range" min="60" max="150" step="1" id="contrast">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
-        <button class="primary" id="sharpImg" style="grid-column:1/-1">✦ Best sharpness</button>
-        <button class="ghost" id="fillImg">⤢ Fill frame</button>
-        <button class="ghost" id="resetImg">↺ Fit whole photo</button>
-        <button class="ghost" id="clearImg">Remove photo</button>
+      <div class="btn-grid">
+        <button class="primary wide" id="sharpImg" type="button"><span data-i="sparkles"></span>Best sharpness</button>
+        <button class="ghost" id="fillImg" type="button">Fill frame</button>
+        <button class="ghost" id="resetImg" type="button">Fit whole photo</button>
+        <button class="ghost wide" id="clearImg" type="button">Remove photo</button>
       </div>
     </div>
 
-    <div class="pane" data-pane="style">
-      <label>Quick themes</label>
-      <div class="themes">
-        <button data-theme="lime" style="background:linear-gradient(135deg,#c6f432 50%,#0b1437 50%)"></button>
-        <button data-theme="sky" style="background:linear-gradient(135deg,#38bdf8 50%,#0a1a2f 50%)"></button>
-        <button data-theme="rose" style="background:linear-gradient(135deg,#fb7185 50%,#2a0a1a 50%)"></button>
-        <button data-theme="gold" title="Gold" style="background:linear-gradient(135deg,#fbbf24 50%,#1c1405 50%)"></button>
-        <button data-theme="ocean" title="Ocean" style="background:linear-gradient(135deg,#22d3ee 50%,#071e2d 50%)"></button>
-        <button data-theme="violet" title="Violet" style="background:linear-gradient(135deg,#a78bfa 50%,#1b1235 50%)"></button>
-        <button data-theme="coral" title="Coral" style="background:linear-gradient(135deg,#fb8b72 50%,#2b1114 50%)"></button>
-        <button data-theme="mint" title="Mint" style="background:linear-gradient(135deg,#6ee7b7 50%,#092a25 50%)"></button>
-        <button data-theme="monochrome" title="Monochrome" style="background:linear-gradient(135deg,#e5e7eb 50%,#151515 50%)"></button>
-        <button data-theme="royal" title="Royal" style="background:linear-gradient(135deg,#f0abfc 50%,#101747 50%)"></button>
-        <button data-theme="orange" title="Orange" style="background:linear-gradient(135deg,#fb923c 50%,#2a1708 50%)"></button>
-        <button data-theme="ice" title="Ice" style="background:linear-gradient(135deg,#bfdbfe 50%,#10243b 50%)"></button>
-      </div>
-      <label>Layout design</label>
-      <select id="layoutSelect">
-        <option value="tap">Tap-inspired / Professional</option>
-        <option value="classic">Classic gradient</option>
-        <option value="centered">Centered profile</option>
-        <option value="minimal">Minimal clean</option>
-        <option value="editorial">Editorial split</option>
-        <option value="split">Modern split</option>
-        <option value="stacked">Stacked portrait</option>
-        <option value="signature">Signature luxury</option>
-        <option value="compact">Compact profile</option>
-        <option value="frame">Framed portrait</option>
-        <option value="banner">Wide banner</option>
-        <option value="portrait-focus">Portrait focus</option>
+    <div class="pane" data-pane="layout">
+      <label>Layout</label>
+      <div class="lay-grid" id="layGrid" role="radiogroup" aria-label="Card layout"></div>
+      <div class="hint" id="layHint"></div>
+
+      <label>Sections <span class="val">order &amp; visibility</span></label>
+      <div class="sec-list" id="secList"></div>
+
+      <label>Quick actions <span class="val">buttons under your name</span></label>
+      <div class="toggle-list" id="quickList"></div>
+
+      <label for="titlePlace">Professional title</label>
+      <select id="titlePlace">
+        <option value="hero">Under my name</option>
+        <option value="about">Inside the About section</option>
       </select>
-      <div class="hint">Choose a complete card composition. Your existing templates are preserved and enhanced. Switch layouts without losing your name typography settings.</div>
-      <button class="ghost" id="dragModeBtn" type="button" aria-pressed="false">↔ Arrange elements on card</button><div class="hint" id="dragModeHint">Turn on arrange mode, then drag the name, photo and sections directly on the card. Turn it off when finished.</div>
-      <button class="ghost" id="resetDesign" type="button">↺ Reset design settings</button>
+
+      <label>Motion</label>
+      <div class="seg" id="motionSeg" role="radiogroup" aria-label="Motion">
+        <button type="button" data-motion="cinematic" role="radio">Cinematic</button>
+        <button type="button" data-motion="subtle" role="radio">Subtle</button>
+        <button type="button" data-motion="off" role="radio">Off</button>
+      </div>
+      <div class="hint">Cinematic plays an intro and moves the header as visitors scroll. Visitors who prefer reduced motion never see animation.</div>
+    </div>
+
+    <div class="pane" data-pane="style">
+      <label>Themes</label>
+      <div class="themes" id="themeGrid"></div>
+      <button class="ghost wide-btn" id="matchPhoto" type="button"><span data-i="sparkles"></span>Match colors to my photo</button>
+
+      <label>Colors</label>
       <div class="row">
-        <div><label>Background</label><input type="color" data-t="bg"></div>
-        <div><label>Accent</label><input type="color" data-t="accent"></div>
+        <div><label class="sub">Background</label><input type="color" data-t="bg"></div>
+        <div><label class="sub">Accent</label><input type="color" data-t="accent"></div>
       </div>
       <div class="row">
-        <div><label>Text on accent</label><input type="color" data-t="ink"></div>
-        <div><label>Text on background</label><input type="color" data-t="text"></div>
+        <div><label class="sub">Text on accent</label><input type="color" data-t="ink"></div>
+        <div><label class="sub">Text on background</label><input type="color" data-t="text"></div>
       </div>
-      <label>Font family</label>
-      <select data-t="font">
-        <option value="'Poppins', system-ui, sans-serif">Modern (Poppins)</option>
-        <option value="Georgia, serif">Classic (Georgia)</option>
-        <option value="'Trebuchet MS', sans-serif">Friendly (Trebuchet)</option>
+      <div class="row">
+        <div><label class="sub">Card surface</label><input type="color" data-t="surface"></div>
+        <div><label class="sub">Border</label><input type="color" data-t="border"></div>
+      </div>
+      <div class="row">
+        <div><label class="sub">Section text</label><input type="color" data-t="sectionText"></div>
+        <div><label class="sub">Muted text</label><input type="color" data-t="muted"></div>
+      </div>
+      <div class="row">
+        <div><label class="sub">Button color</label><input type="color" data-t="buttonBg"></div>
+        <div><label class="sub">Button text</label><input type="color" data-t="buttonText"></div>
+      </div>
+
+      <div class="contrast" id="contrast">
+        <div class="contrast-head"><strong>Readability</strong><button type="button" class="mini-btn" id="fixContrast">Fix automatically</button></div>
+        <div id="contrastList"></div>
+      </div>
+
+      <label>Type pairing</label>
+      <div class="pairs" id="pairGrid"></div>
+      <label for="t_font">Body font</label>
+      <select id="t_font" data-t="font">
+        <option value="'Schibsted Grotesk', system-ui, sans-serif">Schibsted Grotesk</option>
+        <option value="'Poppins', system-ui, sans-serif">Poppins</option>
         <option value="'DM Sans', sans-serif">DM Sans</option>
         <option value="'Manrope', sans-serif">Manrope</option>
         <option value="'Montserrat', sans-serif">Montserrat</option>
         <option value="'Space Grotesk', sans-serif">Space Grotesk</option>
+        <option value="'Bricolage Grotesque', sans-serif">Bricolage Grotesque</option>
         <option value="'Playfair Display', serif">Playfair Display</option>
-        <option value="'Roboto Mono', monospace">Roboto Mono</option>
-        <option value="'Courier New', monospace">Typewriter</option>
-        <option value="Arial, sans-serif">Arial</option>
         <option value="'Cormorant Garamond', Georgia, serif">Cormorant Garamond</option>
         <option value="'Libre Baskerville', Georgia, serif">Libre Baskerville</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="'Roboto Mono', monospace">Roboto Mono</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+        <option value="'Courier New', monospace">Typewriter</option>
       </select>
-      <label>Card content background</label><input type="color" data-t="surface">
-      <div class="row">
-        <div><label>Section text</label><input type="color" data-t="sectionText"></div>
-        <div><label>Muted text</label><input type="color" data-t="muted"></div>
-      </div>
-      <div class="row">
-        <div><label>Button color</label><input type="color" data-t="buttonBg"></div>
-        <div><label>Button text</label><input type="color" data-t="buttonText"></div>
-      </div>
-      <label>Border color</label><input type="color" data-t="border">
-      <label>Corner roundness <span class="val" id="roundV">8px</span></label><input type="range" min="0" max="28" step="1" id="roundness">
-      <label>Section spacing <span class="val" id="spaceV">24px</span></label><input type="range" min="12" max="48" step="1" id="sectionSpace">
-      <div class="design-note" style="margin-top:14px"><strong>Text layout controls</strong><span>Adjust name and title position directly. Changes appear immediately on the live card.</span></div>
-      <label>Name font family</label>
+
+      <label>Shape &amp; spacing</label>
+      <label class="sub">Corner roundness <span class="val" id="roundV"></span></label><input type="range" min="0" max="28" step="1" id="roundness">
+      <label class="sub">Section spacing <span class="val" id="spaceV"></span></label><input type="range" min="12" max="48" step="1" id="sectionSpace">
+
+      <div class="design-note"><strong>Name</strong><span>Fine-tune how your name looks in the header.</span></div>
+      <label for="nameFont">Name font</label>
       <select id="nameFont">
-        <option value="inherit">Use website font</option>
+        <option value="inherit">Match layout</option>
+        <option value="'Instrument Serif', Georgia, serif">Instrument Serif</option>
+        <option value="'Bricolage Grotesque', sans-serif">Bricolage Grotesque</option>
+        <option value="'Schibsted Grotesk', sans-serif">Schibsted Grotesk</option>
         <option value="'DM Sans', sans-serif">DM Sans</option>
         <option value="'Manrope', sans-serif">Manrope</option>
         <option value="'Montserrat', sans-serif">Montserrat</option>
@@ -223,30 +291,38 @@
         <option value="Georgia, serif">Georgia</option>
         <option value="'Space Grotesk', sans-serif">Space Grotesk</option>
       </select>
-      <label>Name paragraph layout</label>
-      <select id="nameLayout"><option value="natural">Natural wrap</option><option value="single">Single line (shrink to fit)</option><option value="two">Two-line name</option><option value="stacked">Stack each word</option></select>
-      <label>Name alignment</label>
-      <select id="nameAlign"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
-      <label>Name horizontal position <span class="val" id="nameXV">0px</span></label><input type="range" min="-40" max="40" step="1" id="nameX">
-      <label>Name vertical position <span class="val" id="nameYV">0px</span></label><input type="range" min="-80" max="80" step="1" id="nameY">
-      <label>Name size <span class="val" id="nameSizeV">42px</span></label><input type="range" min="20" max="72" step="1" id="nameSize">
-      <label>Name line spacing <span class="val" id="nameLineV">1.0</span></label><input type="range" min="0.8" max="1.5" step="0.05" id="nameLine">
-      <label>Name letter spacing <span class="val" id="nameLetterV">-1px</span></label><input type="range" min="-3" max="5" step="0.5" id="nameLetter">
-      <label>Professional title size <span class="val" id="titleSizeV">15px</span></label><input type="range" min="11" max="24" step="1" id="titleSize">
+      <label for="nameLayout">Name wrapping</label>
+      <select id="nameLayout"><option value="natural">Natural wrap</option><option value="single">Single line (shrink to fit)</option><option value="two">Two-line name</option><option value="stacked">One word per line</option></select>
+      <label>Alignment</label>
+      <div class="seg" id="alignSeg" role="radiogroup" aria-label="Name alignment">
+        <button type="button" data-align="auto" role="radio">Auto</button>
+        <button type="button" data-align="left" role="radio">Left</button>
+        <button type="button" data-align="center" role="radio">Center</button>
+        <button type="button" data-align="right" role="radio">Right</button>
+      </div>
+      <label>Name size <span class="val" id="nameSizeV"></span></label><input type="range" min="20" max="72" step="1" id="nameSize">
+      <label>Horizontal position <span class="val" id="nameXV"></span></label><input type="range" min="-40" max="40" step="1" id="nameX">
+      <label>Vertical position <span class="val" id="nameYV"></span></label><input type="range" min="-80" max="80" step="1" id="nameY">
+      <label>Line spacing <span class="val" id="nameLineV"></span></label><input type="range" min="0.8" max="1.5" step="0.05" id="nameLine">
+      <label>Letter spacing <span class="val" id="nameLetterV"></span></label><input type="range" min="-3" max="5" step="0.5" id="nameLetter">
+      <label>Title size <span class="val" id="titleSizeV"></span></label><input type="range" min="11" max="24" step="1" id="titleSize">
+      <button class="ghost wide-btn" id="resetDesign" type="button">Reset design settings</button>
     </div>
 
     <div class="pane" data-pane="links">
       <label>Social links</label>
       <div id="socialEditor"></div>
-      <button class="ghost" id="addSocial" style="margin-top:10px;width:100%">+ Add link</button>
-      <div class="hint">Icons are picked from the label: Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Telegram, GitHub…</div>
-      <button class="lock" id="lockBtn">Save changes &amp; lock editor</button>
+      <button class="ghost wide-btn" id="addSocial" type="button">+ Add link</button>
+      <label>Quick add</label>
+      <div class="quick-add" id="quickAdd"></div>
+      <div class="hint">Icons are picked from the name or address: Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Telegram, GitHub…</div>
+      <button class="lock" id="lockBtn" type="button">Save changes &amp; lock editor</button>
     </div>
   </div>
 
   <div class="pfoot">
-    <button class="close" id="closePanel">Close</button>
-    <button class="save" id="saveBtn">💾 Save changes</button>
+    <button class="close" id="closePanel" type="button">Close</button>
+    <button class="save" id="saveBtn" type="button">Save changes</button>
   </div>
 </div>
 
@@ -255,9 +331,11 @@
 <script src="js/photo.js" defer></script>
 <script src="js/render.js" defer></script>
 <script src="js/dock.js" defer></script>
+<script src="js/studio.js" defer></script>
 <script src="js/editor.js" defer></script>
 <script src="js/upload.js" defer></script>
 <script src="js/actions.js" defer></script>
+<script src="js/motion.js" defer></script>
 <script src="js/boot.js" defer></script>
 </body>
 </html>

@@ -1,48 +1,40 @@
-/* overlays.css */
-/* ---------- Toast + overlays ---------- */
-.toast { position:fixed; top:calc(14px + env(safe-area-inset-top)); left:50%; transform:translate(-50%,-160%); background:#111827; color:#fff; padding:12px 20px; border-radius:var(--r-sm); font:600 .88rem system-ui,sans-serif;
-         z-index:200; box-shadow:0 10px 30px rgba(0,0,0,.4); transition:transform .45s var(--ease); max-width:92%; text-align:center; }
-.toast.show { transform:translate(-50%,0); }
-.toast.bad { background:#b91c1c; }
-.overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(4px); z-index:60; display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition:.3s; }
-.overlay.show { opacity:1; visibility:visible; }
-.modal { background:#fff; color:#111; padding:24px; border-radius:var(--r-lg); width:min(340px,90%); font-family:system-ui,sans-serif; text-align:center; transform:scale(.88) translateY(20px); transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+/* overlays.css — modals: QR share sheet and owner sign-in */
+.overlay { position:fixed; inset:0; z-index:90; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(6,10,22,.66);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); opacity:0; visibility:hidden; transition:opacity .3s, visibility 0s .3s; }
+.overlay.show { opacity:1; visibility:visible; transition:opacity .3s; }
+.modal { position:relative; width:min(360px,100%); padding:24px; border-radius:26px; background:#fff; color:#101828; font-family:var(--font); text-align:center;
+  transform:translateY(24px) scale(.94); transition:transform .55s var(--spring); box-shadow:0 40px 100px rgba(0,0,0,.4); }
 .overlay.show .modal { transform:none; }
-.modal img { width:min(230px,70vw); height:min(230px,70vw); border-radius:var(--r-sm); }
-.modal input { width:100%; padding:13px; border:1px solid #ccc; border-radius:var(--r-sm); margin-top:8px; font-size:16px; }
-.modal button { padding:12px 14px; border-radius:var(--r-sm); border:none; cursor:pointer; font-weight:600; font-size:.95rem; }
+.modal button { min-height:46px; padding:0 16px; border:0; border-radius:14px; font:700 .92rem var(--font); cursor:pointer; transition:transform .25s var(--spring), filter .2s; }
+.modal button:active { transform:scale(.96); }
 
+/* QR share sheet */
+.qr-modal { padding:22px 22px 20px; }
+.qr-head { display:flex; align-items:center; gap:12px; text-align:left; padding-right:34px; }
+.qr-av { width:46px; height:46px; border-radius:50%; flex:none; background:var(--bg) center/cover no-repeat; display:grid; place-items:center; color:var(--text); font:600 .9rem var(--font); }
+.qr-head strong { display:block; font-family:var(--display); font-size:1.5rem; line-height:1.05; font-weight:400; }
+.qr-head small { color:#667085; font-size:.82rem; }
+.qr-box { margin:18px auto 12px; width:min(250px,70vw); aspect-ratio:1; padding:12px; border-radius:20px; background:#fff; border:1px solid #e4e7ec; box-shadow:0 14px 34px -14px rgba(16,24,40,.3); }
+.qr-box img { width:100%; height:100%; display:block; border-radius:8px; }
+.qr-hint { margin:0 0 16px; font-size:.84rem; color:#667085; }
+.qr-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.qr-actions button { display:flex; align-items:center; justify-content:center; gap:8px; background:#f2f4f7; color:#101828; }
+.qr-actions button svg { width:18px; height:18px; }
+.qr-actions button:first-child { background:#101828; color:#fff; }
+.qr-close { position:absolute; top:14px; right:14px; width:36px; min-height:36px !important; padding:0 !important; display:grid; place-items:center; background:#f2f4f7; color:#475467; border-radius:50% !important; }
+.qr-close svg { width:18px; height:18px; }
 
-/* Premium owner sign-in */
-#login.overlay { background:rgba(8,12,20,.72); backdrop-filter:blur(12px); padding:20px; }
-#login .modal { width:min(390px,92vw); padding:30px; border:1px solid #e8ebef; border-radius:18px; background:linear-gradient(180deg,#fff 0%,#f8fafc 100%); color:#101828; text-align:left; box-shadow:0 28px 90px rgba(0,0,0,.28); transform:translateY(14px) scale(.98); }
-#login .modal:before { content:'SECURE ADMIN ACCESS'; display:block; color:#667085; font:700 .66rem/1.2 system-ui,sans-serif; letter-spacing:.16em; margin-bottom:14px; }
-#login .modal h3 { font:700 1.45rem/1.2 system-ui,sans-serif; letter-spacing:-.04em; margin:0 0 8px!important; color:#101828; }
-#login .modal div[style*="font-size"] { color:#667085!important; line-height:1.55; margin-bottom:18px; }
-#login .modal input { box-sizing:border-box; height:50px; border:1px solid #d0d5dd; border-radius:10px; background:#fff; padding:0 14px; outline:none; transition:.2s; }
-#login .modal input:focus { border-color:#111827; box-shadow:0 0 0 4px rgba(17,24,39,.09); }
-#login .modal button { min-height:46px; border-radius:10px!important; font-weight:700; transition:transform .18s,filter .18s; }
-#login .modal button:active { transform:scale(.98); }
-#login #loginCancel { color:#344054; background:#f2f4f7!important; }
-#login #loginOk { background:#111827!important; color:#fff!important; box-shadow:0 5px 12px rgba(17,24,39,.18); }
-
-
-/* Refined administrator sign-in */
-#login .admin-login { box-sizing:border-box; width:min(410px,92vw); padding:30px; border:1px solid #e7eaf0; border-radius:20px; background:#fff; color:#101828; box-shadow:0 30px 100px rgba(0,0,0,.3); font-family:Inter,system-ui,sans-serif; }
-#login .admin-login:before { display:none; }
-.admin-mark { display:grid; place-items:center; width:46px; height:46px; margin-bottom:18px; border-radius:14px; background:#111827; color:#fff; font-size:.88rem; font-weight:800; letter-spacing:-.04em; }
-.admin-eyebrow { color:#667085; font-size:.65rem; font-weight:800; letter-spacing:.16em; }
-#login .admin-login h3 { margin:8px 0 7px!important; color:#101828; font-size:1.65rem; letter-spacing:-.055em; }
-.admin-copy { margin:0 0 23px; color:#667085; font-size:.88rem; line-height:1.55; }
-.admin-password-label { display:block; margin-bottom:8px; color:#344054; font-size:.76rem; font-weight:700; }
+/* Owner sign-in */
+.admin-login { text-align:left; padding:30px; }
+.admin-mark { display:grid; place-items:center; width:46px; height:46px; margin-bottom:18px; border-radius:14px; background:#101828; color:#fff; font-size:.88rem; font-weight:800; letter-spacing:-.04em; }
+.admin-login h3 { margin:0 0 6px; font-size:1.6rem; letter-spacing:-.04em; }
+.admin-copy { margin:0 0 22px; color:#667085; font-size:.9rem; }
+.admin-password-label { display:block; margin-bottom:8px; color:#344054; font-size:.78rem; font-weight:700; }
 .password-wrap { position:relative; }
-#login .password-wrap input { margin:0; padding-right:66px; }
-#login .password-toggle { position:absolute; top:50%; right:8px; min-height:32px; padding:0 9px; transform:translateY(-50%); background:#f2f4f7; color:#475467; font-size:.72rem; }
-#login .password-toggle:active { transform:translateY(-50%) scale(.97); }
+.admin-login input { width:100%; height:50px; padding:0 70px 0 14px; border:1px solid #d0d5dd; border-radius:12px; font:inherit; font-size:16px; background:#fff; color:#101828; transition:border-color .2s, box-shadow .2s; }
+.admin-login input:focus { outline:0; border-color:#101828; box-shadow:0 0 0 4px rgba(16,24,40,.09); }
+.password-toggle { position:absolute; top:50%; right:8px; transform:translateY(-50%); min-height:32px !important; padding:0 10px !important; background:#f2f4f7; color:#475467; font-size:.74rem !important; }
 .admin-login-actions { display:flex; gap:10px; margin-top:16px; }
-#login .admin-login-actions button { flex:1; }
-#login #loginCancel { background:#f2f4f7!important; color:#344054!important; }
-#login #loginOk { display:flex; align-items:center; justify-content:center; gap:12px; background:#111827!important; color:#fff!important; }
-.admin-secure-note { margin-top:20px; color:#98a2b3; text-align:center; font-size:.69rem; }
-.admin-secure-note span { color:#12b76a; font-size:.55rem; margin-right:5px; }
-@media(max-width:420px) { #login .admin-login { padding:24px; border-radius:17px; } }
+.admin-login-actions button { flex:1; }
+#loginCancel { background:#f2f4f7; color:#344054; }
+#loginOk { background:#101828; color:#fff; }
