@@ -36,7 +36,10 @@ const LAYOUTS = [
   { id:'glass', name:'Glass', hint:'Your photo stays fixed while frosted panels slide over it.' },
   { id:'duo', name:'Duo', hint:'Two-tone header with the portrait sitting on the color break.' },
   { id:'story', name:'Story', hint:'Tall, full-screen photo with your quick actions floating on it.' },
-  { id:'bento', name:'Bento', hint:'A big call button beside tidy tiles. Modern and tactile.' }
+  { id:'bento', name:'Bento', hint:'A big call button beside tidy tiles. Modern and tactile.' },
+  { id:'timeline', name:'Timeline', hint:'Sections hang off a vertical rail with accent markers.' },
+  { id:'badge', name:'Badge', hint:'Your header becomes an ID badge with a lanyard slot.' },
+  { id:'neon', name:'Neon', hint:'Dark and glowing: gradient name and luminous outlines.' }
 ];
 /* Layout names saved by older versions map onto the new set so existing cards keep working */
 const LEGACY_LAYOUTS = { classic:'cards', centered:'cards', split:'editorial', stacked:'cards', signature:'editorial', frame:'cards', banner:'tap', 'portrait-focus':'tap' };
@@ -45,7 +48,7 @@ const PROFILE_STYLES = ['full', 'circle', 'portrait', 'square', 'side', 'arch', 
 
 /* ---------- Sections and quick actions ---------- */
 const SECTION_DEFS = [
-  { key:'about', label:'About' }, { key:'highlights', label:'Highlights' }, { key:'contact', label:'Contact' }, { key:'links', label:'Links' }
+  { key:'about', label:'About' }, { key:'highlights', label:'Highlights' }, { key:'services', label:'Services' }, { key:'quote', label:'Testimonial' }, { key:'hours', label:'Hours' }, { key:'contact', label:'Contact' }, { key:'links', label:'Links' }
 ];
 function getSections() {
   const saved = Array.isArray(card.sections) ? card.sections : [], out = [];
@@ -86,3 +89,24 @@ function toast(msg, bad) {
   const t = $('toast'); t.textContent = msg; t.classList.toggle('bad', !!bad); t.classList.add('show');
   clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2800);
 }
+
+
+/* ---------- One-tap templates: layout + photo shape + theme + fonts (your content is never touched) ---------- */
+const TEMPLATES = [
+  { id:'executive', name:'Executive', layout:'editorial', shape:'full', theme:'slate', pair:'editorial' },
+  { id:'creative', name:'Creative', layout:'poster', shape:'full', theme:'lime', pair:'modern' },
+  { id:'founder', name:'Founder', layout:'tap', shape:'full', theme:'midnight', pair:'editorial' },
+  { id:'realtor', name:'Realtor', layout:'glass', shape:'full', theme:'ocean', pair:'classic' },
+  { id:'counsel', name:'Counsel', layout:'editorial', shape:'portrait', theme:'paper', pair:'classic' },
+  { id:'wellness', name:'Wellness', layout:'duo', shape:'blob', theme:'mint', pair:'luxe' },
+  { id:'studio', name:'Studio Pro', layout:'bento', shape:'arch', theme:'violet', pair:'modern' },
+  { id:'local', name:'Local Shop', layout:'story', shape:'full', theme:'orange', pair:'friendly' },
+  { id:'tech', name:'Tech', layout:'neon', shape:'hexagon', theme:'ocean', pair:'tech' },
+  { id:'consultant', name:'Consultant', layout:'timeline', shape:'circle', theme:'cobalt', pair:'modern' },
+  { id:'badge', name:'ID Badge', layout:'badge', shape:'square', theme:'royal', pair:'tech' },
+  { id:'mono', name:'Black & White', layout:'minimal', shape:'portrait', theme:'monochrome', pair:'editorial' },
+  { id:'classic', name:'Classic Cards', layout:'cards', shape:'circle', theme:'gold', pair:'classic' },
+  { id:'compact', name:'Compact Pro', layout:'compact', shape:'circle', theme:'sky', pair:'friendly' },
+  { id:'blush', name:'Blush', layout:'duo', shape:'arch', theme:'blush', pair:'luxe' },
+  { id:'polaroid', name:'Polaroid', layout:'tap', shape:'polaroid', theme:'coral', pair:'friendly' }
+];

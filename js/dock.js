@@ -15,9 +15,24 @@ function buildVcf() {
   lines.push('END:VCARD');
   return lines.join('\r\n');
 }
-$('addContact').onclick = () => {
+/* Small square copy of the profile photo, embedded in the contact file so it shows up in the phone's address book */
+async function vcardPhoto() {
+  if (!card.avatar) return '';
+  try {
+    const blob = await (await fetch(card.avatar, { mode: 'cors' })).blob(), bmp = await createImageBitmap(blob);
+    const size = 320, c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
+    const side = Math.min(bmp.width, bmp.height * 1.0), sx = (bmp.width - side) / 2, sy = Math.max(0, (bmp.height - side) * .12);
+    g.drawImage(bmp, sx, sy, side, side, 0, 0, size, size);
+    const b64 = c.toDataURL('image/jpeg', .85).split(',')[1], head = 'PHOTO;ENCODING=b;TYPE=JPEG:';
+    const full = head + b64, out = []; for (let i = 0; i < full.length; i += 74) out.push((i ? ' ' : '') + full.slice(i, i + 74));   // vCard line folding
+    return out.join('\r\n');
+  } catch (e) { return ''; }       // photo is optional: if the browser blocks reading it, the contact is still saved
+}
+$('addContact').onclick = async () => {
+  let vcf = buildVcf(); const photo = await vcardPhoto();
+  if (photo) vcf = vcf.replace('END:VCARD', photo + '\r\nEND:VCARD');
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([buildVcf()], { type: 'text/vcard' }));
+  a.href = URL.createObjectURL(new Blob([vcf], { type: 'text/vcard' }));
   a.download = (card.name || 'contact').replace(/\s+/g, '_') + '.vcf';
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);

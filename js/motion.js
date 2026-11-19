@@ -18,5 +18,6 @@
 function withTransition(fn) {
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || (card && card.motion === 'off');
   if (!document.startViewTransition || calm) return fn();
-  try { document.startViewTransition(fn); } catch (e) { fn(); }
+  const y = window.scrollY, back = () => { if (isEditing() && Math.abs(window.scrollY - y) > 1) window.scrollTo({ top: y, behavior: 'instant' }); };
+  try { const vt = document.startViewTransition(fn); vt.ready.then(back, () => {}); vt.finished.then(back, () => {}); } catch (e) { fn(); back(); }
 }

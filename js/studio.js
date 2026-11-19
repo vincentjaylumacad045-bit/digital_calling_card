@@ -177,9 +177,10 @@ function setTab(name) {
 }
 function jumpTo(tab, fieldId) {
   setTab(tab);
-  if (fieldId && $(fieldId)) setTimeout(() => { const f = $(fieldId); f.scrollIntoView({ block: 'center', behavior: 'smooth' }); f.focus({ preventScroll: true }); f.classList.remove('flash'); void f.offsetWidth; f.classList.add('flash'); }, 80);
+  if (fieldId && $(fieldId)) setTimeout(() => { const f = $(fieldId), pb = $('pbody');   // scroll only the panel, never the page
+    pb.scrollTo({ top: Math.max(0, f.getBoundingClientRect().top - pb.getBoundingClientRect().top + pb.scrollTop - 90), behavior: 'smooth' }); f.focus({ preventScroll: true }); f.classList.remove('flash'); void f.offsetWidth; f.classList.add('flash'); }, 80);
 }
-const EDIT_TARGETS = { name: ['profile', 'f_name'], title: ['profile', 'f_title'], photo: ['photo'], about: ['profile', 'f_about'], highlights: ['profile', 'f_ach'], contact: ['contact', 'f_phone'], links: ['links'] };
+const EDIT_TARGETS = { name: ['profile', 'f_name'], title: ['profile', 'f_title'], photo: ['photo'], about: ['profile', 'f_about'], highlights: ['profile', 'f_ach'], contact: ['contact', 'f_phone'], links: ['links'], more: ['more'] };
 $('app').addEventListener('click', (e) => {
   if (!isEditing() || document.body.classList.contains('previewing')) return;
   const hit = e.target.closest('[data-edit]'); if (e.target.closest('a,button')) e.preventDefault();   // links never navigate while editing
@@ -205,3 +206,18 @@ addEventListener('keydown', (e) => {
   else if (mod && e.key.toLowerCase() === 'z' && !typing) { e.preventDefault(); historyJump(e.shiftKey ? 1 : -1); }
   else if (mod && e.key.toLowerCase() === 'y' && !typing) { e.preventDefault(); historyJump(1); }
 });
+
+
+/* ===== Keep the page still on phones: keyboard handling + focus scroll lock ===== */
+(function () {
+  const vv = window.visualViewport;
+  if (vv) {
+    const update = () => { if (!isEditing()) return; document.documentElement.style.setProperty('--kb', Math.max(0, Math.round(innerHeight - vv.height - vv.offsetTop)) + 'px'); };
+    vv.addEventListener('resize', update); vv.addEventListener('scroll', update);
+  }
+  $('panel').addEventListener('focusin', (e) => {
+    if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    const y = window.scrollY;                                   // iOS scrolls the page to reveal a focused field; put it back
+    [0, 30, 120, 300, 600, 900].forEach((t) => setTimeout(() => { if (Math.abs(window.scrollY - y) > 2) window.scrollTo({ top: y, behavior: 'instant' }); }, t));
+  });
+})();

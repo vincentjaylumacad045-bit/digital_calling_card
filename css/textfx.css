@@ -1,0 +1,58 @@
+/* textfx.css — text animations, scroll reveals, availability pill, business hours */
+.name .c { display:inline-block; }
+@keyframes blurIn { from { opacity:0; filter:blur(14px); transform:translateY(10px); } to { opacity:1; filter:none; transform:none; } }
+@keyframes charRise { from { transform:translateY(115%); } to { transform:none; } }
+@keyframes charFlip { from { opacity:0; transform:perspective(400px) rotateX(-95deg) translateY(30%); } to { opacity:1; transform:none; } }
+@keyframes typeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes wave { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-.07em); } }
+@keyframes shimmer { from { background-position:150% 0; } to { background-position:-150% 0; } }
+@keyframes wipeIn { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
+@keyframes slideIn { from { opacity:0; transform:translateX(-26px); } to { opacity:1; transform:none; } }
+@keyframes blurRole { from { opacity:0; filter:blur(10px); } to { opacity:1; filter:none; } }
+
+/* Name animations (play with the intro; wave and shimmer keep going) */
+.intro .anim-fade:not(.motion-off) .name .w > span { animation:fadeOnly 1s ease both; animation-delay:calc(.5s + var(--i,0) * .16s); }
+.intro .anim-blur:not(.motion-off) .name .w > span { animation:blurIn 1.1s var(--out-expo) both; animation-delay:calc(.5s + var(--i,0) * .14s); }
+.intro .anim-letters:not(.motion-off) .name .c { animation:charRise .8s var(--out-expo) both; animation-delay:calc(.5s + var(--ci,0) * .04s); }
+.intro .anim-flip:not(.motion-off) .name .c { animation:charFlip .8s var(--out-expo) both; animation-delay:calc(.5s + var(--ci,0) * .05s); }
+.intro .anim-typewriter:not(.motion-off) .name .c { animation:typeIn .01s steps(1) both; animation-delay:calc(.5s + var(--ci,0) * .08s); }
+.anim-wave:not(.motion-off) .name .c { animation:wave 2.8s ease-in-out infinite; animation-delay:calc(var(--ci,0) * .09s); }
+.intro .anim-wave:not(.motion-off) .name .c { animation:charRise .8s var(--out-expo) calc(.5s + var(--ci,0) * .04s) both, wave 2.8s ease-in-out calc(1.6s + var(--ci,0) * .09s) infinite; }
+.anim-shimmer:not(.motion-off) .name .w > span { background:linear-gradient(100deg,var(--hero-text) 38%,color-mix(in srgb,var(--hero-text) 25%,var(--accent)) 50%,var(--hero-text) 62%) 0 0/250% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; animation:shimmer 3.6s linear infinite; }
+.intro .anim-shimmer:not(.motion-off) .name .w > span { animation:wordRise .95s var(--out-expo) calc(.55s + var(--i,0) * .09s) both, shimmer 3.6s linear 1.5s infinite; }
+.anim-none .name .w > span, .anim-none .name .c { animation:none !important; }
+
+/* Title animations */
+.intro .titleanim-wipe:not(.motion-off) .role { animation:wipeIn 1s var(--out-expo) 1s both; }
+.intro .titleanim-type:not(.motion-off) .role { animation:wipeIn calc(var(--tl,12) * .055s) steps(var(--tl,12)) 1s both; }
+.intro .titleanim-blur:not(.motion-off) .role { animation:blurRole 1s var(--out-expo) 1s both; }
+.intro .titleanim-slide:not(.motion-off) .role { animation:slideIn .9s var(--out-expo) 1s both; }
+.intro .titleanim-none .role, .intro .titleanim-none .role::before { animation:none; }
+
+/* Scroll reveals */
+.reveal-up .section, .reveal-slide .section, .reveal-zoom .section, .reveal-blur .section { transition:opacity .85s var(--out-expo), transform .85s var(--out-expo), filter .85s var(--out-expo); }
+.reveal-up:not(.motion-off) .section:not(.in) { opacity:0; transform:translateY(34px); }
+.reveal-slide:not(.motion-off) .section:not(.in) { opacity:0; transform:translateX(-34px); }
+.reveal-zoom:not(.motion-off) .section:not(.in) { opacity:0; transform:scale(.94); }
+.reveal-blur:not(.motion-off) .section:not(.in) { opacity:0; filter:blur(10px); }
+
+/* Availability pill */
+.status { margin:12px 0 0; display:inline-flex; align-items:center; gap:8px; padding:6px 12px 6px 10px; border-radius:99px; font-size:.78rem; font-weight:650; color:var(--hero-text);
+  background:color-mix(in srgb,var(--hero-text) 14%,transparent); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); width:fit-content; max-width:100%; }
+.status[hidden] { display:none; }
+.status i { width:8px; height:8px; border-radius:50%; background:#34d399; box-shadow:0 0 0 0 rgba(52,211,153,.6); animation:pulse 2s infinite; flex:none; }
+@keyframes pulse { 70% { box-shadow:0 0 0 8px rgba(52,211,153,0); } 100% { box-shadow:0 0 0 0 rgba(52,211,153,0); } }
+
+/* Business hours */
+.hours { list-style:none; margin:0; padding:0; display:grid; gap:2px; }
+.hours li { display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid var(--s-line); font-size:.95rem; }
+.hours li:last-child { border-bottom:0; }
+.hours li span:first-child { font-weight:650; }
+.hours li span:last-child { color:var(--s-muted); text-align:right; }
+.hours li.today span { color:var(--s-text); }
+.hours li.today span:first-child::after { content:'Today'; margin-left:8px; padding:2px 7px; border-radius:99px; font-size:.64rem; font-weight:700; background:var(--accent); color:var(--ink); vertical-align:1px; }
+.open-badge { margin-left:auto; padding:3px 9px; border-radius:99px; font-size:.68rem; font-weight:700; letter-spacing:.02em; }
+.open-badge:empty { display:none; }
+.open-badge.on { background:#d1fae5; color:#065f46; }
+.open-badge.off { background:#fee2e2; color:#991b1b; }
+@media (prefers-reduced-motion:reduce) { .status i { animation:none; } .anim-wave .name .c, .anim-shimmer .name .w > span { animation:none !important; } }

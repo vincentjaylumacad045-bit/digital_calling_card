@@ -72,13 +72,16 @@ export default async function handler(req, res) {
       if (!data || typeof data !== 'object' || Array.isArray(data)) return res.status(400).json({ error: 'Invalid card data' });
       const serialized = JSON.stringify(data);
       if (serialized.length > 500000) return res.status(413).json({ error: 'Card data is too large' });
-      const allowedLayouts = ['tap','cards','editorial','minimal','poster','compact','classic','centered','split','stacked','signature','frame','banner','portrait-focus','glass','duo','story','bento'];
+      const allowedLayouts = ['tap','cards','editorial','minimal','poster','compact','classic','centered','split','stacked','signature','frame','banner','portrait-focus','glass','duo','story','bento','timeline','badge','neon'];
       const allowedProfiles = ['circle','full','portrait','square','side','arch','hexagon','blob','polaroid','wide'];
       if (data.layout && !allowedLayouts.includes(data.layout)) return res.status(400).json({ error: 'Invalid layout' });
       if (data.profileStyle && !allowedProfiles.includes(data.profileStyle)) return res.status(400).json({ error: 'Invalid profile image style' });
       if (data.motion && !['cinematic','subtle','off'].includes(data.motion)) return res.status(400).json({ error: 'Invalid motion setting' });
       if (data.sections && !Array.isArray(data.sections)) return res.status(400).json({ error: 'Invalid sections' });
       if (data.quick && !Array.isArray(data.quick)) return res.status(400).json({ error: 'Invalid quick actions' });
+      if (data.services && (!Array.isArray(data.services) || data.services.length > 30)) return res.status(400).json({ error: 'Invalid services' });
+      if (data.cta && typeof data.cta !== 'object') return res.status(400).json({ error: 'Invalid call-to-action' });
+      if (data.quote && typeof data.quote !== 'object') return res.status(400).json({ error: 'Invalid testimonial' });
       if (data.theme && (typeof data.theme !== 'object' || Array.isArray(data.theme))) return res.status(400).json({ error: 'Invalid theme settings' });
       await put('card.json', JSON.stringify(data), {
         access: 'public',

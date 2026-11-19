@@ -28,6 +28,7 @@ function openPanel() {
   card.theme = { ...THEME_FALLBACK, ...(card.theme || {}) };
   markSaved(); fillForm();
   document.querySelectorAll('.section').forEach((el) => el.classList.add('in'));
+  document.documentElement.classList.add('editing-mode');
   holdScroll(() => { document.body.classList.add('editing'); document.body.classList.remove('scrolled'); $('panel').classList.add('open'); });
   historyReset(); updateStatus(); checkDraft();
   setTimeout(() => { if (typeof layoutPhoto === 'function') layoutPhoto(); }, 80);
@@ -39,11 +40,14 @@ function closePanel() {
   }
   finishClose();
 }
-function finishClose() { setPreview(false); holdScroll(() => { $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full'); }); }
-function toggleFull() { const full = $('panel').classList.toggle('full'); document.body.classList.toggle('sheet-full', full); }
+function finishClose() { document.documentElement.classList.remove('editing-mode'); setPreview(false); holdScroll(() => { $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full', 'sheet-min'); }); }
+function setSheet(mode) { document.body.classList.toggle('sheet-full', mode === 'full'); document.body.classList.toggle('sheet-min', mode === 'min'); $('panel').classList.toggle('full', mode === 'full'); }
+const sheetMode = () => (document.body.classList.contains('sheet-full') ? 'full' : document.body.classList.contains('sheet-min') ? 'min' : 'mid');
+function toggleFull() { setSheet(sheetMode() === 'full' ? 'mid' : 'full'); }
+function cycleSheet() { setSheet({ mid: 'full', full: 'min', min: 'mid' }[sheetMode()]); }
 $('closePanel').onclick = closePanel;
 $('expand').onclick = toggleFull;
-$('handle').onclick = toggleFull;
+$('handle').onclick = cycleSheet;
 async function lockEditor() {
   if (hasUnsavedChanges()) {
     if (!confirm('Save your changes and lock the editor?')) return;

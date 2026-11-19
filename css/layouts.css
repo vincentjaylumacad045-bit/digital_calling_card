@@ -5,16 +5,16 @@
 #app.layout-tap { --name-default:var(--display); }
 
 /* 2 · Cards: dark page, content in floating cards */
-#app.layout-cards, #app.layout-bento { --s-surface:var(--bg); --s-text:var(--text); --s-muted:color-mix(in srgb,var(--text) 62%,transparent); --s-line:color-mix(in srgb,var(--text) 14%,transparent);
+#app.layout-cards, #app.layout-bento, #app.layout-badge, #app.layout-neon { --s-surface:var(--bg); --s-text:var(--text); --s-muted:color-mix(in srgb,var(--text) 62%,transparent); --s-line:color-mix(in srgb,var(--text) 14%,transparent);
   --s-soft:color-mix(in srgb,var(--text) 7%,var(--bg)); --name-default:var(--font); --name-weight-default:800; --name-letter-default:-.035em; --name-line-default:.98; --name-size-default:clamp(2.6rem,13.5vw,3.6rem); --overlap:50px; background:var(--bg); }
-#app.layout-cards .sheet, #app.layout-bento .sheet { background:transparent; box-shadow:none; border-radius:0; padding-top:0; }
-#app.layout-cards .quick, #app.layout-cards .sections, #app.layout-bento .quick, #app.layout-bento .sections { padding-left:14px; padding-right:14px; }
-#app.layout-cards .quick, #app.layout-bento .quick { padding-bottom:12px; }
-#app.layout-cards .qa, #app.layout-bento .qa { background:var(--surface); color:var(--section-text); border-color:var(--border-color); }
-#app.layout-cards .qa .ql, #app.layout-bento .qa .ql { color:var(--section-text); }
-#app.layout-cards .sections, #app.layout-bento .sections { gap:12px; }
-#app.layout-cards .section, #app.layout-bento .section { background:var(--surface); color:var(--section-text); border:1px solid var(--border-color); border-radius:calc(var(--card-radius) * 1.3 + 2px); padding:calc(var(--section-space) - 2px) 20px; --s-text:var(--section-text); --s-muted:var(--muted); --s-line:var(--border-color); --s-soft:color-mix(in srgb,var(--section-text) 5%,var(--surface)); }
-#app.layout-cards .foot, #app.layout-bento .foot { color:var(--s-muted); }
+#app.layout-cards .sheet, #app.layout-bento .sheet, #app.layout-badge .sheet, #app.layout-neon .sheet { background:transparent; box-shadow:none; border-radius:0; padding-top:0; }
+#app.layout-cards .quick, #app.layout-cards .sections, #app.layout-bento .quick, #app.layout-bento .sections, #app.layout-badge .quick, #app.layout-neon .quick, #app.layout-badge .sections, #app.layout-neon .sections { padding-left:14px; padding-right:14px; }
+#app.layout-cards .quick, #app.layout-bento .quick, #app.layout-badge .quick, #app.layout-neon .quick { padding-bottom:12px; }
+#app.layout-cards .qa, #app.layout-bento .qa, #app.layout-badge .qa, #app.layout-neon .qa { background:var(--surface); color:var(--section-text); border-color:var(--border-color); }
+#app.layout-cards .qa .ql, #app.layout-bento .qa .ql, #app.layout-badge .qa .ql, #app.layout-neon .qa .ql { color:var(--section-text); }
+#app.layout-cards .sections, #app.layout-bento .sections, #app.layout-badge .sections, #app.layout-neon .sections { gap:12px; }
+#app.layout-cards .section, #app.layout-bento .section, #app.layout-badge .section, #app.layout-neon .section { background:var(--surface); color:var(--section-text); border:1px solid var(--border-color); border-radius:calc(var(--card-radius) * 1.3 + 2px); padding:calc(var(--section-space) - 2px) 20px; --s-text:var(--section-text); --s-muted:var(--muted); --s-line:var(--border-color); --s-soft:color-mix(in srgb,var(--section-text) 5%,var(--surface)); }
+#app.layout-cards .foot, #app.layout-bento .foot, #app.layout-badge .foot, #app.layout-neon .foot { color:var(--s-muted); }
 
 /* 3 · Editorial: serif, hairlines, label-and-value rows like a printed spec sheet */
 #app.layout-editorial { --hero-bg:var(--surface); --hero-text:var(--section-text); --overlap:0px; --name-default:var(--display); --name-size-default:clamp(3.4rem,18vw,4.9rem); --name-line-default:.9; --name-letter-default:-.025em; }
@@ -83,6 +83,8 @@
 #app.layout-compact .photo-in { inset:0 !important; transform:none !important; }
 #app.layout-compact .id { position:relative !important; inset:auto !important; opacity:1 !important; text-align:left !important; transform:translate(var(--name-x,0px),var(--name-y,0px)); }
 #app.layout-compact .initials { display:none; }
+#app.layout-compact .photo { grid-column:1 !important; grid-row:1 !important; }
+#app.layout-compact .id { grid-column:2 !important; grid-row:1 !important; align-self:center !important; }
 #app.layout-compact .role { --role-j:flex-start; margin-top:8px; font-size:var(--title-size,.95rem); }
 #app.layout-compact .role::before { display:none !important; }
 #app.layout-compact .sheet { margin-top:0; border-radius:var(--sheet-r) var(--sheet-r) 0 0; padding-top:22px; }
@@ -153,3 +155,45 @@
 #app.layout-bento .qa:first-child:last-child { grid-row:auto; grid-column:1 / -1; }
 #app.layout-bento .qa:first-child:nth-last-child(2) { grid-row:auto; }
 #app.layout-bento .section { border-radius:calc(var(--card-radius) * 1.6 + 2px); }
+
+
+/* 10 · Timeline: sections hang off a vertical rail */
+#app.layout-timeline { --overlap:34px; --name-default:var(--display); }
+#app.layout-timeline .sections { position:relative; }
+#app.layout-timeline .sections::before { content:''; position:absolute; left:31px; top:34px; bottom:30px; width:2px; border-radius:2px; background:linear-gradient(var(--accent),var(--s-line) 40%); }
+#app.layout-timeline .section { border-top:0; padding-left:64px; }
+#app.layout-timeline .section::before { content:''; position:absolute; left:24px; top:calc(var(--section-space) + 2px); width:16px; height:16px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--s-surface),0 0 0 5px var(--s-line); }
+#app.layout-timeline .section h2::before { display:none; }
+#app.layout-timeline .section h2 { color:var(--s-text); font-size:.95rem; }
+
+/* 11 · Badge: the header is an ID badge on the page */
+#app.layout-badge { --hero-bg:var(--surface); --hero-text:var(--section-text); --overlap:0px; --align:center; --role-j:center; --name-default:var(--font); --name-weight-default:800; --name-letter-default:-.035em; --name-size-default:clamp(2.3rem,12vw,3.2rem); --name-line-default:1; }
+#app.layout-badge .hero { margin:34px 18px 0; height:auto; display:flex; flex-direction:column; gap:20px; padding:48px 20px 22px; border-radius:30px; box-shadow:0 34px 60px -26px rgba(0,0,0,.65); }
+#app.layout-badge .hero::before { inset:auto; top:17px; left:50%; width:64px; height:14px; transform:translateX(-50%); border-radius:99px; background:var(--bg); box-shadow:inset 0 2px 4px rgba(0,0,0,.4); }
+#app.layout-badge .initials { display:none; }
+#app.layout-badge.profile-full .photo { position:relative; inset:auto; flex:none; aspect-ratio:1; border-radius:calc(var(--card-radius) * 1.2 + 6px); -webkit-mask-image:none; mask-image:none; }
+#app.layout-badge.profile-full .photo-in { inset:0; transform:none; }
+#app.layout-badge.profile-full .hero::after { display:none; }
+#app.layout-badge .id { position:relative; inset:auto; opacity:1; transform:translate(var(--name-x,0px),var(--name-y,0px)); }
+#app.layout-badge .id::after { content:''; display:block; height:28px; margin-top:22px; opacity:.8; background:repeating-linear-gradient(90deg,var(--hero-text) 0 2px,transparent 2px 5px,var(--hero-text) 5px 6px,transparent 6px 10px,var(--hero-text) 10px 13px,transparent 13px 16px); }
+#app.layout-badge .role::before { display:none; }
+#app.layout-badge .sheet { margin-top:18px; }
+#app.layout-badge .quick { padding-top:2px; }
+
+/* 12 · Neon: dark, luminous, gradient name */
+#app.layout-neon { --name-default:var(--font); --name-weight-default:800; --name-letter-default:-.045em; --name-size-default:clamp(2.8rem,15vw,4rem); --name-line-default:.96; --overlap:48px; }
+#app.layout-neon .name .w > span { background:linear-gradient(100deg,var(--text) 5%,var(--accent) 95%); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; }
+#app.layout-neon .qa, #app.layout-neon .section { --s-text:var(--text); --s-muted:color-mix(in srgb,var(--text) 64%,transparent); --s-line:color-mix(in srgb,var(--accent) 30%,transparent); --s-soft:color-mix(in srgb,var(--accent) 9%,var(--bg));
+  background:color-mix(in srgb,var(--accent) 6%,var(--bg)); color:var(--text); border:1px solid color-mix(in srgb,var(--accent) 48%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 10%,transparent),0 0 30px -10px color-mix(in srgb,var(--accent) 70%,transparent); }
+#app.layout-neon .qa .ql { color:var(--text); }
+#app.layout-neon .qa .qi, #app.layout-neon .row-link .ico, #app.layout-neon .soc .ico { background:var(--accent); color:var(--ink); }
+#app.layout-neon .section h2 { color:var(--accent); }
+#app.layout-neon .chip { color:var(--text); }
+#app.layout-neon .copy { color:var(--s-muted); }
+
+/* Main button: align with the padding of card-style layouts */
+#app.layout-cards .cta, #app.layout-bento .cta, #app.layout-glass .cta, #app.layout-badge .cta, #app.layout-neon .cta { margin-left:14px; margin-right:14px; }
+#app.layout-story .cta { position:relative; z-index:5; }
+#app.layout-editorial .cta { border-radius:0; margin-bottom:6px; }
+#app.layout-compact .cta { margin-top:2px; }

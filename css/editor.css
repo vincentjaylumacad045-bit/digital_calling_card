@@ -171,12 +171,15 @@
   body.editing:not(.previewing) .app { margin-right:min(440px,calc(100vw - 460px)); }
 }
 @media (max-width:700px) {
-  .panel { left:0; right:0; bottom:0; height:52vh; height:52dvh; border-radius:24px 24px 0 0; transform:translateY(105%); }
+  /* The card is never scaled or re-flowed while editing, so the page cannot jump. The panel simply overlays the bottom. */
+  body { --ph:46vh; --ph:46dvh; }
+  body.sheet-full { --ph:90vh; --ph:90dvh; }
+  body.sheet-min { --ph:152px; }
+  .panel { left:0; right:0; bottom:var(--kb,0px); height:min(var(--ph),calc(100dvh - var(--kb,0px) - 56px)); border-radius:24px 24px 0 0; transform:translateY(calc(105% + var(--kb,0px))); }
   .panel.open { transform:none; }
-  .panel.full { height:92vh; height:92dvh; }
-  .panel .handle { display:block; }
-  body.editing:not(.previewing) .app { zoom:.62; padding-bottom:56dvh; }
-  body.editing.sheet-full:not(.previewing) .app { padding-bottom:94dvh; }
+  .panel .handle { display:block; width:56px; height:6px; margin:9px auto 0; cursor:pointer; position:relative; }
+  .panel .handle::after { content:''; position:absolute; inset:-12px -20px; }
+  body.editing:not(.previewing) .app { padding-bottom:calc(var(--ph) + 28px); }
   .p-tools .ibtn { width:34px; height:34px; }
 }
 @media (max-width:360px) { .editor-heading strong { font-size:.88rem; } .p-tools { gap:3px; } }
@@ -205,3 +208,38 @@ body.editing:not(.previewing) [data-edit] { cursor:pointer; }
 
 .pbody:not([data-tab="profile"]) .strength { display:none; }
 .pbody .quick-add button { display:inline-flex; align-items:center; gap:7px; }
+
+/* Drag and drop */
+.grip { width:24px; flex:none; align-self:stretch; display:grid; place-items:center; color:#a3adbd; cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none; border-radius:8px; }
+.grip:hover { color:#526076; background:#f1f4f8; }
+.grip svg { width:18px; height:18px; }
+.sort-item { transition:transform .24s var(--out-expo), box-shadow .2s; will-change:transform; }
+.sort-item.dragging { transition:box-shadow .2s; z-index:8; position:relative; box-shadow:0 18px 40px rgba(18,32,54,.3); scale:1.025; cursor:grabbing; }
+.dropping { outline:2px dashed #5f7394; outline-offset:3px; background:#eef3fb !important; }
+body.editing .hero.dropping { outline-offset:-6px; }
+.sec-row .grip { height:34px; }
+
+/* Templates */
+.tpl-hint { margin:2px 0 12px; }
+.tpl-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.tpl { display:flex; flex-direction:column; gap:8px; padding:8px 8px 10px !important; min-height:0 !important; text-align:left; background:#fff; border:1.5px solid #e2e7ee !important; border-radius:16px !important; color:var(--e-ink); }
+.tpl b { font-size:.86rem; } .tpl small { color:#8792a3; font-size:.68rem; font-weight:600; margin-top:-5px; }
+.tpl-pv { position:relative; height:96px; border-radius:10px; overflow:hidden; background:var(--b); box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
+.tpl-pv i { position:absolute; display:block; }
+.tpl-pv .p { left:50%; top:12px; width:34px; height:40px; margin-left:-17px; background:var(--a); border-radius:var(--pr,8px); opacity:.95; }
+.tpl-pv .n { left:14px; right:36%; top:60px; height:7px; border-radius:3px; background:var(--t); }
+.tpl-pv .r { left:14px; right:58%; top:72px; height:4px; border-radius:2px; background:var(--a); }
+.tpl-pv .q { left:0; right:0; bottom:0; height:12px; background:var(--s); opacity:.95; }
+.tpl:active { transform:scale(.97); }
+.tpl.on { border-color:#172033 !important; box-shadow:0 0 0 3px rgba(23,32,51,.1); }
+
+/* Services editor */
+.svc-row { display:flex; gap:8px; align-items:flex-start; margin-top:8px; padding:10px 10px 10px 4px; border:1px solid var(--e-line); border-radius:16px; background:#fff; }
+.svc-row .grip { height:44px; }
+.svc-fields { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
+.svc-fields .two { display:flex; gap:6px; } .svc-fields .two input:first-child { flex:1.6; } .svc-fields .two input:last-child { flex:1; }
+.svc-row input, .svc-row textarea { min-height:38px !important; padding:7px 10px !important; font-size:15px !important; border-radius:10px !important; }
+.svc-row textarea { min-height:60px !important; }
+.svc-row .x { width:32px; height:32px; flex:none; min-height:0 !important; padding:0 !important; background:#f3f5f9; color:#526076; display:grid; place-items:center; }
+div.tog { cursor:pointer; } div.tog:focus-visible { outline:2px solid #172033; }
+.sec-row .grip { flex:none; width:24px; }

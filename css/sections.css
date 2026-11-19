@@ -77,3 +77,26 @@ body.editing .mini { display:none; }
 .intro .motion-subtle .sheet { animation:fadeOnly .8s ease .3s both; }
 @keyframes popIn { from { opacity:0; transform:translateY(18px) scale(.86); } to { opacity:1; transform:none; } }
 @keyframes sheetUp { from { transform:translateY(60px); } to { transform:none; } }
+
+/* Main button */
+.cta { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 var(--pad) 12px; padding:0 8px 0 22px; min-height:60px; border-radius:calc(var(--card-radius) * 1.2 + 6px);
+  background:var(--accent); color:var(--ink); font-size:1.02rem; font-weight:750; text-decoration:none; box-shadow:0 16px 32px -16px color-mix(in srgb,var(--accent) 85%,#000); transition:transform .35s var(--spring); }
+.cta[hidden] { display:none; }
+.cta-ic { width:44px; height:44px; flex:none; display:grid; place-items:center; border-radius:50%; background:var(--ink); color:var(--accent); transition:transform .45s var(--spring); }
+.cta:active { transform:scale(.97); }
+@media (hover:hover) { .cta:hover .cta-ic { transform:translateX(4px) rotate(-8deg); } }
+.intro .motion-cinematic .cta { animation:popIn .8s var(--spring) 1.05s both; }
+
+/* Services */
+.services { display:flex; flex-direction:column; gap:8px; }
+.svc { padding:14px 16px; border-radius:var(--card-radius); background:var(--s-soft); border:1px solid var(--s-line); }
+.svc-top { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.svc b { font-size:1rem; font-weight:700; overflow-wrap:anywhere; }
+.price { flex:none; padding:3px 11px; border-radius:99px; background:var(--accent); color:var(--ink); font-size:.8rem; font-weight:750; }
+.svc p { margin:6px 0 0; font-size:.9rem; line-height:1.55; color:var(--s-muted); overflow-wrap:anywhere; }
+
+/* Testimonial */
+.quote { margin:0; font-family:var(--display); font-size:1.6rem; line-height:1.22; letter-spacing:-.01em; color:var(--s-text); overflow-wrap:anywhere; }
+.quote::before { content:'\201C'; display:block; font-size:3.6rem; line-height:.62; margin-bottom:8px; color:var(--accent); }
+.quote-by { display:block; margin-top:12px; font-size:.84rem; font-style:normal; font-weight:650; color:var(--s-muted); }
+.quote-by:empty { display:none; }

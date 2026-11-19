@@ -8,10 +8,12 @@ function renderName() {
   const el = $('name'), text = (card.name || '').trim();
   el.className = 'name name-layout-' + (['natural', 'single', 'two', 'stacked'].includes(card.nameLayout) ? card.nameLayout : 'natural');
   el.setAttribute('data-edit', 'name');
-  el.textContent = '';
+  el.textContent = ''; let ci = 0; const perChar = ['letters', 'typewriter', 'wave', 'flip'].includes(card.nameAnim);
   text.split(/\s+/).filter(Boolean).forEach((word, i, all) => {
     const w = document.createElement('span'), inner = document.createElement('span');
-    w.className = 'w'; inner.textContent = word; inner.style.setProperty('--i', i); w.style.setProperty('--i', i);
+    w.className = 'w'; inner.style.setProperty('--i', i); w.style.setProperty('--i', i);
+    if (perChar) [...word].forEach((ch) => { const c = document.createElement('span'); c.className = 'c'; c.textContent = ch; c.style.setProperty('--ci', ci++); inner.appendChild(c); });
+    else inner.textContent = word;
     w.appendChild(inner); el.appendChild(w);
     if (i < all.length - 1) el.appendChild(document.createTextNode(' '));
   });
@@ -27,7 +29,7 @@ function renderQuick() {
     web: card.website && ['globe', 'Website', /^https?:\/\//.test(card.website) ? card.website : 'https://' + card.website]
   };
   const enabled = Array.isArray(card.quick) ? card.quick : DEFAULT_QUICK;
-  const items = QUICK_DEFS.filter((d) => enabled.includes(d.key) && sources[d.key]).map((d) => ({ d, src: sources[d.key] }));
+  const items = enabled.map((k) => QUICK_DEFS.find((d) => d.key === k)).filter((d) => d && sources[d.key]).map((d) => ({ d, src: sources[d.key] }));
   const q = $('quick'); q.innerHTML = ''; q.style.setProperty('--n', Math.max(1, Math.min(items.length, 4)));
   items.forEach(({ d, src }, i) => {
     const a = document.createElement('a'); a.className = 'qa'; a.href = src[2]; a.style.setProperty('--i', i); a.setAttribute('data-edit', 'contact');
@@ -68,7 +70,41 @@ function renderContactRows() {
   return rows.length;
 }
 
+function renderExtras() {
+  const cta = card.cta || {}, a = $('cta'), url = (cta.url || '').trim(), label = (cta.label || '').trim();
+  a.hidden = !(url && label);
+  if (!a.hidden) {
+    a.href = /^(https?:|mailto:|tel:)/i.test(url) ? url : 'https://' + url; a.target = /^(mailto:|tel:)/i.test(url) ? '' : '_blank'; a.rel = 'noopener';
+    a.innerHTML = ''; const sp = document.createElement('span'); sp.textContent = label; a.append(sp); const ic = document.createElement('span'); ic.className = 'cta-ic'; ic.innerHTML = svg('arrow'); a.append(ic);
+  }
+  const list = (card.services || []).filter((x) => (x.title || '').trim()), box = $('services'); box.innerHTML = '';
+  list.forEach((x) => {
+    const d = document.createElement('div'); d.className = 'svc';
+    const top = document.createElement('div'); top.className = 'svc-top';
+    const b = document.createElement('b'); b.textContent = x.title; top.append(b);
+    if ((x.price || '').trim()) { const pr = document.createElement('span'); pr.className = 'price'; pr.textContent = x.price; top.append(pr); }
+    d.append(top);
+    if ((x.desc || '').trim()) { const p = document.createElement('p'); p.textContent = x.desc; d.append(p); }
+    box.append(d);
+  });
+  const q = card.quote || {}; $('quoteText').textContent = (q.text || '').trim(); $('quoteBy').textContent = (q.by || '').trim();
+  return { services: list.length > 0, quote: !!(q.text || '').trim() };
+}
+
+/* Re-rendering rebuilds parts of the card (name, rows, chips...). If the page gets shorter for a moment the browser clamps the
+   scroll position and the view jumps to the top. Freeze the card height and restore the scroll position around every render. */
 function render() {
+  const app = $('app'), y = window.scrollY, ed = typeof isEditing === 'function' && isEditing();
+  if (ed && app) app.style.minHeight = app.offsetHeight + 'px';
+  try { renderCore(); }
+  finally {
+    if (ed) {
+      if (Math.abs(window.scrollY - y) > 1) window.scrollTo({ top: y, behavior: 'instant' });
+      requestAnimationFrame(() => { app.style.minHeight = ''; });
+    }
+  }
+}
+function renderCore() {
   const t = card.theme || {}, root = document.documentElement.style, app = $('app');
   /* Template classes: remove every previous one first so layouts never stack */
   [...app.classList].forEach((c) => { if (/^(layout|profile|motion)-/.test(c)) app.classList.remove(c); });
@@ -76,6 +112,11 @@ function render() {
   const shape = PROFILE_STYLES.includes(card.profileStyle) ? card.profileStyle : 'full';
   app.classList.add('profile-' + shape); if (shape !== 'full') app.classList.add('profile-flow');
   app.classList.add('motion-' + (['cinematic', 'subtle', 'off'].includes(card.motion) ? card.motion : 'cinematic'));
+  [...app.classList].forEach((c) => { if (/^(anim|titleanim|reveal)-/.test(c)) app.classList.remove(c); });
+  app.classList.add('anim-' + (['fade','blur','letters','typewriter','wave','flip','shimmer','none'].includes(card.nameAnim) ? card.nameAnim : 'rise'));
+  app.classList.add('titleanim-' + (['type','wipe','slide','blur','none'].includes(card.titleAnim) ? card.titleAnim : 'fade'));
+  if (['up','slide','zoom','blur'].includes(card.revealAnim)) app.classList.add('reveal-' + card.revealAnim);
+  $('title').style.setProperty('--tl', Math.max(1, (card.title || '').length));
   app.classList.toggle('title-in-about', card.titlePlacement === 'about');
 
   /* Theme tokens */
@@ -108,6 +149,7 @@ function render() {
   document.title = (card.name || 'Contact') + (card.title ? ' · ' + card.title : '');
   const desc = document.querySelector('meta[name=description]'); if (desc) desc.content = [card.name, card.title, card.location].filter(Boolean).join(' · ');
 
+  { const st = (card.status || '').trim(); $('status').hidden = !st; $('statusText').textContent = st; }
   renderPhoto();
   $('thumb').style.backgroundImage = card.avatar ? `url(${card.avatar})` : '';
   $('miniName').textContent = card.name || '';
@@ -137,7 +179,8 @@ function render() {
   });
 
   /* Sections: owner-controlled order and visibility, hidden when empty */
-  const has = { about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, links: links.length > 0 };
+  const ex = renderExtras();
+  const has = { services: ex.services, quote: ex.quote, about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, hours: renderHours(), links: links.length > 0 };
   getSections().forEach((s, idx) => {
     const el = document.querySelector(`[data-sec="${s.key}"]`); if (!el) return;
     el.style.order = idx; el.hidden = !(s.visible && has[s.key]);
@@ -152,3 +195,55 @@ function observe() {
   if (!io) io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .2 });
   document.querySelectorAll('.section:not(.in)').forEach((el) => io.observe(el));
 }
+
+/* ---------- Business hours + "Open now" badge (uses the visitor's own clock) ---------- */
+const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'], DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+function parseHourLines(text) {
+  const out = [];
+  String(text || '').split('\n').map((l) => l.trim()).filter(Boolean).forEach((line) => {
+    const m = line.match(/^(.*?)(?:\s*[:|]\s*|\s+)(closed|\d{1,2}(?::\d{2})?\s*(?:am|pm)?\s*(?:-|–|to)\s*\d{1,2}(?::\d{2})?\s*(?:am|pm)?.*)$/i);
+    const dayPart = (m ? m[1] : line).toLowerCase(), timePart = m ? m[2] : '', days = new Set();
+    if (/daily|every ?day|7 ?days/.test(dayPart)) DAY_KEYS.forEach((_, i) => days.add(i));
+    else {
+      const r = dayPart.match(/\b(sun|mon|tue|wed|thu|fri|sat)\w*\s*(?:-|–|to|through|thru)\s*(sun|mon|tue|wed|thu|fri|sat)/);
+      if (r) { let a = DAY_KEYS.indexOf(r[1]), b = DAY_KEYS.indexOf(r[2]); for (let n = 0; n < 7; n++) { days.add(a); if (a === b) break; a = (a + 1) % 7; } }
+      else (dayPart.match(/\b(sun|mon|tue|wed|thu|fri|sat)/g) || []).forEach((d) => days.add(DAY_KEYS.indexOf(d)));
+    }
+    let range = null;
+    const t = timePart.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:-|–|to)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+    if (t) {
+      let h1 = +t[1], h2 = +t[4], m1 = +(t[2] || 0), m2 = +(t[5] || 0), p1 = (t[3] || '').toLowerCase(), p2 = (t[6] || '').toLowerCase();
+      if (!p1 && p2) p1 = (h1 <= h2 || h1 === 12) && p2 === 'pm' && h1 !== 12 ? 'pm' : (h1 > h2 ? 'am' : p2);
+      const to24 = (h, p) => (p === 'pm' ? (h % 12) + 12 : p === 'am' ? h % 12 : h);
+      range = [to24(h1, p1) * 60 + m1, to24(h2, p2) * 60 + m2];
+    }
+    out.push({ line, days: [...days].sort(), range, closed: /closed/i.test(timePart) });
+  });
+  return out;
+}
+function updateOpenBadge() {
+  const badge = $('openBadge'), rows = [...document.querySelectorAll('#hoursList li')]; if (!badge) return;
+  const info = parseHourLines(card && card.hours), now = new Date(), d = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
+  const usable = info.filter((x) => x.days.length && (x.range || x.closed));
+  if (!usable.length) { badge.textContent = ''; return; }
+  let open = false;
+  usable.forEach((x) => {
+    if (!x.range) return; const [a, b] = x.range;
+    if (x.days.includes(d) && (b > a ? mins >= a && mins < b : mins >= a)) open = true;                       // same day, or overnight start
+    if (b <= a && x.days.includes((d + 6) % 7) && mins < b) open = true;                                    // overnight tail from yesterday
+  });
+  badge.textContent = open ? 'Open now' : 'Closed now'; badge.className = 'open-badge ' + (open ? 'on' : 'off');
+  rows.forEach((li) => li.classList.toggle('today', li.dataset.days.split(',').includes(String(d))));
+}
+function renderHours() {
+  const box = $('hoursList'); box.innerHTML = '';
+  const info = parseHourLines(card.hours);
+  info.forEach((x) => {
+    const li = document.createElement('li'); li.dataset.days = x.days.join(',');
+    const m = x.line.match(/^(.*?)(?:\s*[:|]\s*|\s+)(closed|\d.*)$/i), a = document.createElement('span'), b = document.createElement('span');
+    a.textContent = m ? m[1].trim() : x.line; b.textContent = m ? m[2].trim() : ''; li.append(a, b); box.append(li);
+  });
+  updateOpenBadge();
+  return info.length > 0;
+}
+setInterval(() => { if (card) updateOpenBadge(); }, 60000);

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1437">
 <meta name="description" content="Digital contact card">
 <title>Digital Contact Card</title>
@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="css/dock.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/editor.css">
+<link rel="stylesheet" href="css/textfx.css">
 </head>
 <body>
 <div class="splash" id="splash" aria-hidden="true"><div class="bar"></div></div>
@@ -34,10 +35,12 @@
     <div class="id" id="idBlock">
       <h1 class="name" id="name" data-edit="name"></h1>
       <p class="role" id="title" data-edit="title"></p>
+      <p class="status" id="status" data-edit="more" hidden><i></i><span id="statusText"></span></p>
     </div>
   </header>
 
   <main class="sheet" id="sheet">
+    <a class="cta" id="cta" data-edit="more" hidden></a>
     <nav class="quick" id="quick" aria-label="Quick actions"></nav>
     <div class="sections" id="sections">
       <section class="section" data-sec="about" data-edit="about">
@@ -48,6 +51,19 @@
       <section class="section" data-sec="highlights" data-edit="highlights">
         <h2>Highlights</h2>
         <ul class="chips" id="chips"></ul>
+      </section>
+      <section class="section" data-sec="services" data-edit="more">
+        <h2>Services</h2>
+        <div class="services" id="services"></div>
+      </section>
+      <section class="section" data-sec="quote" data-edit="more">
+        <h2>Kind words</h2>
+        <blockquote class="quote" id="quoteText"></blockquote>
+        <cite class="quote-by" id="quoteBy"></cite>
+      </section>
+      <section class="section" data-sec="hours" data-edit="more">
+        <h2>Hours <span class="open-badge" id="openBadge"></span></h2>
+        <ul class="hours" id="hoursList"></ul>
       </section>
       <section class="section" data-sec="contact" id="contactWrap" data-edit="contact">
         <h2>Contact</h2>
@@ -118,9 +134,11 @@
     <button class="active" data-tab="profile" role="tab"><span data-i="user"></span>Profile</button>
     <button data-tab="contact" role="tab"><span data-i="phone"></span>Contact</button>
     <button data-tab="photo" role="tab"><span data-i="image"></span>Photo</button>
+    <button data-tab="templates" role="tab"><span data-i="sparkles"></span>Templates</button>
     <button data-tab="layout" role="tab"><span data-i="layout"></span>Layout</button>
     <button data-tab="style" role="tab"><span data-i="palette"></span>Style</button>
     <button data-tab="links" role="tab"><span data-i="link"></span>Links</button>
+    <button data-tab="more" role="tab"><span data-i="plus"></span>More</button>
   </div>
 
   <div class="pbody" id="pbody" data-tab="profile">
@@ -171,8 +189,8 @@
         <button type="button" data-shape="polaroid" role="radio"><svg viewBox="0 0 40 40"><path fill-rule="evenodd" d="M7 4h26v32H7zM11 8v19h18V8z"/></svg>Polaroid</button>
         <button type="button" data-shape="wide" role="radio"><svg viewBox="0 0 40 40"><rect x="3" y="10" width="34" height="20" rx="3"/></svg>Wide</button>
       </div>
-      <label>Profile photo</label>
-      <div class="photo-up">
+      <label>Profile photo <span class="val">drop an image here</span></label>
+      <div class="photo-up" id="photoDrop">
         <div class="thumb" id="thumb"></div>
         <div class="photo-btns">
           <button class="primary" id="pickBtn" type="button"><span data-i="image"></span>Choose photo</button>
@@ -194,6 +212,11 @@
         <button class="ghost" id="resetImg" type="button">Fit whole photo</button>
         <button class="ghost wide" id="clearImg" type="button">Remove photo</button>
       </div>
+    </div>
+
+    <div class="pane" data-pane="templates">
+      <div class="hint tpl-hint">One tap changes the layout, photo shape, colors and fonts together. Your text, photo and links stay exactly as they are. You can undo any template.</div>
+      <div class="tpl-grid" id="tplGrid"></div>
     </div>
 
     <div class="pane" data-pane="layout">
@@ -220,6 +243,23 @@
         <button type="button" data-motion="off" role="radio">Off</button>
       </div>
       <div class="hint">Cinematic plays an intro and moves the header as visitors scroll. Visitors who prefer reduced motion never see animation.</div>
+
+      <label for="nameAnim">Name animation</label>
+      <select id="nameAnim">
+        <option value="rise">Rise (default)</option><option value="letters">Letter by letter</option><option value="typewriter">Typewriter</option>
+        <option value="fade">Soft fade</option><option value="blur">Blur in</option><option value="flip">Flip</option>
+        <option value="wave">Wave (keeps moving)</option><option value="shimmer">Shimmer (keeps shining)</option><option value="none">None</option>
+      </select>
+      <label for="titleAnim">Title animation</label>
+      <select id="titleAnim">
+        <option value="fade">Fade up (default)</option><option value="type">Typing</option><option value="wipe">Wipe</option>
+        <option value="slide">Slide in</option><option value="blur">Blur in</option><option value="none">None</option>
+      </select>
+      <label for="revealAnim">Section reveal on scroll</label>
+      <select id="revealAnim">
+        <option value="none">Underline only (default)</option><option value="up">Fade up</option><option value="slide">Slide in</option><option value="zoom">Zoom</option><option value="blur">Blur in</option>
+      </select>
+      <button class="ghost wide-btn" id="replayAnim" type="button" style="margin-top:12px">▶ Preview animations</button>
     </div>
 
     <div class="pane" data-pane="style">
@@ -312,6 +352,30 @@
       <label>Letter spacing <span class="val" id="nameLetterV"></span></label><input type="range" min="-3" max="5" step="0.5" id="nameLetter">
       <label>Title size <span class="val" id="titleSizeV"></span></label><input type="range" min="11" max="24" step="1" id="titleSize">
       <button class="ghost wide-btn" id="resetDesign" type="button">Reset design settings</button>
+    </div>
+
+    <div class="pane" data-pane="more">
+      <label>Main button <span class="val">optional</span></label>
+      <input type="text" id="cta_label" placeholder="Button text, e.g. Book a free call" autocomplete="off">
+      <input type="text" id="cta_url" inputmode="url" autocapitalize="off" placeholder="https://calendly.com/you" style="margin-top:8px">
+      <div class="hint">A big button at the top of your card. Great for booking a meeting, a menu, or a shop link.</div>
+
+      <label for="f_status">Availability <span class="val">optional</span></label>
+      <input type="text" id="f_status" data-f="status" placeholder="e.g. Available for new projects" autocomplete="off">
+      <div class="hint">Shows a small glowing pill under your title.</div>
+
+      <label for="f_hours">Business hours <span class="val">optional</span></label>
+      <textarea id="f_hours" data-f="hours" placeholder="Mon-Fri 9:00 AM - 6:00 PM&#10;Sat 10:00 AM - 2:00 PM&#10;Sun Closed" style="min-height:96px"></textarea>
+      <div class="hint">One line per day or range. Visitors see an "Open now" badge based on their own clock. Turn it on in the Layout tab.</div>
+
+      <label>Services <span class="val">drag to reorder</span></label>
+      <div id="serviceEditor"></div>
+      <button class="ghost wide-btn" id="addService" type="button">+ Add service</button>
+
+      <label>Testimonial</label>
+      <textarea id="quote_text" placeholder="A short quote from a happy client." style="min-height:84px"></textarea>
+      <input type="text" id="quote_by" placeholder="Name, role" autocomplete="off" style="margin-top:8px">
+      <div class="hint">Turn on or hide Services and Testimonial in the Layout tab.</div>
     </div>
 
     <div class="pane" data-pane="links">
