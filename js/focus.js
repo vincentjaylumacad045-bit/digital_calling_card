@@ -62,8 +62,8 @@ const SEC_ICON = {
 };
 const SEC_EDIT = { about: ['profile', 'f_about'], highlights: ['profile', 'f_ach'], services: ['more', 'serviceEditor'], quote: ['more', 'quote_text'], hours: ['more', 'f_hours'], contact: ['contact', 'f_phone'], links: ['links'] };
 function addSectionHandles() {
-  document.querySelectorAll('.section h2').forEach((h) => {
-    if (h.querySelector('.sec-tools')) return;
+  document.querySelectorAll('.section').forEach((h) => {
+    if (h.querySelector(':scope > .sec-tools')) return;
     const t = document.createElement('span'); t.className = 'sec-tools';
     const mk = (act, title) => `<button type="button" class="sec-btn" data-act="${act}" title="${title}" aria-label="${title}">${SEC_ICON[act]}</button>`;
     t.innerHTML = mk('edit', 'Edit this section') + mk('up', 'Move up') + mk('down', 'Move down') + mk('hide', 'Hide this section') +
