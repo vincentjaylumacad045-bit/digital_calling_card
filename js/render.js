@@ -115,7 +115,7 @@ function renderCore() {
   [...app.classList].forEach((c) => { if (/^(anim|titleanim|reveal)-/.test(c)) app.classList.remove(c); });
   app.classList.add('anim-' + (['fade','blur','letters','typewriter','wave','flip','shimmer','none'].includes(card.nameAnim) ? card.nameAnim : 'rise'));
   app.classList.add('titleanim-' + (['type','wipe','slide','blur','none'].includes(card.titleAnim) ? card.titleAnim : 'fade'));
-  if (['up','slide','zoom','blur'].includes(card.revealAnim)) app.classList.add('reveal-' + card.revealAnim);
+  { const ra = card.revealAnim === undefined ? 'up' : card.revealAnim; if (['up','slide','zoom','blur'].includes(ra)) app.classList.add('reveal-' + ra); }
   $('title').style.setProperty('--tl', Math.max(1, (card.title || '').length));
   app.classList.toggle('title-in-about', card.titlePlacement === 'about');
 
@@ -185,15 +185,19 @@ function renderCore() {
     const el = document.querySelector(`[data-sec="${s.key}"]`); if (!el) return;
     el.style.order = idx; el.hidden = !(s.visible && has[s.key]);
   });
-  observe();
+  observe(); if (typeof updateSecButtons === 'function') updateSecButtons();
   if (typeof touchHistory === 'function') touchHistory();
 }
 
 /* ---------- Section underline reveal (structural, once per section) ---------- */
 let io;
 function observe() {
-  if (!io) io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .2 });
-  document.querySelectorAll('.section:not(.in)').forEach((el) => io.observe(el));
+  /* Sections animate in when they enter the screen and out when they leave, so it works every time you scroll up or down */
+  if (!io) io = new IntersectionObserver((es) => es.forEach((e) => {
+    const keep = document.body.classList.contains('editing');                       // while editing, every section stays visible
+    e.target.classList.toggle('in', keep || e.isIntersecting);
+  }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.section').forEach((el) => { if (!el.__obs) { el.__obs = true; io.observe(el); } });
 }
 
 /* ---------- Business hours + "Open now" badge (uses the visitor's own clock) ---------- */

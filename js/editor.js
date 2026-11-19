@@ -154,7 +154,7 @@ function fillForm() {
   document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] ?? ''));
   document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t] ?? THEME_FALLBACK[i.dataset.t] ?? ''));
   syncPhotoControls();
-  $('nameFont').value = card.nameFont || 'inherit'; $('nameLayout').value = card.nameLayout || 'natural'; $('titlePlace').value = card.titlePlacement === 'about' ? 'about' : 'hero'; $('nameAnim').value = card.nameAnim || 'rise'; $('titleAnim').value = card.titleAnim || 'fade'; $('revealAnim').value = card.revealAnim || 'none';
+  $('nameFont').value = card.nameFont || 'inherit'; $('nameLayout').value = card.nameLayout || 'natural'; $('titlePlace').value = card.titlePlacement === 'about' ? 'about' : 'hero'; $('nameAnim').value = card.nameAnim || 'rise'; $('titleAnim').value = card.titleAnim || 'fade'; $('revealAnim').value = card.revealAnim === undefined ? 'up' : card.revealAnim;
   const computed = Math.round(parseFloat(getComputedStyle($('name')).fontSize)) || 48;
   $('nameSize').value = typeof card.nameSize === 'number' ? card.nameSize : clampN(computed, 20, 72);
   $('nameLine').value = typeof card.nameLine === 'number' ? card.nameLine : 1; $('nameLetter').value = typeof card.nameLetter === 'number' ? card.nameLetter : 0;

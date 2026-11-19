@@ -54,12 +54,48 @@ function releasePart(delay) {
 })();
 
 /* 2. Drag sections up and down on the card itself */
+const SEC_ICON = {
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 00-4-4L4 16v4z"/></svg>',
+  hide: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.9 5.1A9.8 9.8 0 0112 5c5 0 8.5 4.2 9.5 7a11 11 0 01-3 4.2M6.2 6.3A11 11 0 002.5 12c1 2.8 4.5 7 9.5 7a9.6 9.6 0 004-.9"/></svg>'
+};
+const SEC_EDIT = { about: ['profile', 'f_about'], highlights: ['profile', 'f_ach'], services: ['more', 'serviceEditor'], quote: ['more', 'quote_text'], hours: ['more', 'f_hours'], contact: ['contact', 'f_phone'], links: ['links'] };
 function addSectionHandles() {
   document.querySelectorAll('.section h2').forEach((h) => {
-    if (h.querySelector('.sec-drag')) return;
-    const g = document.createElement('span'); g.className = 'sec-drag'; g.title = 'Drag up or down to reorder'; g.setAttribute('aria-label', 'Drag to reorder section'); g.innerHTML = svg('grip'); h.appendChild(g);
+    if (h.querySelector('.sec-tools')) return;
+    const t = document.createElement('span'); t.className = 'sec-tools';
+    const mk = (act, title) => `<button type="button" class="sec-btn" data-act="${act}" title="${title}" aria-label="${title}">${SEC_ICON[act]}</button>`;
+    t.innerHTML = mk('edit', 'Edit this section') + mk('up', 'Move up') + mk('down', 'Move down') + mk('hide', 'Hide this section') +
+      `<span class="sec-drag" title="Drag up or down to reorder" aria-label="Drag to reorder section">${svg('grip')}</span>`;
+    h.appendChild(t);
   });
 }
+const visibleSecs = () => [...document.querySelectorAll('.section')].filter((s) => !s.hidden).sort((a, b) => (+a.style.order || 0) - (+b.style.order || 0));
+function updateSecButtons() {
+  const v = visibleSecs();
+  v.forEach((s, i) => { const u = s.querySelector('[data-act=up]'), d = s.querySelector('[data-act=down]'); if (u) u.disabled = i === 0; if (d) d.disabled = i === v.length - 1; });
+}
+function applyVisibleOrder(keys) {                                   // put the visible sections in `keys` order, keeping hidden ones where they were
+  const all = getSections(), vis = new Set(keys); let n = 0;
+  card.sections = all.map((s) => (vis.has(s.key) ? { key: keys[n++], visible: s.visible } : s));
+}
+function moveSection(sec, delta) {
+  const keys = visibleSecs().map((s) => s.dataset.sec), i = keys.indexOf(sec.dataset.sec), j = i + delta; if (i < 0 || j < 0 || j >= keys.length) return;
+  const before = sec.getBoundingClientRect().top; [keys[i], keys[j]] = [keys[j], keys[i]];
+  applyVisibleOrder(keys); render(); renderSectionList();
+  window.__focusScrollUntil = Date.now() + 300; scrollBy(0, sec.getBoundingClientRect().top - before);      // keep the moved section under your finger
+  sec.classList.remove('moved'); void sec.offsetWidth; sec.classList.add('moved');
+}
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.sec-btn'); if (!btn) return;
+  e.preventDefault(); e.stopPropagation(); if (!isEditing() || document.body.classList.contains('previewing')) return;
+  const sec = btn.closest('.section'), act = btn.dataset.act;
+  if (act === 'up') moveSection(sec, -1);
+  else if (act === 'down') moveSection(sec, 1);
+  else if (act === 'edit') { const t = SEC_EDIT[sec.dataset.sec]; if (t) { $('panel').classList.add('open'); jumpTo(t[0], t[1]); focusPart(sec, false); } }
+  else if (act === 'hide') { card.sections = getSections().map((s) => (s.key === sec.dataset.sec ? { ...s, visible: false } : s)); render(); renderSectionList(); toast('Section hidden. Turn it back on in the Layout tab, or press Undo.'); }
+}, true);
 addSectionHandles();
 document.addEventListener('pointerdown', (e) => {
   const grip = e.target.closest('.sec-drag'); if (!grip || !isEditing() || document.body.classList.contains('previewing') || e.button > 0) return;
@@ -85,8 +121,7 @@ document.addEventListener('pointerdown', (e) => {
     items.forEach((n) => { n.style.transform = ''; n.classList.remove('dragging-sec', 'sec-shift'); }); document.body.classList.remove('sec-dragging');
     if (to !== from) {
       const keys = items.map((n) => n.dataset.sec), [k] = keys.splice(from, 1); keys.splice(to, 0, k);
-      const all = getSections(), vis = new Set(keys); let n = 0;
-      card.sections = all.map((s) => (vis.has(s.key) ? { key: keys[n++], visible: s.visible } : s));
+      applyVisibleOrder(keys);
       render(); renderSectionList(); toast('Section moved');
     }
   };

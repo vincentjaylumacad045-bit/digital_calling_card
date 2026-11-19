@@ -9,6 +9,13 @@
     root.style.setProperty('--py', Math.round(Math.min(y * .2, 40)) + 'px');          // whole pixels only, so the photo stays sharp
     document.body.classList.toggle('scrolled', y > h * .72 && !document.body.classList.contains('editing'));
   }
+  let away = false;
+  function heroReplay() {
+    const y = window.scrollY || 0, h = ($('hero') && $('hero').offsetHeight) || 500;
+    if (y > h * 0.9) away = true;
+    else if (away && y < h * 0.15 && !document.body.classList.contains('editing') && card && card.motion !== 'off') { away = false; replayIntro(); }
+  }
+  addEventListener('scroll', heroReplay, { passive: true });
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   addEventListener('resize', update);
   update();
