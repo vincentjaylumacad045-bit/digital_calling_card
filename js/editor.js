@@ -115,7 +115,7 @@ function replayAll() {
   secs.filter((s) => !s.hidden).forEach((s, i) => setTimeout(() => s.classList.add('in'), 900 + i * 160));
   setTimeout(() => secs.forEach((s) => s.classList.add('in')), 900 + secs.length * 160 + 900);
 }
-['nameAnim', 'titleAnim', 'revealAnim'].forEach((id) => $(id).addEventListener('change', () => { card[id] = $(id).value; render(); replayAll(); }));
+['nameAnim', 'titleAnim', 'revealAnim'].forEach((id) => $(id).addEventListener('change', () => { keepScrolls(() => { card[id] = $(id).value; render(); replayAll(); }); }));
 $('replayAnim').onclick = () => { if (card.motion === 'off') { card.motion = 'cinematic'; renderSegs(); render(); } replayAll(); };
 function replayIntro() { document.body.classList.remove('intro'); void document.body.offsetWidth; document.body.classList.add('intro'); clearTimeout(replayIntro.t); replayIntro.t = setTimeout(() => document.body.classList.remove('intro'), 3200); }
 

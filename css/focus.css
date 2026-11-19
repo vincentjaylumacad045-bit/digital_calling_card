@@ -1,8 +1,10 @@
 /* focus.css — highlight the part being edited; drag handles on the live card */
 .spot { outline:2px solid var(--accent); outline-offset:8px; border-radius:10px; box-shadow:0 0 0 9px color-mix(in srgb,var(--accent) 22%,transparent); transition:outline-color .2s, box-shadow .3s; position:relative; z-index:6; }
 .hero .spot, .app.layout-poster .id .spot { outline-color:#fff; box-shadow:0 0 0 9px rgba(255,255,255,.22); }
-body.has-spot.editing:not(.previewing) .section:not(.spot), body.has-spot.editing:not(.previewing) .quick { opacity:.55; transition:opacity .25s; }
-body.has-spot.editing:not(.previewing) .section.spot { opacity:1; }
+/* Everything except the part being edited is blurred and dimmed */
+.section, .quick, .cta, .photo, .id > * { transition:filter .3s, opacity .3s; }
+body.has-spot.editing:not(.previewing) :is(.section, .quick, .cta, .photo, .id > *):not(.spot) { filter:blur(5px); opacity:.45; }
+body.has-spot.editing:not(.previewing) .spot { filter:none; opacity:1; }
 
 .sec-tools { display:none; position:absolute; top:6px; right:8px; z-index:12; align-items:center; gap:3px; padding:3px; border-radius:12px;
   background:color-mix(in srgb,var(--s-surface) 92%,transparent); box-shadow:0 0 0 1px var(--s-line), 0 6px 18px -6px rgba(0,0,0,.3); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }

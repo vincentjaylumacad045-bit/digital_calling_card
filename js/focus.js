@@ -44,12 +44,14 @@ function releasePart(delay) {
   spotTimer = setTimeout(() => { if (spotEl) spotEl.classList.remove('spot'); spotEl = null; document.body.classList.remove('has-spot'); }, delay);
 }
 (function () {
-  const body = $('pbody'); let lastKey = '';
-  body.addEventListener('focusin', (e) => { if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return; const n = partFor(e.target); if (n) { lastKey = e.target.id; setTimeout(() => focusPart(n, true), 120); } });
+  const body = $('pbody');
+  /* Only typing fields move the card into view. Dropdowns, sliders and buttons just highlight, so the page never jumps while you choose. */
+  const typing = (el) => el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && /^(text|search|url|tel|email|)$/.test(el.type));
+  body.addEventListener('focusin', (e) => { if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return; const n = partFor(e.target); if (n) { const sc = typing(e.target); setTimeout(() => focusPart(n, sc), 120); } });
   body.addEventListener('focusout', () => releasePart(900));
-  body.addEventListener('input', (e) => { const n = partFor(e.target); if (n) { focusPart(n, e.target.id !== lastKey); lastKey = e.target.id; if (e.target.type === 'range') releasePart(1400); } });
-  body.addEventListener('pointerdown', (e) => { const n = e.target.closest('input[type=range]') && partFor(e.target); if (n) focusPart(n, true); });
-  body.addEventListener('change', (e) => { const n = partFor(e.target); if (n) { focusPart(n, true); releasePart(1600); } });
+  body.addEventListener('input', (e) => { const n = partFor(e.target); if (n) { focusPart(n, false); if (!typing(e.target)) releasePart(1400); } });
+  body.addEventListener('pointerdown', (e) => { const n = e.target.closest('input[type=range],select') && partFor(e.target); if (n) focusPart(n, false); });
+  body.addEventListener('change', (e) => { const n = partFor(e.target); if (n) { setTimeout(() => focusPart(n, true), 80); releasePart(2600); } });   // after you choose, bring the result into view
   /* Picking a tab or template also points at what it changes */
 })();
 
