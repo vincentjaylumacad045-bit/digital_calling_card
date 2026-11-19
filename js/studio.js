@@ -218,6 +218,6 @@ addEventListener('keydown', (e) => {
   $('panel').addEventListener('focusin', (e) => {
     if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
     const y = window.scrollY;                                   // iOS scrolls the page to reveal a focused field; put it back
-    [0, 30, 120, 300, 600, 900].forEach((t) => setTimeout(() => { if (Math.abs(window.scrollY - y) > 2) window.scrollTo({ top: y, behavior: 'instant' }); }, t));
+    [0, 30, 120, 300, 600, 900].forEach((t) => setTimeout(() => { if (Date.now() > (window.__focusScrollUntil || 0) && Math.abs(window.scrollY - y) > 2) window.scrollTo({ top: y, behavior: 'instant' }); }, t));
   });
 })();

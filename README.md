@@ -7,8 +7,8 @@ An animated one-page contact card. Everyone can view it. Only you (with your pas
 ## Project structure
 ```
 index.html   card markup + Design Studio editor
-css/         base · hero · sections · layouts · dock · overlays · editor · textfx
-js/          icons → state → photo → render → dock → studio → editor → upload → actions → motion → boot
+css/         base · hero · sections · layouts · dock · overlays · editor · textfx · focus
+js/          icons → state → photo → render → dock → studio → editor → upload → focus → actions → motion → boot
 api/         card.js (read/save card) · upload.js (photo upload)
 ```
 

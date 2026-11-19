@@ -1,0 +1,19 @@
+/* focus.css — highlight the part being edited; drag handles on the live card */
+.spot { outline:2px solid var(--accent); outline-offset:8px; border-radius:10px; box-shadow:0 0 0 9px color-mix(in srgb,var(--accent) 22%,transparent); transition:outline-color .2s, box-shadow .3s; position:relative; z-index:6; }
+.hero .spot, .app.layout-poster .id .spot { outline-color:#fff; box-shadow:0 0 0 9px rgba(255,255,255,.22); }
+body.has-spot.editing:not(.previewing) .section:not(.spot), body.has-spot.editing:not(.previewing) .quick { opacity:.55; transition:opacity .25s; }
+body.has-spot.editing:not(.previewing) .section.spot { opacity:1; }
+
+.sec-drag { display:none; margin-left:auto; width:34px; height:28px; border-radius:8px; place-items:center; color:var(--s-muted); cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none; background:color-mix(in srgb,var(--s-text) 7%,transparent); }
+.sec-drag svg { width:18px; height:18px; }
+body.editing:not(.previewing) .sec-drag { display:grid; }
+body.editing:not(.previewing) .open-badge { margin-left:8px; }
+.sec-shift { transition:transform .25s var(--out-expo); }
+.dragging-sec { position:relative; z-index:40; background:var(--s-surface); box-shadow:0 18px 40px -12px rgba(0,0,0,.4); border-radius:var(--card-radius); cursor:grabbing; opacity:1 !important; transition:none; }
+.sec-dragging, .sec-dragging * { cursor:grabbing !important; -webkit-user-select:none; user-select:none; }
+.sec-dragging .section { overflow-anchor:none; }
+
+body.editing:not(.previewing) #name, body.editing:not(.previewing) #title { cursor:grab; }
+.id.grabbing, .id.grabbing * { cursor:grabbing !important; }
+body.moving-name { -webkit-user-select:none; user-select:none; }
+body.moving-name .id { outline:1.5px dashed #fff; outline-offset:10px; }

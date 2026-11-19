@@ -99,7 +99,7 @@ function render() {
   try { renderCore(); }
   finally {
     if (ed) {
-      if (Math.abs(window.scrollY - y) > 1) window.scrollTo({ top: y, behavior: 'instant' });
+      if (Date.now() > (window.__focusScrollUntil || 0) && Math.abs(window.scrollY - y) > 1) window.scrollTo({ top: y, behavior: 'instant' });
       requestAnimationFrame(() => { app.style.minHeight = ''; });
     }
   }
