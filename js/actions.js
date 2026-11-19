@@ -40,7 +40,7 @@ function closePanel() {
   }
   finishClose();
 }
-function finishClose() { document.documentElement.classList.remove('editing-mode'); setPreview(false); holdScroll(() => { $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full', 'sheet-min'); }); }
+function finishClose() { if (typeof setArrange === 'function') document.body.classList.remove('arrange'); document.documentElement.classList.remove('editing-mode'); setPreview(false); holdScroll(() => { $('panel').classList.remove('open', 'full'); document.body.classList.remove('editing', 'sheet-full', 'sheet-min'); }); }
 function setSheet(mode) { document.body.classList.toggle('sheet-full', mode === 'full'); document.body.classList.toggle('sheet-min', mode === 'min'); $('panel').classList.toggle('full', mode === 'full'); }
 const sheetMode = () => (document.body.classList.contains('sheet-full') ? 'full' : document.body.classList.contains('sheet-min') ? 'min' : 'mid');
 function toggleFull() { setSheet(sheetMode() === 'full' ? 'mid' : 'full'); }

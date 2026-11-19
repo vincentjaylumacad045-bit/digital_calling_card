@@ -32,7 +32,7 @@ function renderQuick() {
   const items = enabled.map((k) => QUICK_DEFS.find((d) => d.key === k)).filter((d) => d && sources[d.key]).map((d) => ({ d, src: sources[d.key] }));
   const q = $('quick'); q.innerHTML = ''; q.style.setProperty('--n', Math.max(1, Math.min(items.length, 4)));
   items.forEach(({ d, src }, i) => {
-    const a = document.createElement('a'); a.className = 'qa'; a.href = src[2]; a.style.setProperty('--i', i); a.setAttribute('data-edit', 'contact');
+    const a = document.createElement('a'); a.className = 'qa'; a.href = src[2]; a.style.setProperty('--i', i); a.setAttribute('data-edit', 'contact'); a.dataset.key = d.key;
     if (!/^(tel|mailto):/.test(src[2])) { a.target = '_blank'; a.rel = 'noopener'; }
     a.innerHTML = `<span class="qi">${svg(src[0])}</span><span class="ql"></span>`;
     a.querySelector('.ql').textContent = d.label;
@@ -50,8 +50,9 @@ function renderContactRows() {
   if (card.website) rows.push(['globe', 'Website', card.website.replace(/^https?:\/\//, '').replace(/\/$/, ''), web]);
   if (card.location) rows.push(['pin', 'Location', card.location, 'https://www.google.com/maps/search/' + encodeURIComponent(card.location)]);
   const box = $('rows'); box.innerHTML = '';
+  { const ord = Array.isArray(card.contactOrder) ? card.contactOrder : [], rk = (r) => { const i = ord.indexOf(r[0]); return i < 0 ? 99 : i; }; rows.sort((a, b) => rk(a) - rk(b)); }
   rows.forEach(([ic, lab, val, href]) => {
-    const wrap = document.createElement('div'); wrap.className = 'row-wrap';
+    const wrap = document.createElement('div'); wrap.className = 'row-wrap'; wrap.dataset.key = ic;
     const a = document.createElement('a'); a.className = 'row-link'; a.href = href;
     if (!/^(tel|mailto):/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
     const ico = document.createElement('span'); ico.className = 'ico'; ico.innerHTML = svg(ic);
@@ -185,7 +186,7 @@ function renderCore() {
     const el = document.querySelector(`[data-sec="${s.key}"]`); if (!el) return;
     el.style.order = idx; el.hidden = !(s.visible && has[s.key]);
   });
-  observe(); if (typeof updateSecButtons === 'function') updateSecButtons();
+  observe(); if (typeof updateSecButtons === 'function') updateSecButtons(); if (typeof decorateItems === 'function') decorateItems();
   if (typeof touchHistory === 'function') touchHistory();
 }
 

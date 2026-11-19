@@ -2,6 +2,7 @@
 /* ---------- Icons ---------- */
 const P = {
   chevron:'<path d="m9 18 6-6-6-6"/>',
+  arrange:'<path d="M8 20V4M8 4 4.5 7.5M8 4l3.5 3.5M16 4v16M16 20l-3.5-3.5M16 20l3.5-3.5"/>',
   grip:'<path d="M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01" stroke-width="3.2"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
   arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',

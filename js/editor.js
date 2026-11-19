@@ -215,7 +215,7 @@ $('fixContrast').onclick = () => { fixContrast(); fillForm(); render(); toast('C
 $('undoBtn').onclick = () => historyJump(-1);
 $('redoBtn').onclick = () => historyJump(1);
 $('resetDesign').addEventListener('click', () => {
-  ['nameX', 'nameY', 'nameAlign', 'nameSize', 'nameFont', 'nameLayout', 'nameLine', 'nameLetter', 'titleSize', 'roundness', 'sectionSpace', 'titlePlacement', 'dragPositions', 'nameAnim', 'titleAnim', 'revealAnim'].forEach((k) => delete card[k]);
+  ['nameX', 'nameY', 'nameAlign', 'nameSize', 'nameFont', 'nameLayout', 'nameLine', 'nameLetter', 'titleSize', 'roundness', 'sectionSpace', 'titlePlacement', 'dragPositions', 'nameAnim', 'titleAnim', 'revealAnim', 'contactOrder'].forEach((k) => delete card[k]);
   card.layout = 'tap'; card.profileStyle = 'full'; card.theme = { ...THEME_FALLBACK };
   withTransition(() => { fillForm(); render(); }); toast('Design settings reset. Save to publish.');
 });

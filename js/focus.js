@@ -152,3 +152,56 @@ document.addEventListener('pointerdown', (e) => {
   document.addEventListener('touchmove', (e) => { if (armed() && e.cancelable) e.preventDefault(); }, { passive: false });
   document.addEventListener('click', (e) => { if (e.target.closest('.sec-drag')) { e.preventDefault(); e.stopPropagation(); return; } if (window.__suppressClick && Date.now() < window.__suppressClick) { e.preventDefault(); e.stopPropagation(); } }, true);
 })();
+
+/* 4. Arrange mode: every item on the card (contact rows, links, services, highlights, quick actions) can be dragged to a new place */
+const moveIn = (arr, from, to) => { const a = [...arr], [x] = a.splice(from, 1); a.splice(to, 0, x); return a; };
+function reslot(full, slots, values) { const out = [...full]; slots.forEach((s, n) => { out[s] = values[n]; }); return out; }     // put `values` back into their slots, everything else stays
+const ITEM_CFG = [
+  { box: '#rows', item: '.row-wrap', commit(els, from, to) { card.contactOrder = moveIn(els.map((n) => n.dataset.key), from, to); } },
+  { box: '#quick', item: '.qa', commit(els, from, to) {
+      const full = Array.isArray(card.quick) ? [...card.quick] : [...DEFAULT_QUICK], vis = new Set(els.map((n) => n.dataset.key)), slots = full.map((k, i) => (vis.has(k) ? i : -1)).filter((i) => i >= 0);
+      card.quick = reslot(full, slots, moveIn(els.map((n) => n.dataset.key), from, to)); renderQuickList(); } },
+  { box: '#socials', item: '.soc', commit(els, from, to) {
+      const slots = card.socials.map((s, i) => (s.url ? i : -1)).filter((i) => i >= 0); card.socials = reslot(card.socials, slots, moveIn(slots.map((i) => card.socials[i]), from, to)); renderSocialEditor(); } },
+  { box: '#services', item: '.svc', commit(els, from, to) {
+      const sv = card.services || [], slots = sv.map((s, i) => ((s.title || '').trim() ? i : -1)).filter((i) => i >= 0); card.services = reslot(sv, slots, moveIn(slots.map((i) => sv[i]), from, to)); renderServiceEditor(); } },
+  { box: '#chips', item: '.chip', commit(els, from, to) {
+      const lines = (card.achievements || '').split('\n'), slots = lines.map((l, i) => (l.trim() ? i : -1)).filter((i) => i >= 0).slice(0, 12);
+      card.achievements = reslot(lines, slots, moveIn(slots.map((i) => lines[i]), from, to)).join('\n'); $('f_ach').value = card.achievements; } }
+];
+function decorateItems() {
+  ITEM_CFG.forEach((c) => { const box = document.querySelector(c.box); if (!box) return;
+    box.querySelectorAll(':scope > ' + c.item).forEach((it) => { it.classList.add('arr-item'); if (!it.querySelector(':scope > .item-grip')) { const g = document.createElement('span'); g.className = 'item-grip'; g.title = 'Drag to move'; g.innerHTML = svg('grip'); it.appendChild(g); } }); });
+}
+decorateItems();
+function setArrange(on) {
+  document.body.classList.toggle('arrange', on); $('arrangeBtn').setAttribute('aria-pressed', on); $('arrangeBtn').classList.toggle('on', on);
+  if (on) { if (document.body.classList.contains('previewing')) setPreview(false); $('panel').classList.remove('full'); setSheet('min'); toast('Arrange on: drag the ⋮⋮ handles to move anything'); }
+  else if (sheetMode() === 'min') setSheet('mid');
+}
+$('arrangeBtn').onclick = () => setArrange(!document.body.classList.contains('arrange'));
+document.addEventListener('pointerdown', (e) => {
+  const grip = e.target.closest('.item-grip'); if (!grip || !isEditing() || !document.body.classList.contains('arrange') || e.button > 0) return;
+  const item = grip.parentElement, cfg = ITEM_CFG.find((c) => item.matches(c.item) && item.parentElement && item.parentElement.matches(c.box)); if (!cfg) return;
+  e.preventDefault(); e.stopPropagation(); grip.setPointerCapture(e.pointerId);
+  const els = [...item.parentElement.querySelectorAll(':scope > ' + cfg.item)], from = els.indexOf(item), rects = els.map((n) => n.getBoundingClientRect());
+  const cx = (r) => r.left + r.width / 2, cy = (r) => r.top + r.height / 2, startX = e.clientX, startY = e.clientY, startScroll = scrollY;
+  let to = from, lx = e.clientX, ly = e.clientY, raf = 0;
+  item.classList.add('item-dragging'); document.body.classList.add('sec-dragging');
+  const place = () => {
+    const dx = lx - startX, dy = ly - startY + (scrollY - startScroll); item.style.transform = `translate(${dx}px,${dy}px)`;
+    const px = cx(rects[from]) + dx, py = cy(rects[from]) + dy; let best = Infinity;
+    rects.forEach((r, i) => { const d = Math.hypot(cx(r) - px, cy(r) - py); if (d < best) { best = d; to = i; } });
+    els.forEach((n, i) => n.classList.toggle('drop-target', i === to && to !== from));
+  };
+  const loop = () => { const band = visibleBand(), v = ly < band.top + 50 ? -10 : ly > band.bottom - 40 ? 10 : 0; if (v) { window.__focusScrollUntil = Date.now() + 600; scrollBy(0, v); place(); } raf = requestAnimationFrame(loop); };
+  raf = requestAnimationFrame(loop);
+  const move = (ev) => { lx = ev.clientX; ly = ev.clientY; place(); };
+  const up = () => {
+    cancelAnimationFrame(raf); grip.removeEventListener('pointermove', move); grip.removeEventListener('pointerup', up); grip.removeEventListener('pointercancel', up);
+    els.forEach((n) => { n.style.transform = ''; n.classList.remove('item-dragging', 'drop-target'); }); document.body.classList.remove('sec-dragging');
+    window.__suppressClick = Date.now() + 300;
+    if (to !== from) { cfg.commit(els, from, to); render(); toast('Moved. Press Save to publish.'); }
+  };
+  grip.addEventListener('pointermove', move); grip.addEventListener('pointerup', up); grip.addEventListener('pointercancel', up);
+}, true);
