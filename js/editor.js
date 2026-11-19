@@ -150,7 +150,8 @@ function updateStyleValues() {
   $('nameLineV').textContent = typeof card.nameLine === 'number' ? Number(card.nameLine).toFixed(2) : 'Auto';
   $('nameLetterV').textContent = typeof card.nameLetter === 'number' ? card.nameLetter + 'px' : 'Auto';
 }
-function fillForm() {
+function fillForm() { return keepScrolls(fillFormCore); }
+function fillFormCore() {
   document.querySelectorAll('[data-f]').forEach((i) => (i.value = card[i.dataset.f] ?? ''));
   document.querySelectorAll('[data-t]').forEach((i) => (i.value = card.theme[i.dataset.t] ?? THEME_FALLBACK[i.dataset.t] ?? ''));
   syncPhotoControls();

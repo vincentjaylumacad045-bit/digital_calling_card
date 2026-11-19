@@ -21,10 +21,19 @@
   update();
 })();
 
+/* Keep both the card and the editor panel exactly where they were while a design change redraws them */
+function scrollSnapshot() { const pb = $('pbody'); return { y: window.scrollY, py: pb ? pb.scrollTop : 0 }; }
+function scrollRestore(s) {
+  const pb = $('pbody'); if (!isEditing()) return;
+  if (pb && Math.abs(pb.scrollTop - s.py) > 1) pb.scrollTo({ top: s.py, behavior: 'instant' });
+  if (Math.abs(window.scrollY - s.y) > 1) window.scrollTo({ top: s.y, behavior: 'instant' });
+}
+function keepScrolls(fn) { const s = scrollSnapshot(); try { return fn(); } finally { scrollRestore(s); } }
+
 /* Run a change inside a view transition when the browser supports it, so layout and theme switches morph instead of snapping */
 function withTransition(fn) {
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || (card && card.motion === 'off');
-  if (!document.startViewTransition || calm) return fn();
-  const y = window.scrollY, back = () => { if (isEditing() && Math.abs(window.scrollY - y) > 1) window.scrollTo({ top: y, behavior: 'instant' }); };
-  try { const vt = document.startViewTransition(fn); vt.ready.then(back, () => {}); vt.finished.then(back, () => {}); } catch (e) { fn(); back(); }
+  const snap = scrollSnapshot(), run = () => keepScrolls(fn), back = () => scrollRestore(snap);
+  if (!document.startViewTransition || calm) { run(); return; }
+  try { const vt = document.startViewTransition(run); vt.ready.then(back, () => {}); vt.finished.then(() => { back(); setTimeout(back, 60); }, () => {}); } catch (e) { run(); back(); }
 }
