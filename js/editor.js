@@ -59,7 +59,12 @@ const LAYOUT_THUMBS = {
   timeline: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="30" fill="#2c3b5e"/><rect x="6" y="19" width="26" height="5" rx="2" fill="#fff"/><rect x="11" y="36" width="1.6" height="40" fill="#c9d1de"/><circle cx="11.8" cy="38" r="3" fill="#c6f432"/><circle cx="11.8" cy="53" r="3" fill="#c6f432"/><circle cx="11.8" cy="68" r="3" fill="#c6f432"/><rect x="19" y="36" width="34" height="3" rx="1.5" fill="#c9d1de"/><rect x="19" y="43" width="26" height="3" rx="1.5" fill="#dfe5ef"/><rect x="19" y="51" width="34" height="3" rx="1.5" fill="#c9d1de"/><rect x="19" y="66" width="30" height="3" rx="1.5" fill="#c9d1de"/>',
   badge: '<rect width="60" height="80" fill="#1d2a4a"/><rect x="7" y="8" width="46" height="62" rx="8" fill="#fff"/><rect x="24" y="11" width="12" height="3" rx="1.5" fill="#1d2a4a"/><rect x="13" y="19" width="34" height="26" rx="4" fill="#c3cbd9"/><rect x="17" y="50" width="26" height="4.5" rx="2" fill="#172033"/><rect x="13" y="61" width="34" height="5" fill="#172033" opacity=".8"/>',
   neon: '<rect width="60" height="80" fill="#0b1228"/><rect x="5" y="14" width="34" height="6" rx="2" fill="#c6f432"/><rect x="5" y="31" width="50" height="13" rx="4" fill="#12204a" stroke="#c6f432" stroke-width="1"/><rect x="5" y="48" width="50" height="13" rx="4" fill="#12204a" stroke="#c6f432" stroke-width="1"/><rect x="5" y="65" width="50" height="11" rx="4" fill="#12204a" stroke="#c6f432" stroke-width="1"/>',
-  compact: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="26" fill="#2c3b5e"/><circle cx="14" cy="13" r="7" fill="#c9d1de"/><rect x="25" y="9" width="26" height="4.5" rx="2" fill="#fff"/><rect x="25" y="16" width="18" height="2.5" rx="1" fill="#8f9bb0"/><rect x="5" y="32" width="50" height="11" rx="3" fill="#eef1f6"/><rect x="5" y="46" width="50" height="11" rx="3" fill="#eef1f6"/><rect x="5" y="60" width="50" height="11" rx="3" fill="#eef1f6"/>'
+  compact: '<rect width="60" height="80" fill="#fff"/><rect width="60" height="26" fill="#2c3b5e"/><circle cx="14" cy="13" r="7" fill="#c9d1de"/><rect x="25" y="9" width="26" height="4.5" rx="2" fill="#fff"/><rect x="25" y="16" width="18" height="2.5" rx="1" fill="#8f9bb0"/><rect x="5" y="32" width="50" height="11" rx="3" fill="#eef1f6"/><rect x="5" y="46" width="50" height="11" rx="3" fill="#eef1f6"/><rect x="5" y="60" width="50" height="11" rx="3" fill="#eef1f6"/>',
+  portfolio: '<defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs><rect width="60" height="80" fill="#fffbe6"/><rect width="60" height="9" fill="#fff"/><rect x="4" y="3" width="16" height="3" rx="1.5" fill="#222"/><rect x="38" y="2.5" width="18" height="5" rx="2.5" fill="none" stroke="#333" stroke-width=".8"/><path d="M34 22a15 15 0 0 1 20 5L36 40z" fill="url(#pg)"/><path d="M6 36a14 14 0 0 1 12 6l-9 4z" fill="#ffa63d"/><circle cx="30" cy="32" r="15" fill="#c3cbd9"/><circle cx="12" cy="56" r="2" fill="#222"/><circle cx="20" cy="56" r="2" fill="#222"/><circle cx="28" cy="56" r="2" fill="#222"/><circle cx="36" cy="56" r="2" fill="#222"/><rect x="6" y="62" width="40" height="5" rx="2" fill="#111"/><rect x="6" y="70" width="30" height="3" rx="1.5" fill="#c9d1de"/>',
+  aurora: '<defs><radialGradient id="ag1" cx=".2" cy=".15" r=".6"><stop offset="0" stop-color="#7c3aed" stop-opacity=".9"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></radialGradient><radialGradient id="ag2" cx=".9" cy=".6" r=".6"><stop offset="0" stop-color="#22d3ee" stop-opacity=".7"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></radialGradient></defs><rect width="60" height="80" fill="#10122b"/><rect width="60" height="80" fill="url(#ag1)"/><rect width="60" height="80" fill="url(#ag2)"/><circle cx="30" cy="22" r="12" fill="#4a5d86" stroke="#c4b5fd" stroke-width="2"/><rect x="14" y="39" width="32" height="5" rx="2" fill="#fff"/><rect x="5" y="50" width="50" height="11" rx="4" fill="#fff" opacity=".18"/><rect x="5" y="64" width="50" height="11" rx="4" fill="#fff" opacity=".18"/>',
+  brutal: '<rect width="60" height="80" fill="#fff3cf"/><rect x="6" y="6" width="26" height="26" fill="#ffd23f" stroke="#111" stroke-width="1.6"/><rect x="9" y="9" width="26" height="26" fill="#c3cbd9" stroke="#111" stroke-width="1.6"/><rect x="6" y="42" width="40" height="7" fill="#111"/><rect x="6" y="54" width="48" height="9" fill="#fff" stroke="#111" stroke-width="1.4"/><rect x="8" y="56" width="48" height="9" fill="#111" opacity="0"/><rect x="6" y="66" width="48" height="9" fill="#ffd23f" stroke="#111" stroke-width="1.4"/>',
+  spotlight: '<rect width="60" height="80" fill="#fde9ec"/><circle cx="30" cy="25" r="19" fill="none" stroke="#e11d48" stroke-width=".8" opacity=".5"/><circle cx="30" cy="25" r="14" fill="#c3cbd9" stroke="#fff" stroke-width="2"/><rect x="16" y="46" width="28" height="5" rx="2" fill="#3b0d1f"/><circle cx="14" cy="60" r="5" fill="#3b0d1f"/><circle cx="26" cy="60" r="5" fill="#3b0d1f"/><circle cx="38" cy="60" r="5" fill="#3b0d1f"/><circle cx="50" cy="60" r="5" fill="#3b0d1f"/><rect x="6" y="69" width="48" height="6" rx="3" fill="#fff"/>',
+  terminal: '<rect width="60" height="80" fill="#04100a"/><rect x="4" y="5" width="52" height="70" rx="4" fill="#07170f" stroke="#12402a"/><circle cx="9" cy="10" r="1.4" fill="#ff5f56"/><circle cx="14" cy="10" r="1.4" fill="#ffbd2e"/><circle cx="19" cy="10" r="1.4" fill="#27c93f"/><rect x="9" y="18" width="12" height="2.5" rx="1" fill="#34f58a"/><rect x="9" y="25" width="30" height="4" rx="1.5" fill="#d7ffe8"/><rect x="9" y="33" width="38" height="2.5" rx="1" fill="#86b79c"/><rect x="9" y="40" width="34" height="2.5" rx="1" fill="#86b79c"/><rect x="9" y="50" width="42" height="9" rx="2" fill="none" stroke="#34f58a" stroke-width=".8"/><rect x="9" y="63" width="6" height="3" fill="#34f58a"/>'
 };
 function renderLayoutPicker() {
   const box = $('layGrid'), cur = normLayout(card.layout); box.innerHTML = '';
@@ -108,6 +113,7 @@ function renderShapePick() { document.querySelectorAll('#shapePick [data-shape]'
 function renderSegs() {
   document.querySelectorAll('#motionSeg [data-motion]').forEach((b) => b.setAttribute('aria-checked', b.dataset.motion === (card.motion || 'cinematic')));
   document.querySelectorAll('#alignSeg [data-align]').forEach((b) => b.setAttribute('aria-checked', b.dataset.align === (card.nameAlign || 'auto')));
+  document.querySelectorAll('#topbarSeg [data-topbar]').forEach((b) => b.setAttribute('aria-checked', b.dataset.topbar === (card.topbar || 'auto')));
 }
 function replayAll() {
   replayIntro();
@@ -211,12 +217,13 @@ $('titlePlace').addEventListener('change', () => { card.titlePlacement = $('titl
 document.querySelectorAll('#shapePick [data-shape]').forEach((b) => b.onclick = () => { card.profileStyle = b.dataset.shape; withTransition(render); renderShapePick(); autoFrame(); });
 document.querySelectorAll('#motionSeg [data-motion]').forEach((b) => b.onclick = () => { card.motion = b.dataset.motion; render(); renderSegs(); if (card.motion !== 'off') replayIntro(); });
 document.querySelectorAll('#alignSeg [data-align]').forEach((b) => b.onclick = () => { if (b.dataset.align === 'auto') delete card.nameAlign; else card.nameAlign = b.dataset.align; render(); renderSegs(); });
+document.querySelectorAll('#topbarSeg [data-topbar]').forEach((b) => b.onclick = () => { if (b.dataset.topbar === 'auto') delete card.topbar; else card.topbar = b.dataset.topbar; withTransition(render); renderSegs(); });
 $('matchPhoto').onclick = paletteFromPhoto;
 $('fixContrast').onclick = () => { fixContrast(); fillForm(); render(); toast('Colors adjusted for readability'); };
 $('undoBtn').onclick = () => historyJump(-1);
 $('redoBtn').onclick = () => historyJump(1);
 $('resetDesign').addEventListener('click', () => {
-  ['nameX', 'nameY', 'nameAlign', 'nameSize', 'nameFont', 'nameLayout', 'nameLine', 'nameLetter', 'titleSize', 'roundness', 'sectionSpace', 'titlePlacement', 'dragPositions', 'nameAnim', 'titleAnim', 'revealAnim', 'contactOrder'].forEach((k) => delete card[k]);
+  ['nameX', 'nameY', 'nameAlign', 'nameSize', 'nameFont', 'nameLayout', 'nameLine', 'nameLetter', 'titleSize', 'roundness', 'sectionSpace', 'titlePlacement', 'dragPositions', 'topbar', 'nameAnim', 'titleAnim', 'revealAnim', 'contactOrder'].forEach((k) => delete card[k]);
   card.layout = 'tap'; card.profileStyle = 'full'; card.theme = { ...THEME_FALLBACK };
   withTransition(() => { fillForm(); render(); }); toast('Design settings reset. Save to publish.');
 });
@@ -297,9 +304,29 @@ function renderServiceEditor() {
 }
 makeSortable($('serviceEditor'), '.svc-row', (from, to) => { card.services = moveItem(card.services, from, to); renderServiceEditor(); render(); });
 $('addService').onclick = () => { card.services = card.services || []; card.services.push({ title: '', price: '', desc: '' }); renderServiceEditor(); const ins = $('serviceEditor').querySelectorAll('input'); if (ins.length) ins[ins.length - 2].focus(); };
+/* Numbers and Skills editors share one small row builder */
+function listEditor(boxId, key, mk, blank, emptyMsg) {
+  const box = $(boxId); box.innerHTML = ''; card[key] = Array.isArray(card[key]) ? card[key] : [];
+  if (!card[key].length) { box.innerHTML = `<div class="empty-links">${emptyMsg}</div>`; return; }
+  card[key].forEach((x, idx) => {
+    const row = document.createElement('div'); row.className = 'svc-row mini-row'; row.innerHTML = mk(x) + `<button type="button" class="x" aria-label="Remove">${svg('close')}</button>`;
+    row.prepend(gripEl());
+    row.querySelector('.x').onclick = () => { card[key].splice(idx, 1); listEditor(boxId, key, mk, blank, emptyMsg); render(); };
+    row.querySelectorAll('[data-k]').forEach((inp) => inp.oninput = () => { x[inp.dataset.k] = inp.type === 'range' ? +inp.value : inp.value; const o = row.querySelector('.lv-out'); if (o && inp.type === 'range') o.textContent = inp.value + '%'; render(); });
+    box.appendChild(row);
+  });
+}
+const statRow = (x) => `<div class="svc-fields"><div class="two"><input type="text" data-k="value" placeholder="120+" aria-label="Number" value="${esc(x.value)}"><input type="text" data-k="label" placeholder="Projects" aria-label="Label" value="${esc(x.label)}"></div></div>`;
+const skillRow = (x) => `<div class="svc-fields"><input type="text" data-k="name" placeholder="Skill, e.g. Branding" aria-label="Skill" value="${esc(x.name)}"><label class="lv-row"><input type="range" min="0" max="100" step="1" data-k="level" aria-label="Level" value="${+x.level || 0}"><span class="lv-out">${+x.level || 0}%</span></label></div>`;
+const renderStatEditor = () => listEditor('statEditor', 'stats', statRow, { value: '', label: '' }, 'No numbers yet. Add things like “120+ Projects”.');
+const renderSkillEditor = () => listEditor('skillEditor', 'skills', skillRow, { name: '', level: 80 }, 'No skills yet. Add what you are best at.');
+makeSortable($('statEditor'), '.svc-row', (from, to) => { card.stats = moveItem(card.stats, from, to); renderStatEditor(); render(); });
+makeSortable($('skillEditor'), '.svc-row', (from, to) => { card.skills = moveItem(card.skills, from, to); renderSkillEditor(); render(); });
+$('addStat').onclick = () => { card.stats = card.stats || []; if (card.stats.length >= 6) return toast('Up to 6 numbers', true); card.stats.push({ value: '', label: '' }); renderStatEditor(); const i = $('statEditor').querySelectorAll('input'); if (i.length) i[i.length - 2].focus(); };
+$('addSkill').onclick = () => { card.skills = card.skills || []; if (card.skills.length >= 12) return toast('Up to 12 skills', true); card.skills.push({ name: '', level: 80 }); renderSkillEditor(); const i = $('skillEditor').querySelectorAll('input[type=text]'); if (i.length) i[i.length - 1].focus(); };
 function fillMore() {
   const c = card.cta || {}, q = card.quote || {}; $('cta_label').value = c.label || ''; $('cta_url').value = c.url || ''; $('quote_text').value = q.text || ''; $('quote_by').value = q.by || '';
-  renderServiceEditor();
+  renderServiceEditor(); renderStatEditor(); renderSkillEditor();
 }
 [['cta_label', 'cta', 'label'], ['cta_url', 'cta', 'url'], ['quote_text', 'quote', 'text'], ['quote_by', 'quote', 'by']].forEach(([id, obj, key]) => $(id).addEventListener('input', () => { card[obj] = card[obj] || {}; card[obj][key] = $(id).value; render(); }));
 

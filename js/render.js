@@ -8,6 +8,7 @@ function renderName() {
   const el = $('name'), text = (card.name || '').trim();
   el.className = 'name name-layout-' + (['natural', 'single', 'two', 'stacked'].includes(card.nameLayout) ? card.nameLayout : 'natural');
   el.setAttribute('data-edit', 'name');
+  { const pre = (card.intro === undefined ? 'It\u2019s' : card.intro).trim(); el.dataset.pre = pre ? pre + ' ' : ''; el.dataset.post = pre ? '.' : ''; }
   el.textContent = ''; let ci = 0; const perChar = ['letters', 'typewriter', 'wave', 'flip'].includes(card.nameAnim);
   text.split(/\s+/).filter(Boolean).forEach((word, i, all) => {
     const w = document.createElement('span'), inner = document.createElement('span');
@@ -92,6 +93,66 @@ function renderExtras() {
   return { services: list.length > 0, quote: !!(q.text || '').trim() };
 }
 
+
+/* ---------- Top bar, greeting, hero social icons, numbers, skills ---------- */
+const TOPBAR_LAYOUTS = ['portfolio'];
+function topbarOn() { const m = card.topbar; return m === 'on' || (m !== 'off' && TOPBAR_LAYOUTS.includes(normLayout(card.layout))); }
+function talkHref() {
+  const c = card.cta || {}, url = (c.url || '').trim();
+  if (url) return /^(https?:|mailto:|tel:)/i.test(url) ? url : 'https://' + url;
+  if (card.email) return 'mailto:' + card.email;
+  if (card.phone) return 'tel:' + card.phone.replace(/\s/g, '');
+  if (digits(card.whatsapp)) return 'https://wa.me/' + digits(card.whatsapp);
+  return '#contactWrap';
+}
+function renderTopbar() {
+  const parts = (card.name || '').trim().split(/\s+/).filter(Boolean), tn = $('tbName'); tn.textContent = '';
+  if (parts.length) { const a = document.createElement('span'); a.textContent = parts[0]; tn.append(a); if (parts.length > 1) { const b = document.createElement('span'); b.className = 'dim'; b.textContent = ' ' + parts.slice(1).join(' '); tn.append(b); } }
+  $('tbLabel').textContent = (card.talkLabel === undefined ? 'Let’s Talk' : card.talkLabel).trim() || 'Let’s Talk';
+  const a = $('tbBtn'), h = talkHref(); a.href = h; a.target = /^https?:/.test(h) ? '_blank' : ''; a.rel = 'noopener';
+  const g = $('greet'), gt = (card.greeting === undefined ? '\u{1F44B} Hey there,' : card.greeting).trim(); g.textContent = gt; g.hidden = !gt;
+}
+function renderHeroSocials(links) {
+  const box = $('heroSoc'); box.innerHTML = '';
+  links.slice(0, 6).forEach((s, i) => {
+    const a = document.createElement('a'); a.href = /^https?:\/\//i.test(s.url) ? s.url : 'https://' + s.url; a.target = '_blank'; a.rel = 'noopener'; a.style.setProperty('--i', i);
+    a.setAttribute('aria-label', s.label || 'Link'); a.innerHTML = svg(socialIcon(s)); box.appendChild(a);
+  });
+}
+const calmNow = () => matchMedia('(prefers-reduced-motion: reduce)').matches || card.motion === 'off' || (typeof isEditing === 'function' && isEditing());
+function renderStats() {
+  const list = (card.stats || []).filter((x) => (x.value || '').toString().trim()), box = $('stats'); box.innerHTML = '';
+  list.slice(0, 6).forEach((x, i) => {
+    const d = document.createElement('div'); d.className = 'stat'; d.style.setProperty('--d', i * 80 + 'ms');
+    const m = String(x.value).trim().match(/^([^\d-]*)(-?[\d.,]*\d)(.*)$/), v = document.createElement('b'); v.className = 'stat-v';
+    if (m) { v.dataset.pre = m[1]; v.dataset.to = m[2].replace(/,/g, ''); v.dataset.post = m[3]; v.textContent = calmNow() ? m[1] + m[2] + m[3] : m[1] + '0' + m[3]; } else v.textContent = x.value;
+    const l = document.createElement('span'); l.textContent = x.label || ''; d.append(v, l); box.append(d);
+  });
+  return list.length > 0;
+}
+function renderSkills() {
+  const list = (card.skills || []).filter((x) => (x.name || '').trim()), box = $('skills'); box.innerHTML = '';
+  list.slice(0, 12).forEach((x, i) => {
+    const lv = clampN(Math.round(+x.level || 0), 0, 100), d = document.createElement('div'); d.className = 'skill'; d.style.setProperty('--d', i * 70 + 'ms'); d.style.setProperty('--lv', lv + '%');
+    const top = document.createElement('div'); top.className = 'skill-top'; const n = document.createElement('b'); n.textContent = x.name; const p = document.createElement('span'); p.textContent = lv + '%'; top.append(n, p);
+    const bar = document.createElement('div'); bar.className = 'bar'; bar.setAttribute('role', 'progressbar'); bar.setAttribute('aria-valuenow', lv); bar.setAttribute('aria-label', x.name); bar.innerHTML = '<i></i>';
+    d.append(top, bar); box.append(d);
+  });
+  return list.length > 0;
+}
+/* Count-up for the Numbers section: runs when the section scrolls into view */
+function countUp(sec) {
+  sec.querySelectorAll('.stat-v[data-to]').forEach((el) => {
+    const to = parseFloat(el.dataset.to), dec = (el.dataset.to.split('.')[1] || '').length, pre = el.dataset.pre || '', post = el.dataset.post || '';
+    const calm = calmNow();
+    const fmt = (n) => pre + (dec ? n.toFixed(dec) : Math.round(n).toString()) + post;
+    if (calm) { el.textContent = fmt(to); return; }
+    const t0 = performance.now(), dur = 1300;
+    const step = (t) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(to * e); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+
 /* Re-rendering rebuilds parts of the card (name, rows, chips...). If the page gets shorter for a moment the browser clamps the
    scroll position and the view jumps to the top. Freeze the card height and restore the scroll position around every render. */
 function render() {
@@ -119,6 +180,7 @@ function renderCore() {
   { const ra = card.revealAnim === undefined ? 'up' : card.revealAnim; if (['up','slide','zoom','blur'].includes(ra)) app.classList.add('reveal-' + ra); }
   $('title').style.setProperty('--tl', Math.max(1, (card.title || '').length));
   app.classList.toggle('title-in-about', card.titlePlacement === 'about');
+  app.classList.toggle('has-topbar', topbarOn()); document.body.classList.toggle('has-topbar', topbarOn());
 
   /* Theme tokens */
   const set = (k, v) => root.setProperty(k, v), unset = (k) => root.removeProperty(k);
@@ -161,7 +223,7 @@ function renderCore() {
 
   const chips = (card.achievements || '').split('\n').map((s) => s.trim()).filter(Boolean).slice(0, 12);
   $('chips').innerHTML = '';
-  chips.forEach((c) => { const li = document.createElement('li'); li.className = 'chip'; li.textContent = c; $('chips').appendChild(li); });
+  chips.forEach((c) => { const li = document.createElement('li'); li.className = 'chip'; li.style.setProperty('--d', chips.indexOf(c) * 60 + 'ms'); li.textContent = c; $('chips').appendChild(li); });
 
   const links = (card.socials || []).filter((s) => s.url);
   $('socials').innerHTML = '';
@@ -179,9 +241,10 @@ function renderCore() {
     a.append(ico, txt, go); $('socials').appendChild(a);
   });
 
+  renderTopbar(); renderHeroSocials(links);
   /* Sections: owner-controlled order and visibility, hidden when empty */
-  const ex = renderExtras();
-  const has = { services: ex.services, quote: ex.quote, about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, hours: renderHours(), links: links.length > 0 };
+  const ex = renderExtras(), hasStats = renderStats(), hasSkills = renderSkills();
+  const has = { stats: hasStats, skills: hasSkills, services: ex.services, quote: ex.quote, about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, hours: renderHours(), links: links.length > 0 };
   getSections().forEach((s, idx) => {
     const el = document.querySelector(`[data-sec="${s.key}"]`); if (!el) return;
     el.style.order = idx; el.hidden = !(s.visible && has[s.key]);
@@ -196,7 +259,9 @@ function observe() {
   /* Sections animate in when they enter the screen and out when they leave, so it works every time you scroll up or down */
   if (!io) io = new IntersectionObserver((es) => es.forEach((e) => {
     const keep = document.body.classList.contains('editing');                       // while editing, every section stays visible
+    const was = e.target.classList.contains('in');
     e.target.classList.toggle('in', keep || e.isIntersecting);
+    if (e.isIntersecting && !was && e.target.dataset.sec === 'stats') countUp(e.target);
   }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
   document.querySelectorAll('.section').forEach((el) => { if (!el.__obs) { el.__obs = true; io.observe(el); } });
 }

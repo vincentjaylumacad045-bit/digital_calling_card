@@ -8,6 +8,11 @@
     root.style.setProperty('--p', Math.min(1, y / (h * .62)).toFixed(3));             // 0 → 1 as the hero scrolls away
     root.style.setProperty('--py', Math.round(Math.min(y * .2, 40)) + 'px');          // whole pixels only, so the photo stays sharp
     document.body.classList.toggle('scrolled', y > h * .72 && !document.body.classList.contains('editing'));
+    /* Reading progress, back-to-top button and the top bar's "stuck" shadow */
+    const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    root.style.setProperty('--prog', Math.min(1, y / max).toFixed(4));
+    document.body.classList.toggle('show-top', y > innerHeight * .9 && !document.body.classList.contains('editing'));
+    document.body.classList.toggle('tb-stuck', y > 8);
   }
   let away = false;
   function heroReplay() {
@@ -37,3 +42,23 @@ function withTransition(fn) {
   if (!document.startViewTransition || calm) { run(); return; }
   try { const vt = document.startViewTransition(run); vt.ready.then(back, () => {}); vt.finished.then(() => { back(); setTimeout(back, 60); }, () => {}); } catch (e) { run(); back(); }
 }
+
+/* Back to top: smooth scroll */
+$('toTop').onclick = () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+
+/* "Let's Talk" with no contact details falls back to an in-page jump: scroll smoothly under the sticky bar */
+$('tbBtn').addEventListener('click', (e) => {
+  const h = $('tbBtn').getAttribute('href'); if (h !== '#contactWrap') return;
+  e.preventDefault(); const t = $('contactWrap'); if (t && !t.hidden) t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+/* Gentle pointer parallax on the decorative shapes and photo (mouse only, never on touch, never with reduced motion) */
+(function () {
+  if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = $('hero'); let raf = 0, tx = 0, ty = 0;
+  hero.addEventListener('pointermove', (e) => {
+    const r = hero.getBoundingClientRect(); tx = ((e.clientX - r.left) / r.width - .5); ty = ((e.clientY - r.top) / r.height - .5);
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; hero.style.setProperty('--mx', tx.toFixed(3)); hero.style.setProperty('--my', ty.toFixed(3)); });
+  });
+  hero.addEventListener('pointerleave', () => { hero.style.setProperty('--mx', 0); hero.style.setProperty('--my', 0); });
+})();

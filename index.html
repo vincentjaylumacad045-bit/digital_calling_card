@@ -8,7 +8,7 @@
 <title>Digital Contact Card</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Schibsted+Grotesk:wght@400..800&family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Schibsted+Grotesk:wght@400..800&family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/hero.css">
 <link rel="stylesheet" href="css/sections.css">
@@ -18,10 +18,14 @@
 <link rel="stylesheet" href="css/editor.css">
 <link rel="stylesheet" href="css/textfx.css">
 <link rel="stylesheet" href="css/focus.css">
+<link rel="stylesheet" href="css/layouts2.css">
+<link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 <div class="splash" id="splash" aria-hidden="true"><div class="bar"></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="progress" id="progress" aria-hidden="true"><i></i></div>
+<button class="to-top" id="toTop" type="button" aria-label="Back to top" data-i="up"></button>
 
 <!-- Compact header that slides in once the hero scrolls away -->
 <div class="mini" id="mini">
@@ -30,14 +34,22 @@
 </div>
 
 <div class="app" id="app">
+  <!-- Sticky top bar: name + a "Let's Talk" button (default for the Portfolio layout, optional for the rest) -->
+  <div class="topbar" id="topbar">
+    <span class="tb-name" id="tbName"></span>
+    <a class="tb-btn" id="tbBtn" href="#contactWrap"><span id="tbLabel">Let’s Talk</span><span data-i="arrow"></span></a>
+  </div>
   <header class="hero" id="hero">
+    <div class="deco" id="deco" aria-hidden="true"><i class="dots"></i><i class="blob b1"></i><i class="blob b2"></i><i class="dot"></i><i class="ring r1"></i><i class="ring r2"></i></div>
     <div class="initials" id="initials" aria-hidden="true"></div>
     <div class="photo" id="photoBox" data-edit="photo"><div class="photo-in" id="photoIn"><img id="photoImg" alt="" decoding="async" hidden></div></div>
     <div class="id" id="idBlock">
+      <p class="greet" id="greet" data-edit="more" hidden></p>
       <h1 class="name" id="name" data-edit="name"></h1>
       <p class="role" id="title" data-edit="title"></p>
       <p class="status" id="status" data-edit="more" hidden><i></i><span id="statusText"></span></p>
     </div>
+    <nav class="hero-soc" id="heroSoc" aria-label="Social links"></nav>
   </header>
 
   <main class="sheet" id="sheet">
@@ -49,9 +61,17 @@
         <p class="about-title" id="aboutTitle"></p>
         <p class="about-text" id="about"></p>
       </section>
+      <section class="section" data-sec="stats" data-edit="more">
+        <h2>Numbers</h2>
+        <div class="stats" id="stats"></div>
+      </section>
       <section class="section" data-sec="highlights" data-edit="highlights">
         <h2>Highlights</h2>
         <ul class="chips" id="chips"></ul>
+      </section>
+      <section class="section" data-sec="skills" data-edit="more">
+        <h2>Skills</h2>
+        <div class="skills" id="skills"></div>
       </section>
       <section class="section" data-sec="services" data-edit="more">
         <h2>Services</h2>
@@ -232,6 +252,14 @@
       <label>Quick actions <span class="val">buttons under your name</span></label>
       <div class="toggle-list" id="quickList"></div>
 
+      <label>Top bar <span class="val">name + button, stays while scrolling</span></label>
+      <div class="seg" id="topbarSeg" role="radiogroup" aria-label="Top bar">
+        <button type="button" data-topbar="auto" role="radio">Auto</button>
+        <button type="button" data-topbar="on" role="radio">On</button>
+        <button type="button" data-topbar="off" role="radio">Off</button>
+      </div>
+      <div class="hint">Auto shows it only in the Portfolio layout. The button label is set in the More tab.</div>
+
       <label for="titlePlace">Professional title</label>
       <select id="titlePlace">
         <option value="hero">Under my name</option>
@@ -357,6 +385,12 @@
     </div>
 
     <div class="pane" data-pane="more">
+      <label>Greeting &amp; top bar <span class="val">Portfolio layout</span></label>
+      <input type="text" id="f_greeting" data-f="greeting" placeholder="👋 Hey there," autocomplete="off">
+      <input type="text" id="f_intro" data-f="intro" placeholder="It’s  (shown before your name)" autocomplete="off" style="margin-top:8px">
+      <input type="text" id="f_talk" data-f="talkLabel" placeholder="Let’s Talk" autocomplete="off" style="margin-top:8px">
+      <div class="hint">Makes the headline “👋 Hey there, It’s Your Name.” The last box is the top-bar button; it opens your email, phone or WhatsApp (or your main button link below).</div>
+
       <label>Main button <span class="val">optional</span></label>
       <input type="text" id="cta_label" placeholder="Button text, e.g. Book a free call" autocomplete="off">
       <input type="text" id="cta_url" inputmode="url" autocapitalize="off" placeholder="https://calendly.com/you" style="margin-top:8px">
@@ -370,6 +404,14 @@
       <textarea id="f_hours" data-f="hours" placeholder="Mon-Fri 9:00 AM - 6:00 PM&#10;Sat 10:00 AM - 2:00 PM&#10;Sun Closed" style="min-height:96px"></textarea>
       <div class="hint">One line per day or range. Visitors see an "Open now" badge based on their own clock. Turn it on in the Layout tab.</div>
 
+      <label>Numbers <span class="val">counts up on scroll</span></label>
+      <div id="statEditor"></div>
+      <button class="ghost wide-btn" id="addStat" type="button">+ Add number</button>
+
+      <label>Skills <span class="val">bars fill on scroll</span></label>
+      <div id="skillEditor"></div>
+      <button class="ghost wide-btn" id="addSkill" type="button">+ Add skill</button>
+
       <label>Services <span class="val">drag to reorder</span></label>
       <div id="serviceEditor"></div>
       <button class="ghost wide-btn" id="addService" type="button">+ Add service</button>
@@ -377,7 +419,7 @@
       <label>Testimonial</label>
       <textarea id="quote_text" placeholder="A short quote from a happy client." style="min-height:84px"></textarea>
       <input type="text" id="quote_by" placeholder="Name, role" autocomplete="off" style="margin-top:8px">
-      <div class="hint">Turn on or hide Services and Testimonial in the Layout tab.</div>
+      <div class="hint">Turn on or hide Numbers, Skills, Services and Testimonial in the Layout tab.</div>
     </div>
 
     <div class="pane" data-pane="links">

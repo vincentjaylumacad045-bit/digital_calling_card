@@ -20,9 +20,12 @@ const THEMES = {
   ice: { bg:'#10243b', accent:'#bfdbfe', ink:'#10243b', text:'#f8fafc', surface:'#f8fbff', sectionText:'#14263b', muted:'#6b7d91', buttonBg:'#10243b', buttonText:'#ffffff', border:'#dce6f0' },
   cobalt: { bg:'#e8edff', accent:'#2f4bff', ink:'#ffffff', text:'#0d1440', surface:'#ffffff', sectionText:'#0d1440', muted:'#55608f', buttonBg:'#2f4bff', buttonText:'#ffffff', border:'#dde3ff' },
   blush: { bg:'#fde9ec', accent:'#e11d48', ink:'#ffffff', text:'#3b0d1f', surface:'#fffafb', sectionText:'#3b0d1f', muted:'#8a5566', buttonBg:'#3b0d1f', buttonText:'#ffffff', border:'#f6d6dc' },
+  sunrise: { bg:'#fffbea', accent:'#ffa63d', ink:'#1a1208', text:'#111111', surface:'#ffffff', sectionText:'#111111', muted:'#6b7280', buttonBg:'#111111', buttonText:'#ffffff', border:'#ececec' },
+  matrix: { bg:'#04100a', accent:'#34f58a', ink:'#04100a', text:'#d7ffe8', surface:'#07170f', sectionText:'#d7ffe8', muted:'#86b79c', buttonBg:'#34f58a', buttonText:'#04100a', border:'#12402a' },
+  cream: { bg:'#fff3cf', accent:'#ffd23f', ink:'#111111', text:'#111111', surface:'#ffffff', sectionText:'#111111', muted:'#4d4d4d', buttonBg:'#111111', buttonText:'#ffffff', border:'#111111' },
   slate: { bg:'#e6e9ee', accent:'#111827', ink:'#ffffff', text:'#111827', surface:'#ffffff', sectionText:'#111827', muted:'#5b6472', buttonBg:'#111827', buttonText:'#ffffff', border:'#dfe3e9' }
 };
-const THEME_NAMES = { lime:'Lime', sky:'Sky', rose:'Rose', gold:'Gold', ocean:'Ocean', violet:'Violet', coral:'Coral', mint:'Mint', monochrome:'Mono', paper:'Paper', midnight:'Midnight', royal:'Royal', orange:'Orange', ice:'Ice', cobalt:'Cobalt', blush:'Blush', slate:'Slate' };
+const THEME_NAMES = { lime:'Lime', sky:'Sky', rose:'Rose', gold:'Gold', ocean:'Ocean', violet:'Violet', coral:'Coral', mint:'Mint', monochrome:'Mono', paper:'Paper', midnight:'Midnight', royal:'Royal', orange:'Orange', ice:'Ice', cobalt:'Cobalt', blush:'Blush', slate:'Slate', sunrise:'Sunrise', matrix:'Matrix', cream:'Cream' };
 const THEME_FALLBACK = { bg:'#0b1437', accent:'#c6f432', ink:'#0b1437', text:'#ffffff', font:"'Schibsted Grotesk', system-ui, sans-serif", surface:'#ffffff', sectionText:'#171717', muted:'#687080', buttonBg:'#0b1437', buttonText:'#ffffff', border:'#e5e7eb' };
 
 /* ---------- Layouts ---------- */
@@ -39,7 +42,12 @@ const LAYOUTS = [
   { id:'bento', name:'Bento', hint:'A big call button beside tidy tiles. Modern and tactile.' },
   { id:'timeline', name:'Timeline', hint:'Sections hang off a vertical rail with accent markers.' },
   { id:'badge', name:'Badge', hint:'Your header becomes an ID badge with a lanyard slot.' },
-  { id:'neon', name:'Neon', hint:'Dark and glowing: gradient name and luminous outlines.' }
+  { id:'neon', name:'Neon', hint:'Dark and glowing: gradient name and luminous outlines.' },
+  { id:'portfolio', name:'Portfolio', hint:'Sticky top bar with Let\u2019s Talk, dotted photo, social icons and a big \u201CHey there\u201D headline.' },
+  { id:'aurora', name:'Aurora', hint:'Soft glowing gradient background with a ringed photo and frosted cards.' },
+  { id:'brutal', name:'Brutalist', hint:'Thick outlines, hard shadows and loud sticker-style type.' },
+  { id:'spotlight', name:'Spotlight', hint:'Centered, pulsing halo around your photo with round action buttons.' },
+  { id:'terminal', name:'Terminal', hint:'A code-editor window: monospace type and a blinking cursor.' }
 ];
 /* Layout names saved by older versions map onto the new set so existing cards keep working */
 const LEGACY_LAYOUTS = { classic:'cards', centered:'cards', split:'editorial', stacked:'cards', signature:'editorial', frame:'cards', banner:'tap', 'portrait-focus':'tap' };
@@ -48,7 +56,7 @@ const PROFILE_STYLES = ['full', 'circle', 'portrait', 'square', 'side', 'arch', 
 
 /* ---------- Sections and quick actions ---------- */
 const SECTION_DEFS = [
-  { key:'about', label:'About' }, { key:'highlights', label:'Highlights' }, { key:'services', label:'Services' }, { key:'quote', label:'Testimonial' }, { key:'hours', label:'Hours' }, { key:'contact', label:'Contact' }, { key:'links', label:'Links' }
+  { key:'about', label:'About' }, { key:'stats', label:'Numbers' }, { key:'highlights', label:'Highlights' }, { key:'skills', label:'Skills' }, { key:'services', label:'Services' }, { key:'quote', label:'Testimonial' }, { key:'hours', label:'Hours' }, { key:'contact', label:'Contact' }, { key:'links', label:'Links' }
 ];
 function getSections() {
   const saved = Array.isArray(card.sections) ? card.sections : [], out = [];
@@ -69,6 +77,8 @@ const PAIRS = [
   { id:'classic', label:'Classic', name:"'Playfair Display', serif", body:"'DM Sans', sans-serif" },
   { id:'luxe', label:'Luxe', name:"'Cormorant Garamond', serif", body:"'Manrope', sans-serif" },
   { id:'tech', label:'Technical', name:"'Space Grotesk', sans-serif", body:"'Space Grotesk', sans-serif" },
+  { id:'inter', label:'Inter', name:"'Inter', system-ui, sans-serif", body:"'Inter', system-ui, sans-serif" },
+  { id:'mono', label:'Mono', name:"'JetBrains Mono', 'Roboto Mono', monospace", body:"'JetBrains Mono', 'Roboto Mono', monospace" },
   { id:'friendly', label:'Friendly', name:"'Poppins', sans-serif", body:"'Poppins', system-ui, sans-serif" }
 ];
 
@@ -77,7 +87,10 @@ const FALLBACK_CARD = {
   name:'Kevin Smith', title:'Sr. Marketing Manager', about:'I lead marketing at D. Agency, helping local brands tell their story and grow.',
   achievements:'Creative direction\nBrand strategy\nEnglish · Filipino', phone:'+63 900 000 0000', email:'you@example.com', whatsapp:'+63 900 000 0000',
   website:'https://example.com', location:'Davao, Philippines', socials:[{ label:'Facebook', url:'https://facebook.com/' }, { label:'Instagram', url:'https://instagram.com/' }],
-  avatar:'', layout:'tap', profileStyle:'full', theme:{ ...THEME_FALLBACK }
+  avatar:'', layout:'tap', profileStyle:'full', theme:{ ...THEME_FALLBACK },
+  greeting:'\u{1F44B} Hey there,', intro:'It\u2019s', talkLabel:'Let\u2019s Talk',
+  stats:[{ value:'8+', label:'Years' }, { value:'120+', label:'Projects' }, { value:'40+', label:'Clients' }],
+  skills:[{ name:'Brand strategy', level:92 }, { name:'Social media', level:85 }, { name:'Copywriting', level:78 }]
 };
 
 /* Owner mode: edit button shows only on devices where the owner logged in, or via yoursite.com/#edit */
@@ -108,5 +121,13 @@ const TEMPLATES = [
   { id:'classic', name:'Classic Cards', layout:'cards', shape:'circle', theme:'gold', pair:'classic' },
   { id:'compact', name:'Compact Pro', layout:'compact', shape:'circle', theme:'sky', pair:'friendly' },
   { id:'blush', name:'Blush', layout:'duo', shape:'arch', theme:'blush', pair:'luxe' },
-  { id:'polaroid', name:'Polaroid', layout:'tap', shape:'polaroid', theme:'coral', pair:'friendly' }
+  { id:'polaroid', name:'Polaroid', layout:'tap', shape:'polaroid', theme:'coral', pair:'friendly' },
+  { id:'portfolio', name:'Portfolio', layout:'portfolio', shape:'circle', theme:'sunrise', pair:'inter' },
+  { id:'portfolio2', name:'Portfolio Lime', layout:'portfolio', shape:'circle', theme:'lime', pair:'inter' },
+  { id:'aurora', name:'Aurora', layout:'aurora', shape:'circle', theme:'violet', pair:'modern' },
+  { id:'aurora2', name:'Northern Lights', layout:'aurora', shape:'blob', theme:'mint', pair:'luxe' },
+  { id:'brutal', name:'Brutalist', layout:'brutal', shape:'square', theme:'cream', pair:'modern' },
+  { id:'spotlight', name:'Spotlight', layout:'spotlight', shape:'circle', theme:'blush', pair:'friendly' },
+  { id:'spotlight2', name:'Spotlight Dark', layout:'spotlight', shape:'circle', theme:'midnight', pair:'modern' },
+  { id:'terminal', name:'Terminal', layout:'terminal', shape:'square', theme:'matrix', pair:'mono' }
 ];

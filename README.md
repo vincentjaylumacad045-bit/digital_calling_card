@@ -13,7 +13,7 @@ api/         card.js (read/save card) · upload.js (photo upload)
 ```
 
 ## Design (v2)
-- **Thirteen layouts:** Studio, Cards, Editorial, Minimal, Poster, Compact, Glass, Duo, Story, Bento, Timeline, Badge, Neon.
+- **Eighteen layouts** (v4 adds Portfolio, Aurora, Brutalist, Spotlight, Terminal) plus Studio, Cards, Editorial, Minimal, Poster, Compact, Glass, Duo, Story, Bento, Timeline, Badge, Neon. Original list: Studio, Cards, Editorial, Minimal, Poster, Compact, Glass, Duo, Story, Bento, Timeline, Badge, Neon.
 - **16 one-tap templates** (layout + photo shape + colors + fonts) in the Templates tab. Cards saved with older layout names are mapped automatically.
 - **Ten photo shapes** (Full, Circle, Portrait, Square, Side, Arch, Hexagon, Organic, Polaroid, Wide) that work with every layout.
 - **Motion:** one orchestrated intro (curtain, photo reveal, name rise, quick-action pop, sheet slide-up), scroll-linked header, sticky mini header, view-transition morphs when switching layout/theme. Set to Cinematic / Subtle / Off in the editor; reduced-motion is always respected.
@@ -31,3 +31,13 @@ Corner sizes are controlled by the Corner roundness slider (`--card-radius`).
 - Drag-and-drop: reorder sections, quick actions, links and services by their grip; drop a photo onto the photo area or the card to upload.
 - Visitor features: main call-to-action button, Services list with prices, Testimonial, contact file now includes your photo.
 - Responsive checked at 320, 390, 768 and 1280 px across every layout and photo shape.
+
+
+## Added in v4
+- **Portfolio layout** (matches the reference design): sticky top bar with a "Let's Talk" button, dotted circle photo with color blobs, social icon row, and a "Hey there, It's Name." headline. Edit the greeting, the word before your name and the button label in **More → Greeting & top bar**.
+- **Top bar** can be switched On/Off/Auto for any layout (Layout tab).
+- **New sections:** Numbers (count-up) and Skills (animated bars), editable in the More tab.
+- **8 new one-tap templates**, 3 new themes (Sunrise, Matrix, Cream), Inter and JetBrains Mono type pairings.
+- Reading-progress bar, back-to-top button, staggered item reveals, pointer parallax on desktop.
+- Responsive: card widens to 520/600/640px on tablets and desktops, small-phone and landscape tuning.
+- Files: `css/layouts2.css`, `css/responsive.css`; `api/card.js` allows the new layouts.
