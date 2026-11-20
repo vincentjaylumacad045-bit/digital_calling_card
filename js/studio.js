@@ -171,7 +171,7 @@ function updateStrength() {
 
 /* ===== Click an element on the card to edit it ===== */
 function setTab(name) {
-  document.querySelectorAll('[data-tab]').forEach((x) => { x.classList.toggle('active', x.dataset.tab === name); x.setAttribute('aria-selected', x.dataset.tab === name); });
+  document.querySelectorAll('#tabs [data-tab]').forEach((x) => { x.classList.toggle('active', x.dataset.tab === name); x.setAttribute('aria-selected', x.dataset.tab === name); });
   document.querySelectorAll('[data-pane]').forEach((p) => p.classList.toggle('active', p.dataset.pane === name));
   $('pbody').scrollTop = 0; $('pbody').dataset.tab = name;
 }

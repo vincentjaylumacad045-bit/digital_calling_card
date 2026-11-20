@@ -97,6 +97,6 @@ body.editing .mini { display:none; }
 
 /* Testimonial */
 .quote { margin:0; font-family:var(--display); font-size:1.6rem; line-height:1.22; letter-spacing:-.01em; color:var(--s-text); overflow-wrap:anywhere; }
-.quote::before { content:'\201C'; display:block; font-size:3.6rem; line-height:.62; margin-bottom:8px; color:var(--accent); }
+.quote::before { content:'\201C'; display:block; font-size:3.6rem; line-height:.62; margin-bottom:8px; color:var(--accent-s); }
 .quote-by { display:block; margin-top:12px; font-size:.84rem; font-style:normal; font-weight:650; color:var(--s-muted); }
 .quote-by:empty { display:none; }

@@ -131,7 +131,7 @@
 .ct-row.low b { background:#fff1d6; color:#9a5b00; }
 .ct-row.bad b { background:#fde4e1; color:#b42318; }
 .pairs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.pair-chip { display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:10px 12px !important; min-height:0 !important; background:#fff; border:1.5px solid #e2e7ee !important; border-radius:13px !important; color:#172033; text-align:left; }
+.pair-chip { touch-action:manipulation; cursor:pointer; -webkit-tap-highlight-color:transparent; display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:10px 12px !important; min-height:0 !important; background:#fff; border:1.5px solid #e2e7ee !important; border-radius:13px !important; color:#172033; text-align:left; }
 .pair-chip b { font-size:1.2rem !important; line-height:1.1; font-weight:500 !important; }
 .pair-chip small { color:#8792a3; font-size:.66rem; font-weight:600; }
 .pair-chip.on { border-color:#172033 !important; box-shadow:0 0 0 3px rgba(23,32,51,.1); }
@@ -172,7 +172,7 @@
 }
 @media (max-width:700px) {
   /* The card is never scaled or re-flowed while editing, so the page cannot jump. The panel simply overlays the bottom. */
-  body { --ph:46vh; --ph:46dvh; }
+  body { --ph:62vh; --ph:62dvh; }
   body.sheet-full { --ph:90vh; --ph:90dvh; }
   body.sheet-min { --ph:152px; }
   .panel { left:0; right:0; bottom:var(--kb,0px); height:min(var(--ph),calc(100dvh - var(--kb,0px) - 56px)); border-radius:24px 24px 0 0; transform:translateY(calc(105% + var(--kb,0px))); }
@@ -181,6 +181,7 @@
   .panel .handle::after { content:''; position:absolute; inset:-12px -20px; }
   body.editing:not(.previewing) .app { padding-bottom:calc(var(--ph) + 28px); }
   .p-tools .ibtn { width:34px; height:34px; }
+  .ptop { padding:8px 14px 8px; } .pfoot { padding:8px 14px calc(8px + env(safe-area-inset-bottom)); } .pfoot button { min-height:42px; }
 }
 @media (max-width:360px) { .editor-heading strong { font-size:.88rem; } .p-tools { gap:3px; } }
 

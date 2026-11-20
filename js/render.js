@@ -94,6 +94,14 @@ function renderExtras() {
 }
 
 
+/* ---------- Contrast guard: whatever colors a theme or the owner picks, text and icons stay readable ---------- */
+const hexRgb = (h) => { const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((h || '').trim()); if (!m) return null; let x = m[1]; if (x.length === 3) x = x.split('').map((c) => c + c).join(''); return [0, 2, 4].map((i) => parseInt(x.substr(i, 2), 16)); };
+const relLum = ([r, g, b]) => { const f = (v) => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };
+const ratio = (a, b) => { const A = hexRgb(a), B = hexRgb(b); if (!A || !B) return 21; const l1 = relLum(A), l2 = relLum(B); return (Math.max(l1, l2) + .05) / (Math.min(l1, l2) + .05); };
+const mixHex = (a, b, k) => { const A = hexRgb(a), B = hexRgb(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, '0')).join(''); };
+const accentOn = (acc, bg) => { if (!hexRgb(acc) || !hexRgb(bg) || ratio(acc, bg) >= 3) return acc; const to = relLum(hexRgb(bg)) > .4 ? '#000000' : '#ffffff'; for (let k = .1; k <= 1; k += .1) { const c = mixHex(acc, to, k); if (ratio(c, bg) >= 3) return c; } return to; };
+const readable = (fg, bg, min, dark = '#111111', light = '#ffffff') => (ratio(fg, bg) >= min ? fg : (ratio(dark, bg) >= ratio(light, bg) ? dark : light));
+
 /* ---------- Top bar, greeting, hero social icons, numbers, skills ---------- */
 const TOPBAR_LAYOUTS = ['portfolio'];
 function topbarOn() { const m = card.topbar; return m === 'on' || (m !== 'off' && TOPBAR_LAYOUTS.includes(normLayout(card.layout))); }
@@ -184,9 +192,12 @@ function renderCore() {
 
   /* Theme tokens */
   const set = (k, v) => root.setProperty(k, v), unset = (k) => root.removeProperty(k);
-  set('--bg', t.bg || THEME_FALLBACK.bg); set('--accent', t.accent || THEME_FALLBACK.accent); set('--ink', t.ink || THEME_FALLBACK.ink); set('--text', t.text || THEME_FALLBACK.text);
-  set('--font', t.font || THEME_FALLBACK.font); set('--surface', t.surface || THEME_FALLBACK.surface); set('--section-text', t.sectionText || THEME_FALLBACK.sectionText);
-  set('--muted', t.muted || THEME_FALLBACK.muted); set('--button-bg', t.buttonBg || THEME_FALLBACK.buttonBg); set('--button-text', t.buttonText || THEME_FALLBACK.buttonText);
+  const T = { ...THEME_FALLBACK, ...t };
+  const gBg = T.bg, gAccent = T.accent, gSurface = T.surface;
+  set('--accent-s', accentOn(gAccent, gSurface)); set('--accent-b', accentOn(gAccent, gBg));
+  set('--bg', gBg); set('--accent', gAccent); set('--ink', readable(T.ink, gAccent, 3)); set('--text', readable(T.text, gBg, 3));
+  set('--font', T.font); set('--surface', gSurface); set('--section-text', readable(T.sectionText, gSurface, 4.5));
+  set('--muted', readable(T.muted, gSurface, 3, '#4b5563', '#c3c8d2')); set('--button-bg', T.buttonBg); set('--button-text', readable(T.buttonText, T.buttonBg, 3));
   set('--border-color', t.border || THEME_FALLBACK.border);
   set('--card-radius', (card.roundness ?? 14) + 'px'); set('--section-space', (card.sectionSpace ?? 26) + 'px');
   set('--name-x', (card.nameX || 0) + 'px'); set('--name-y', (card.nameY || 0) + 'px');

@@ -41,3 +41,8 @@ Corner sizes are controlled by the Corner roundness slider (`--card-radius`).
 - Reading-progress bar, back-to-top button, staggered item reveals, pointer parallax on desktop.
 - Responsive: card widens to 520/600/640px on tablets and desktops, small-phone and landscape tuning.
 - Files: `css/layouts2.css`, `css/responsive.css`; `api/card.js` allows the new layouts.
+
+## v4.2
+- Contrast guard: text, icons, buttons and accent-colored labels are automatically kept readable for every theme and layout (fixes invisible text/icons on Paper, Midnight and the light themes).
+- Professional layouts: **Counsel** (attorneys, advisors), **Clinic** (doctors, dentists, therapists), **Agent** (realtors, sales), with matching Legal and Medical themes and 6 templates.
+- Fixed: tapping anything in the editor panel (fonts, colors) scrolled it back to the top.

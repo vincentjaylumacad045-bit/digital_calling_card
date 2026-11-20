@@ -23,9 +23,11 @@ const THEMES = {
   sunrise: { bg:'#fffbea', accent:'#ffa63d', ink:'#1a1208', text:'#111111', surface:'#ffffff', sectionText:'#111111', muted:'#6b7280', buttonBg:'#111111', buttonText:'#ffffff', border:'#ececec' },
   matrix: { bg:'#04100a', accent:'#34f58a', ink:'#04100a', text:'#d7ffe8', surface:'#07170f', sectionText:'#d7ffe8', muted:'#86b79c', buttonBg:'#34f58a', buttonText:'#04100a', border:'#12402a' },
   cream: { bg:'#fff3cf', accent:'#ffd23f', ink:'#111111', text:'#111111', surface:'#ffffff', sectionText:'#111111', muted:'#4d4d4d', buttonBg:'#111111', buttonText:'#ffffff', border:'#111111' },
+  legal: { bg:'#0f1a2e', accent:'#c9a227', ink:'#0f1a2e', text:'#ffffff', surface:'#fbfaf6', sectionText:'#1a2233', muted:'#6a6f7c', buttonBg:'#0f1a2e', buttonText:'#ffffff', border:'#e6e1d3' },
+  medical: { bg:'#eaf7f8', accent:'#0e9aa7', ink:'#ffffff', text:'#0b2e33', surface:'#ffffff', sectionText:'#0b2e33', muted:'#58767c', buttonBg:'#0e9aa7', buttonText:'#ffffff', border:'#d8ecee' },
   slate: { bg:'#e6e9ee', accent:'#111827', ink:'#ffffff', text:'#111827', surface:'#ffffff', sectionText:'#111827', muted:'#5b6472', buttonBg:'#111827', buttonText:'#ffffff', border:'#dfe3e9' }
 };
-const THEME_NAMES = { lime:'Lime', sky:'Sky', rose:'Rose', gold:'Gold', ocean:'Ocean', violet:'Violet', coral:'Coral', mint:'Mint', monochrome:'Mono', paper:'Paper', midnight:'Midnight', royal:'Royal', orange:'Orange', ice:'Ice', cobalt:'Cobalt', blush:'Blush', slate:'Slate', sunrise:'Sunrise', matrix:'Matrix', cream:'Cream' };
+const THEME_NAMES = { lime:'Lime', sky:'Sky', rose:'Rose', gold:'Gold', ocean:'Ocean', violet:'Violet', coral:'Coral', mint:'Mint', monochrome:'Mono', paper:'Paper', midnight:'Midnight', royal:'Royal', orange:'Orange', ice:'Ice', cobalt:'Cobalt', blush:'Blush', slate:'Slate', sunrise:'Sunrise', matrix:'Matrix', cream:'Cream', legal:'Legal', medical:'Medical' };
 const THEME_FALLBACK = { bg:'#0b1437', accent:'#c6f432', ink:'#0b1437', text:'#ffffff', font:"'Schibsted Grotesk', system-ui, sans-serif", surface:'#ffffff', sectionText:'#171717', muted:'#687080', buttonBg:'#0b1437', buttonText:'#ffffff', border:'#e5e7eb' };
 
 /* ---------- Layouts ---------- */
@@ -47,6 +49,9 @@ const LAYOUTS = [
   { id:'aurora', name:'Aurora', hint:'Soft glowing gradient background with a ringed photo and frosted cards.' },
   { id:'brutal', name:'Brutalist', hint:'Thick outlines, hard shadows and loud sticker-style type.' },
   { id:'spotlight', name:'Spotlight', hint:'Centered, pulsing halo around your photo with round action buttons.' },
+  { id:'counsel', name:'Counsel', hint:'Attorneys, advisors and consultants: serif type, gold rules and a framed portrait.' },
+  { id:'clinic', name:'Clinic', hint:'Doctors, dentists and therapists: clean and calm with a verified badge and a booking button.' },
+  { id:'agent', name:'Agent', hint:'Realtors, agents and sales: a large photo with a floating name card.' },
   { id:'terminal', name:'Terminal', hint:'A code-editor window: monospace type and a blinking cursor.' }
 ];
 /* Layout names saved by older versions map onto the new set so existing cards keep working */
@@ -129,5 +134,11 @@ const TEMPLATES = [
   { id:'brutal', name:'Brutalist', layout:'brutal', shape:'square', theme:'cream', pair:'modern' },
   { id:'spotlight', name:'Spotlight', layout:'spotlight', shape:'circle', theme:'blush', pair:'friendly' },
   { id:'spotlight2', name:'Spotlight Dark', layout:'spotlight', shape:'circle', theme:'midnight', pair:'modern' },
+  { id:'attorney', name:'Attorney', layout:'counsel', shape:'portrait', theme:'legal', pair:'classic' },
+  { id:'lawfirm', name:'Law Ivory', layout:'counsel', shape:'square', theme:'gold', pair:'luxe' },
+  { id:'doctor', name:'Doctor', layout:'clinic', shape:'circle', theme:'medical', pair:'modern' },
+  { id:'dentist', name:'Wellness', layout:'clinic', shape:'circle', theme:'mint', pair:'friendly' },
+  { id:'realtor', name:'Realtor', layout:'agent', shape:'portrait', theme:'cobalt', pair:'modern' },
+  { id:'consultant', name:'Consultant', layout:'agent', shape:'portrait', theme:'slate', pair:'inter' },
   { id:'terminal', name:'Terminal', layout:'terminal', shape:'square', theme:'matrix', pair:'mono' }
 ];

@@ -54,9 +54,9 @@
 #app.layout-minimal .qa { background:transparent; border:0; padding:6px 0; }
 #app.layout-minimal .qa .qi { border-radius:50%; width:52px; height:52px; background:transparent; color:var(--text); border:1px solid color-mix(in srgb,var(--text) 28%,transparent); }
 #app.layout-minimal .row-link, #app.layout-minimal .chip, #app.layout-minimal .soc { background:transparent; }
-#app.layout-minimal .row-link .ico { background:transparent; color:var(--accent); width:30px; }
+#app.layout-minimal .row-link .ico { background:transparent; color:var(--accent-b); width:30px; }
 #app.layout-minimal .copy { color:var(--s-muted); }
-#app.layout-minimal .soc .ico { background:transparent; color:var(--accent); width:30px; }
+#app.layout-minimal .soc .ico { background:transparent; color:var(--accent-b); width:30px; }
 #app.layout-minimal .mini-save, #app.layout-minimal .add { background:var(--accent); }
 
 /* 5 · Poster: loud type on the accent color, angled edge, big square actions */
@@ -188,7 +188,7 @@
   box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 10%,transparent),0 0 30px -10px color-mix(in srgb,var(--accent) 70%,transparent); }
 #app.layout-neon .qa .ql { color:var(--text); }
 #app.layout-neon .qa .qi, #app.layout-neon .row-link .ico, #app.layout-neon .soc .ico { background:var(--accent); color:var(--ink); }
-#app.layout-neon .section h2 { color:var(--accent); }
+#app.layout-neon .section h2 { color:var(--accent-s); }
 #app.layout-neon .chip { color:var(--text); }
 #app.layout-neon .copy { color:var(--s-muted); }
 

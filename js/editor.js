@@ -64,6 +64,9 @@ const LAYOUT_THUMBS = {
   aurora: '<defs><radialGradient id="ag1" cx=".2" cy=".15" r=".6"><stop offset="0" stop-color="#7c3aed" stop-opacity=".9"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></radialGradient><radialGradient id="ag2" cx=".9" cy=".6" r=".6"><stop offset="0" stop-color="#22d3ee" stop-opacity=".7"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></radialGradient></defs><rect width="60" height="80" fill="#10122b"/><rect width="60" height="80" fill="url(#ag1)"/><rect width="60" height="80" fill="url(#ag2)"/><circle cx="30" cy="22" r="12" fill="#4a5d86" stroke="#c4b5fd" stroke-width="2"/><rect x="14" y="39" width="32" height="5" rx="2" fill="#fff"/><rect x="5" y="50" width="50" height="11" rx="4" fill="#fff" opacity=".18"/><rect x="5" y="64" width="50" height="11" rx="4" fill="#fff" opacity=".18"/>',
   brutal: '<rect width="60" height="80" fill="#fff3cf"/><rect x="6" y="6" width="26" height="26" fill="#ffd23f" stroke="#111" stroke-width="1.6"/><rect x="9" y="9" width="26" height="26" fill="#c3cbd9" stroke="#111" stroke-width="1.6"/><rect x="6" y="42" width="40" height="7" fill="#111"/><rect x="6" y="54" width="48" height="9" fill="#fff" stroke="#111" stroke-width="1.4"/><rect x="8" y="56" width="48" height="9" fill="#111" opacity="0"/><rect x="6" y="66" width="48" height="9" fill="#ffd23f" stroke="#111" stroke-width="1.4"/>',
   spotlight: '<rect width="60" height="80" fill="#fde9ec"/><circle cx="30" cy="25" r="19" fill="none" stroke="#e11d48" stroke-width=".8" opacity=".5"/><circle cx="30" cy="25" r="14" fill="#c3cbd9" stroke="#fff" stroke-width="2"/><rect x="16" y="46" width="28" height="5" rx="2" fill="#3b0d1f"/><circle cx="14" cy="60" r="5" fill="#3b0d1f"/><circle cx="26" cy="60" r="5" fill="#3b0d1f"/><circle cx="38" cy="60" r="5" fill="#3b0d1f"/><circle cx="50" cy="60" r="5" fill="#3b0d1f"/><rect x="6" y="69" width="48" height="6" rx="3" fill="#fff"/>',
+  counsel: '<rect width="60" height="80" fill="#fbfaf6"/><rect width="60" height="40" fill="#0f1a2e"/><rect x="21" y="6" width="18" height="23" fill="#c3cbd9" stroke="#c9a227" stroke-width="1"/><rect x="14" y="32" width="32" height="3.5" rx="1" fill="#fff"/><rect x="26" y="38" width="8" height="1.2" fill="#c9a227"/><rect x="6" y="48" width="48" height="1" fill="#c9a227"/><rect x="14" y="52" width="32" height="3" fill="#1a2233"/><rect x="6" y="60" width="48" height="8" fill="none" stroke="#e6e1d3"/><rect x="6" y="70" width="48" height="8" fill="none" stroke="#e6e1d3"/>',
+  clinic: '<defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4f0f2"/><stop offset="1" stop-color="#fff"/></linearGradient></defs><rect width="60" height="80" fill="url(#cg)"/><circle cx="30" cy="22" r="13" fill="#c3cbd9" stroke="#fff" stroke-width="2.5"/><circle cx="40" cy="31" r="4.5" fill="#0e9aa7" stroke="#fff" stroke-width="1.5"/><path d="M38 31l1.6 1.6L42 29.6" fill="none" stroke="#fff" stroke-width="1.2"/><rect x="14" y="41" width="32" height="4" rx="2" fill="#0b2e33"/><rect x="21" y="47" width="18" height="2.5" rx="1" fill="#58767c"/><rect x="5" y="54" width="50" height="9" rx="4.5" fill="#0e9aa7"/><rect x="5" y="66" width="50" height="10" rx="4" fill="#fff" stroke="#d8ecee"/>',
+  agent: '<rect width="60" height="80" fill="#e8edff"/><rect x="5" y="5" width="50" height="40" rx="8" fill="#c3cbd9"/><circle cx="30" cy="22" r="8" fill="#9aa6bd"/><rect x="9" y="36" width="42" height="18" rx="6" fill="#fff" stroke="#dde3ff"/><rect x="16" y="41" width="28" height="4" rx="2" fill="#0d1440"/><rect x="21" y="48" width="18" height="2.5" rx="1" fill="#55608f"/><rect x="5" y="60" width="50" height="8" rx="4" fill="#fff"/><rect x="5" y="70" width="50" height="8" rx="4" fill="#fff"/>',
   terminal: '<rect width="60" height="80" fill="#04100a"/><rect x="4" y="5" width="52" height="70" rx="4" fill="#07170f" stroke="#12402a"/><circle cx="9" cy="10" r="1.4" fill="#ff5f56"/><circle cx="14" cy="10" r="1.4" fill="#ffbd2e"/><circle cx="19" cy="10" r="1.4" fill="#27c93f"/><rect x="9" y="18" width="12" height="2.5" rx="1" fill="#34f58a"/><rect x="9" y="25" width="30" height="4" rx="1.5" fill="#d7ffe8"/><rect x="9" y="33" width="38" height="2.5" rx="1" fill="#86b79c"/><rect x="9" y="40" width="34" height="2.5" rx="1" fill="#86b79c"/><rect x="9" y="50" width="42" height="9" rx="2" fill="none" stroke="#34f58a" stroke-width=".8"/><rect x="9" y="63" width="6" height="3" fill="#34f58a"/>'
 };
 function renderLayoutPicker() {
@@ -137,16 +140,19 @@ function renderThemeGrid() {
   });
 }
 function renderPairs() {
-  const box = $('pairGrid'); box.innerHTML = '';
-  PAIRS.forEach((p) => {
-    const on = card.nameFont === p.name && card.theme.font === p.body;
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'pair-chip' + (on ? ' on' : '');
-    b.innerHTML = `<b style="font-family:${p.name.replace(/"/g, '')}">Aa Name</b><small>${p.label}</small>`;
-    b.onclick = () => { withTransition(() => { card.nameFont = p.name; card.theme.font = p.body; fillForm(); render(); }); };
-    box.appendChild(b);
-  });
+  const box = $('pairGrid'), isOn = (p) => card.nameFont === p.name && card.theme.font === p.body;
+  /* Built once and then only highlighted, so tapping a font never rebuilds the list under your finger or moves the panel */
+  if (box.children.length !== PAIRS.length) {
+    box.innerHTML = '';
+    PAIRS.forEach((p) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'pair-chip'; b.dataset.pair = p.id;
+      b.innerHTML = `<b style="font-family:${p.name.replace(/"/g, '')}">Aa Name</b><small>${p.label}</small>`;
+      b.onclick = () => keepScrolls(() => { card.nameFont = p.name; card.theme.font = p.body; render(); renderPairs(); const nf = $('nameFont'); if (nf) nf.value = p.name; });
+      box.appendChild(b);
+    });
+  }
+  PAIRS.forEach((p, i) => { const b = box.children[i]; b.classList.toggle('on', isOn(p)); b.setAttribute('aria-pressed', isOn(p)); });
 }
-
 /* ===== Form fill ===== */
 function updateStyleValues() {
   const val = (id, out, fn) => { if ($(id) && $(out)) $(out).textContent = fn ? fn($(id).value) : $(id).value; };
@@ -262,7 +268,7 @@ $('resetImg').onclick = () => { card.photoZoom = 100; card.photoX = 50; card.pho
 })();
 
 /* ===== Tabs ===== */
-document.querySelectorAll('[data-tab]').forEach((b) => b.onclick = () => setTab(b.dataset.tab));
+document.querySelectorAll('#tabs [data-tab]').forEach((b) => b.onclick = () => setTab(b.dataset.tab));
 
 
 /* ===== Templates: one tap restyles layout, shape, colors and fonts (content untouched) ===== */
