@@ -72,3 +72,16 @@
 .admin-login-actions button { flex:1; }
 #loginCancel { background:#f2f4f7; color:#344054; }
 #loginOk { background:#101828; color:#fff; }
+
+/* QR v5.1: logo shapes, uploaded-logo fit, and the owner-only shortcut to the design tab */
+.qr-logo { box-sizing:border-box; }
+.qr-logo[data-shape="circle"] { border-radius:50%; }
+.qr-logo[data-shape="rounded"] { border-radius:26%; }
+.qr-logo[data-kind="logo"] { background-color:#fff; background-size:contain; background-position:center; background-origin:content-box; background-clip:padding-box; }
+.qr-logo[data-kind="logo"][data-shape="circle"] { padding:3%; }
+.qr-logo[data-kind="logo"][data-shape="rounded"] { padding:9%; }
+.qr-logo[data-kind="logo"][data-back="none"] { background-color:transparent; box-shadow:none; }
+.qr-logo[hidden] { display:none; }
+.qr-modal .qr-edit { display:flex; align-items:center; justify-content:center; gap:7px; background:transparent; color:#475467; font-size:.84rem; box-shadow:inset 0 0 0 1.5px #d0d5dd; }
+.qr-modal .qr-edit[hidden] { display:none; }
+.qr-edit svg { width:16px; height:16px; }

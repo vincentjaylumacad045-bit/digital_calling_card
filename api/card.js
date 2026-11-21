@@ -89,6 +89,14 @@ export default async function handler(req, res) {
       if (data.cta && typeof data.cta !== 'object') return res.status(400).json({ error: 'Invalid call-to-action' });
       if (data.quote && typeof data.quote !== 'object') return res.status(400).json({ error: 'Invalid testimonial' });
       if (data.theme && (typeof data.theme !== 'object' || Array.isArray(data.theme))) return res.status(400).json({ error: 'Invalid theme settings' });
+      if (data.qr !== undefined) {
+        const q = data.qr, oneOf = { shape: ['soft','dots','pixel','classic'], eye: ['auto','rounded','ring','round','square'], color: ['theme','ink','black','custom'], logo: ['photo','logo','initials','none'], logoShape: ['rounded','circle'], logoBack: ['white','none'] };
+        if (!q || typeof q !== 'object' || Array.isArray(q)) return res.status(400).json({ error: 'Invalid QR design' });
+        for (const k of Object.keys(oneOf)) if (q[k] !== undefined && !oneOf[k].includes(q[k])) return res.status(400).json({ error: 'Invalid QR design: ' + k });
+        if (q.logoSize !== undefined && !(Number(q.logoSize) >= 12 && Number(q.logoSize) <= 40)) return res.status(400).json({ error: 'Invalid QR logo size' });
+        if (q.custom !== undefined && !/^#[0-9a-fA-F]{6}$/.test(String(q.custom))) return res.status(400).json({ error: 'Invalid QR color' });
+        if (q.logoUrl !== undefined && q.logoUrl !== '' && !/^https:\/\/[^\s"'<>]{4,500}$/.test(String(q.logoUrl))) return res.status(400).json({ error: 'Invalid QR logo address' });
+      }
       await put('card.json', JSON.stringify(data), {
         access: 'public',
         addRandomSuffix: false,

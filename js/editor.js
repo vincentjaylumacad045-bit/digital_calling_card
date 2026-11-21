@@ -177,7 +177,7 @@ function fillFormCore() {
   [['nameX', 0], ['nameY', 0], ['titleSize', 16], ['roundness', 14], ['sectionSpace', 26]].forEach(([id, fb]) => { $(id).value = card[id] ?? fb; });
   updateStyleValues(); renderLayoutPicker(); renderSectionList(); renderQuickList(); renderShapePick(); renderSegs(); renderThemeGrid(); renderPairs(); renderContrast();
   $('matchPhoto').disabled = !card.avatar && !lastPhotoBlob;
-  renderSocialEditor(); renderTemplates(); fillMore(); updateStrength(); hydrateIcons();
+  renderSocialEditor(); renderTemplates(); fillMore(); if (typeof renderQrEditor === 'function') renderQrEditor(); updateStrength(); hydrateIcons();
 }
 
 /* ===== Links ===== */

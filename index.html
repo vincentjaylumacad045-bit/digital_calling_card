@@ -142,23 +142,12 @@
       <button type="button" role="tab" data-mode="link" aria-selected="true"><span data-i="link"></span>Open card</button>
       <button type="button" role="tab" data-mode="contact" aria-selected="false"><span data-i="userplus"></span>Save contact</button>
     </div>
-    <div class="qr-style">
-      <div class="qr-shapes" id="qrShapes" role="radiogroup" aria-label="Code style">
-        <button type="button" role="radio" data-shape="soft" aria-label="Soft squares"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2.6"/><rect x="13" y="3" width="8" height="8" rx="2.6"/><rect x="3" y="13" width="8" height="8" rx="2.6"/><rect x="13" y="13" width="8" height="8" rx="2.6"/></svg></button>
-        <button type="button" role="radio" data-shape="dots" aria-label="Dots"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="4"/><circle cx="17" cy="7" r="4"/><circle cx="7" cy="17" r="4"/><circle cx="17" cy="17" r="4"/></svg></button>
-        <button type="button" role="radio" data-shape="classic" aria-label="Classic squares"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg></button>
-      </div>
-      <div class="qr-colors" id="qrColors" role="radiogroup" aria-label="Code color">
-        <button type="button" role="radio" data-color="theme" aria-label="Card color"></button>
-        <button type="button" role="radio" data-color="ink" aria-label="Dark blue-gray"></button>
-        <button type="button" role="radio" data-color="black" aria-label="Black"></button>
-      </div>
-    </div>
     <div class="qr-actions">
       <button type="button" id="qrCopy"><span data-i="copy"></span>Copy link</button>
       <button type="button" id="qrShare"><span data-i="share"></span>Share</button>
       <button type="button" id="qrDl"><span data-i="download"></span>Save image</button>
     </div>
+    <button type="button" class="qr-edit" id="qrEdit" hidden><span data-i="pencil"></span>Edit QR design</button>
   </div>
 </div>
 
@@ -204,6 +193,7 @@
     <button data-tab="layout" role="tab"><span data-i="layout"></span>Layout</button>
     <button data-tab="style" role="tab"><span data-i="palette"></span>Style</button>
     <button data-tab="links" role="tab"><span data-i="link"></span>Links</button>
+    <button data-tab="qr" role="tab"><span data-i="qr"></span>QR</button>
     <button data-tab="more" role="tab"><span data-i="plus"></span>More</button>
   </div>
 
@@ -431,6 +421,83 @@
       <button class="ghost wide-btn" id="resetDesign" type="button">Reset design settings</button>
     </div>
 
+    <div class="pane" data-pane="qr">
+      <div class="qr-pv" id="qrPv">
+        <div class="qr-tile"><div class="qr-code" id="qrPvCode"></div><span class="qr-logo" id="qrPvLogo"></span></div>
+      </div>
+      <div class="pv-hint" id="qrPvInfo"></div>
+      <div class="btn-grid">
+        <button class="primary wide" id="qrPreset" type="button"><span data-i="sparkles"></span>Use reference style</button>
+      </div>
+      <div class="hint">Dot grid, rounded corner frames and a big round logo in the middle. You can still change anything below.</div>
+
+      <label>Dot style</label>
+      <div class="seg" data-qrkey="shape" role="radiogroup" aria-label="Dot style">
+        <button type="button" role="radio" data-v="soft">Soft</button>
+        <button type="button" role="radio" data-v="dots">Dots</button>
+        <button type="button" role="radio" data-v="pixel">Pixel</button>
+        <button type="button" role="radio" data-v="classic">Classic</button>
+      </div>
+
+      <label>Corner frames</label>
+      <div class="seg" data-qrkey="eye" role="radiogroup" aria-label="Corner frames">
+        <button type="button" role="radio" data-v="auto">Auto</button>
+        <button type="button" role="radio" data-v="rounded">Soft</button>
+        <button type="button" role="radio" data-v="ring">Ring</button>
+        <button type="button" role="radio" data-v="round">Round</button>
+        <button type="button" role="radio" data-v="square">Square</button>
+      </div>
+
+      <label>Code color</label>
+      <div class="seg" data-qrkey="color" role="radiogroup" aria-label="Code color">
+        <button type="button" role="radio" data-v="theme">Card</button>
+        <button type="button" role="radio" data-v="ink">Ink</button>
+        <button type="button" role="radio" data-v="black">Black</button>
+        <button type="button" role="radio" data-v="custom">Custom</button>
+      </div>
+      <div id="qrCustomRow" hidden style="margin-top:8px"><input type="color" id="qrCustom"></div>
+      <div class="hint">Dark colors scan best. A custom color that is too light is ignored and ink is used instead.</div>
+
+      <label>Logo in the middle</label>
+      <div class="seg" data-qrkey="logo" role="radiogroup" aria-label="Logo in the middle">
+        <button type="button" role="radio" data-v="photo">Photo</button>
+        <button type="button" role="radio" data-v="logo">Logo</button>
+        <button type="button" role="radio" data-v="initials">Initials</button>
+        <button type="button" role="radio" data-v="none">None</button>
+      </div>
+
+      <div class="photo-up" id="qrLogoRow">
+        <div class="thumb qr-thumb" id="qrThumb"></div>
+        <div class="photo-btns">
+          <button class="primary" id="qrLogoPick" type="button"><span data-i="image"></span>Upload logo</button>
+          <button class="ghost" id="qrLogoClear" type="button">Remove logo</button>
+        </div>
+      </div>
+      <input type="file" accept="image/png,image/jpeg,image/webp" id="qrLogoFile" hidden>
+      <div class="hint">PNG with a transparent background looks best. A logo that is already round (like a badge) fills a Circle shape edge to edge.</div>
+
+      <label>Logo shape</label>
+      <div class="seg" data-qrkey="logoShape" role="radiogroup" aria-label="Logo shape">
+        <button type="button" role="radio" data-v="circle">Circle</button>
+        <button type="button" role="radio" data-v="rounded">Rounded</button>
+      </div>
+
+      <label>Logo backing</label>
+      <div class="seg" data-qrkey="logoBack" role="radiogroup" aria-label="Logo backing">
+        <button type="button" role="radio" data-v="white">White</button>
+        <button type="button" role="radio" data-v="none">None</button>
+      </div>
+
+      <label>Logo size <span class="val" id="qrSizeV"></span></label><input type="range" min="12" max="40" step="1" id="qrSize">
+      <div class="hint" id="qrSafe"></div>
+
+      <div class="btn-grid">
+        <button class="ghost" id="qrTest" type="button">Test scan</button>
+        <button class="ghost" id="qrReset" type="button">Reset QR design</button>
+      </div>
+      <div class="hint">Changes are saved with the card: press Save to publish. Visitors only see the finished code and cannot change it.</div>
+    </div>
+
     <div class="pane" data-pane="more">
       <label>Greeting &amp; top bar <span class="val">Portfolio layout</span></label>
       <input type="text" id="f_greeting" data-f="greeting" placeholder="👋 Hey there," autocomplete="off">
@@ -513,6 +580,7 @@
 <script src="js/studio.js" defer></script>
 <script src="js/editor.js" defer></script>
 <script src="js/upload.js" defer></script>
+<script src="js/qrstudio.js" defer></script>
 <script src="js/focus.js" defer></script>
 <script src="js/actions.js" defer></script>
 <script src="js/motion.js" defer></script>

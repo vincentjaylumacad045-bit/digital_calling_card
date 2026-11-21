@@ -1,6 +1,6 @@
 /* js/qr.js — QR code generator that runs in the browser (no outside service, works offline).
    encode(text, level) -> { size, ver, dark(x, y), isEye(x, y) }
-   toSvg(qr, options)  -> SVG markup   (styles: soft, dots, classic) */
+   toSvg(qr, options)  -> SVG markup   (styles: soft, dots, pixel, classic) */
 const QR = (() => {
   const ECC_PER_BLOCK = [
     [-1, 7, 10, 15, 20, 26, 18, 20, 24, 30, 18, 20, 24, 26, 30, 22, 24, 28, 30, 28, 28, 28, 28, 30, 30, 26, 28, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
@@ -123,16 +123,21 @@ const QR = (() => {
     let n = Math.round(qr.size * frac); if (n % 2 === 0) n++; const a = Math.floor((qr.size - n) / 2); return { a, b: a + n, n };
   }
 
-  /* options: style (soft | dots | classic), fg, eye, margin (modules), logo (fraction of width, 0 for none), bg (or null for transparent) */
+  /* options: style (soft | dots | pixel | classic), logoShape (square | circle), eyeR ([outer, inner] corner radius), fg, eye, margin (modules), logo (fraction of width, 0 for none), bg (or null for transparent) */
   function toSvg(qr, o = {}) {
     const style = o.style || 'soft', fg = o.fg || '#111827', eye = o.eye || fg, margin = o.margin ?? 2, bg = o.bg === undefined ? '#ffffff' : o.bg;
     const box = o.logo ? logoBox(qr, o.logo) : null, total = qr.size + margin * 2, s = qr.size;
-    const inLogo = (x, y) => box && x >= box.a - 1 && x < box.b + 1 && y >= box.a - 1 && y < box.b + 1;
+    const round = o.logoShape === 'circle', mid = qr.size / 2;
+    /* square logos clear a square; round logos clear a circle (less of the code is lost, so the logo can be bigger and still scan) */
+    const inLogo = (x, y) => !box ? false : round
+      ? Math.hypot(x + .5 - mid, y + .5 - mid) <= box.n / 2 + .9
+      : x >= box.a - 1 && x < box.b + 1 && y >= box.a - 1 && y < box.b + 1;
     let mods = '';
     for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
       if (!qr.dark(x, y) || qr.isEye(x, y) || inLogo(x, y)) continue;
       const X = x + margin, Y = y + margin;
       if (style === 'dots') mods += `<circle cx="${X + .5}" cy="${Y + .5}" r=".46"/>`;
+      else if (style === 'pixel') mods += `<rect x="${X + .16}" y="${Y + .16}" width=".68" height=".68" rx=".08"/>`;
       else if (style === 'classic') mods += `<rect x="${X}" y="${Y}" width="1.02" height="1.02"/>`;
       else mods += `<rect x="${X + .06}" y="${Y + .06}" width=".88" height=".88" rx=".3"/>`;
     }
@@ -144,6 +149,11 @@ const QR = (() => {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" shape-rendering="geometricPrecision" role="img" aria-label="QR code">`
       + (bg ? `<rect width="${total}" height="${total}" fill="${bg}"/>` : '') + `<g fill="${fg}">${mods}</g>` + ring(0, 0) + ring(s - 7, 0) + ring(0, s - 7) + '</svg>';
   }
-  return { encode, toSvg, logoBox };
+  /* True when the module at (x, y) falls inside the cleared logo zone (used by the scan self-test) */
+  function inLogoZone(qr, frac, shape, x, y) {
+    const box = logoBox(qr, frac), mid = qr.size / 2;
+    return shape === 'circle' ? Math.hypot(x + .5 - mid, y + .5 - mid) <= box.n / 2 + .9 : x >= box.a - 1 && x < box.b + 1 && y >= box.a - 1 && y < box.b + 1;
+  }
+  return { encode, toSvg, logoBox, inLogoZone };
 })();
 if (typeof module !== 'undefined') module.exports = QR;

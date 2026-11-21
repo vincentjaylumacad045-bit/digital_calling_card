@@ -68,3 +68,12 @@ Corner sizes are controlled by the Corner roundness slider (`--card-radius`).
   - Contact file: long lines are folded as the vCard format requires, a name is always present, and the file is sent as UTF-8.
   - Wrong-password attempts on `/api/card` and `/api/upload` are slowed down; uploads accept only JPG, PNG and WebP and reject oversized photos with a clear message.
 - Replace the whole folder, including `api/card.js` and `api/upload.js`, then redeploy.
+
+## v5.1 — QR design in edit mode only
+- **Only the owner can change the QR.** The style buttons are gone from the visitor's QR sheet. Visitors see the finished code and can copy the link, share it or save the image.
+- **New QR tab in the Design Studio** (`js/qrstudio.js`): live preview, dot style (Soft, Dots, Pixel, Classic), corner frames (Auto, Soft, Ring, Round, Square), code color (Card, Ink, Black, Custom), and the logo in the middle (Photo, uploaded Logo, Initials, None) with shape, backing and size.
+- **Use reference style** button applies the dot-grid look with thick rounded corner frames and a big round logo badge.
+- **Logo upload:** PNG keeps its transparent background. Round logos get a round cleared area, so they can be larger and still scan.
+- The design is saved inside the card (`card.qr`), so it follows Undo/Redo, drafts and Save like everything else. Owners also get an **Edit QR design** shortcut on the QR sheet.
+- **Test scan** uses the browser's barcode reader where available. Always try a real phone camera before printing.
+- Replace the whole folder, including `api/card.js` (it now checks `card.qr`), then redeploy.
