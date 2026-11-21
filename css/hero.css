@@ -29,7 +29,10 @@
   font-size:min(var(--name-size,var(--name-size-default,clamp(3rem,16vw,4.3rem))),15vw);
   line-height:var(--name-line,var(--name-line-default,.94)); letter-spacing:var(--name-letter,var(--name-letter-default,-.015em));
   text-transform:var(--name-case,none); color:var(--hero-text); overflow-wrap:anywhere; text-wrap:balance; }
-.name .w { display:inline-block; overflow:hidden; vertical-align:top; padding:.08em .04em .16em; margin:-.08em -.04em -.16em; }
+.name .w { display:inline-block; overflow:hidden; vertical-align:top; padding:.14em .16em .22em; margin:-.14em -.16em -.22em; }
+/* Once the intro has played nothing is clipped, so heavy glyphs and tight tracking can never be cut off */
+body:not(.intro) .name .w { overflow:visible; }
+.name .w > span { box-decoration-break:clone; -webkit-box-decoration-break:clone; }
 .name .w > span { display:inline-block; }
 .name-layout-single { white-space:nowrap; font-size:min(var(--name-size,var(--name-size-default,3.2rem)),9.2vw); }
 .name-layout-two { max-width:12ch; }

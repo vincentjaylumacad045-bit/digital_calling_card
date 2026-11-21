@@ -6,7 +6,7 @@ function start(c) {
   setTimeout(() => {
     $('splash').classList.add('gone');
     document.body.classList.add('ready', 'intro');
-    setTimeout(() => document.body.classList.remove('intro'), 3200);   // intro animations run once, then the card is final
+    setTimeout(() => document.body.classList.remove('intro'), introMs());   // intro animations run once, then the card is final
     checkEditLink();
   }, 350);
 }

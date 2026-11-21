@@ -25,9 +25,26 @@ const THEMES = {
   cream: { bg:'#fff3cf', accent:'#ffd23f', ink:'#111111', text:'#111111', surface:'#ffffff', sectionText:'#111111', muted:'#4d4d4d', buttonBg:'#111111', buttonText:'#ffffff', border:'#111111' },
   legal: { bg:'#0f1a2e', accent:'#c9a227', ink:'#0f1a2e', text:'#ffffff', surface:'#fbfaf6', sectionText:'#1a2233', muted:'#6a6f7c', buttonBg:'#0f1a2e', buttonText:'#ffffff', border:'#e6e1d3' },
   medical: { bg:'#eaf7f8', accent:'#0e9aa7', ink:'#ffffff', text:'#0b2e33', surface:'#ffffff', sectionText:'#0b2e33', muted:'#58767c', buttonBg:'#0e9aa7', buttonText:'#ffffff', border:'#d8ecee' },
+  sunset: { bg:'#2b0f2e', accent:'#ff7a59', ink:'#2b0f2e', text:'#fff4ee', surface:'#fff8f4', sectionText:'#35142f', muted:'#8a6a7a', buttonBg:'#2b0f2e', buttonText:'#ffffff', border:'#f3dfe0' },
+  forest: { bg:'#0e2418', accent:'#a3e635', ink:'#0e2418', text:'#f1fbe9', surface:'#f8fcf3', sectionText:'#142a1c', muted:'#667a69', buttonBg:'#0e2418', buttonText:'#ffffff', border:'#dfeadb' },
+  berry: { bg:'#2a0b2e', accent:'#f472b6', ink:'#2a0b2e', text:'#ffffff', surface:'#fff9fc', sectionText:'#35133b', muted:'#8a6e92', buttonBg:'#2a0b2e', buttonText:'#ffffff', border:'#f1dcf0' },
+  peach: { bg:'#fff1e6', accent:'#ff6b35', ink:'#ffffff', text:'#3a1d0f', surface:'#ffffff', sectionText:'#3a1d0f', muted:'#8d6b57', buttonBg:'#3a1d0f', buttonText:'#ffffff', border:'#f6dcc9' },
+  lavender: { bg:'#f1ebff', accent:'#7c3aed', ink:'#ffffff', text:'#241449', surface:'#ffffff', sectionText:'#241449', muted:'#6f6590', buttonBg:'#7c3aed', buttonText:'#ffffff', border:'#e1d6fb' },
+  espresso: { bg:'#1e1410', accent:'#d6a374', ink:'#1e1410', text:'#fbf3ea', surface:'#fbf6f0', sectionText:'#2a1c14', muted:'#7d6a5c', buttonBg:'#1e1410', buttonText:'#ffffff', border:'#eadfd2' },
+  arctic: { bg:'#eef6fb', accent:'#0284c7', ink:'#ffffff', text:'#0b2a3d', surface:'#ffffff', sectionText:'#0b2a3d', muted:'#587487', buttonBg:'#0284c7', buttonText:'#ffffff', border:'#d6e6f0' },
+  crimson: { bg:'#1a0508', accent:'#ef4444', ink:'#ffffff', text:'#ffffff', surface:'#fff8f8', sectionText:'#2a0b0f', muted:'#8a6a6e', buttonBg:'#1a0508', buttonText:'#ffffff', border:'#f2dcdc' },
+  sand: { bg:'#efe6d6', accent:'#b4691f', ink:'#ffffff', text:'#2b2116', surface:'#fffaf1', sectionText:'#2b2116', muted:'#7a6a55', buttonBg:'#2b2116', buttonText:'#ffffff', border:'#e6d9c3' },
+  aqua: { bg:'#06303a', accent:'#2dd4bf', ink:'#06303a', text:'#ecfeff', surface:'#f3fdfc', sectionText:'#0b3a40', muted:'#5f8286', buttonBg:'#06303a', buttonText:'#ffffff', border:'#d3ecea' },
+  grape: { bg:'#2e1065', accent:'#e879f9', ink:'#2e1065', text:'#ffffff', surface:'#fcf7ff', sectionText:'#2e1065', muted:'#7d6a99', buttonBg:'#2e1065', buttonText:'#ffffff', border:'#eadcf7' },
+  bubblegum: { bg:'#ffe4f1', accent:'#ec4899', ink:'#ffffff', text:'#4a0d2c', surface:'#ffffff', sectionText:'#4a0d2c', muted:'#955a78', buttonBg:'#ec4899', buttonText:'#ffffff', border:'#f8cfe3' },
+  graphite: { bg:'#1f2328', accent:'#f59e0b', ink:'#1f2328', text:'#f3f4f6', surface:'#f6f6f7', sectionText:'#1f2328', muted:'#6b7280', buttonBg:'#1f2328', buttonText:'#ffffff', border:'#e1e3e6' },
+  emerald: { bg:'#052e1c', accent:'#10b981', ink:'#052e1c', text:'#ecfdf5', surface:'#f6fdf9', sectionText:'#073b25', muted:'#5f8272', buttonBg:'#052e1c', buttonText:'#ffffff', border:'#d3ebdf' },
+  ruby: { bg:'#fff0f0', accent:'#be123c', ink:'#ffffff', text:'#3f0a17', surface:'#ffffff', sectionText:'#3f0a17', muted:'#8d5a63', buttonBg:'#be123c', buttonText:'#ffffff', border:'#f6d5da' },
+  denim: { bg:'#16263f', accent:'#7aa7ff', ink:'#10203a', text:'#f4f8ff', surface:'#f6f9ff', sectionText:'#16263f', muted:'#62748f', buttonBg:'#16263f', buttonText:'#ffffff', border:'#d9e2f1' },
+  noir: { bg:'#0a0a0a', accent:'#d4af37', ink:'#0a0a0a', text:'#f5f0e1', surface:'#141414', sectionText:'#f5f0e1', muted:'#a89f85', buttonBg:'#d4af37', buttonText:'#0a0a0a', border:'#2a2a2a' },
   slate: { bg:'#e6e9ee', accent:'#111827', ink:'#ffffff', text:'#111827', surface:'#ffffff', sectionText:'#111827', muted:'#5b6472', buttonBg:'#111827', buttonText:'#ffffff', border:'#dfe3e9' }
 };
-const THEME_NAMES = { lime:'Lime', sky:'Sky', rose:'Rose', gold:'Gold', ocean:'Ocean', violet:'Violet', coral:'Coral', mint:'Mint', monochrome:'Mono', paper:'Paper', midnight:'Midnight', royal:'Royal', orange:'Orange', ice:'Ice', cobalt:'Cobalt', blush:'Blush', slate:'Slate', sunrise:'Sunrise', matrix:'Matrix', cream:'Cream', legal:'Legal', medical:'Medical' };
+const THEME_NAMES = { lime:'Lime', sky:'Sky', rose:'Rose', gold:'Gold', ocean:'Ocean', violet:'Violet', coral:'Coral', mint:'Mint', monochrome:'Mono', paper:'Paper', midnight:'Midnight', royal:'Royal', orange:'Orange', ice:'Ice', cobalt:'Cobalt', blush:'Blush', slate:'Slate', sunrise:'Sunrise', matrix:'Matrix', cream:'Cream', legal:'Legal', medical:'Medical', sunset:'Sunset', forest:'Forest', berry:'Berry', peach:'Peach', lavender:'Lavender', espresso:'Espresso', arctic:'Arctic', crimson:'Crimson', sand:'Sand', aqua:'Aqua', grape:'Grape', bubblegum:'Bubblegum', graphite:'Graphite', emerald:'Emerald', ruby:'Ruby', denim:'Denim', noir:'Noir' };
 const THEME_FALLBACK = { bg:'#0b1437', accent:'#c6f432', ink:'#0b1437', text:'#ffffff', font:"'Schibsted Grotesk', system-ui, sans-serif", surface:'#ffffff', sectionText:'#171717', muted:'#687080', buttonBg:'#0b1437', buttonText:'#ffffff', border:'#e5e7eb' };
 
 /* ---------- Layouts ---------- */
@@ -49,9 +66,15 @@ const LAYOUTS = [
   { id:'aurora', name:'Aurora', hint:'Soft glowing gradient background with a ringed photo and frosted cards.' },
   { id:'brutal', name:'Brutalist', hint:'Thick outlines, hard shadows and loud sticker-style type.' },
   { id:'spotlight', name:'Spotlight', hint:'Centered, pulsing halo around your photo with round action buttons.' },
+  { id:'creator', name:'Creator', hint:'Link-in-bio style: round photo and big tappable pill buttons.' },
+  { id:'storefront', name:'Storefront', hint:'Shops and restaurants: cover banner, overlapping logo and a bold order button.' },
+  { id:'sunset', name:'Sunset', hint:'Warm full-page gradient with a thick white photo ring and frosted cards.' },
   { id:'counsel', name:'Counsel', hint:'Attorneys, advisors and consultants: serif type, gold rules and a framed portrait.' },
   { id:'clinic', name:'Clinic', hint:'Doctors, dentists and therapists: clean and calm with a verified badge and a booking button.' },
   { id:'agent', name:'Agent', hint:'Realtors, agents and sales: a large photo with a floating name card.' },
+  { id:'swiss', name:'Swiss', hint:'Numbered editorial sections, hard rules and a large uppercase name.' },
+  { id:'luxe', name:'Luxe', hint:'Black and gold with a framed arch portrait. Elegant and premium.' },
+  { id:'soft', name:'Soft', hint:'Gentle raised surfaces and pressed fields. Calm and tactile.' },
   { id:'terminal', name:'Terminal', hint:'A code-editor window: monospace type and a blinking cursor.' }
 ];
 /* Layout names saved by older versions map onto the new set so existing cards keep working */
@@ -61,7 +84,7 @@ const PROFILE_STYLES = ['full', 'circle', 'portrait', 'square', 'side', 'arch', 
 
 /* ---------- Sections and quick actions ---------- */
 const SECTION_DEFS = [
-  { key:'about', label:'About' }, { key:'stats', label:'Numbers' }, { key:'highlights', label:'Highlights' }, { key:'skills', label:'Skills' }, { key:'services', label:'Services' }, { key:'quote', label:'Testimonial' }, { key:'hours', label:'Hours' }, { key:'contact', label:'Contact' }, { key:'links', label:'Links' }
+  { key:'about', label:'About' }, { key:'stats', label:'Numbers' }, { key:'video', label:'Video' }, { key:'map', label:'Map' }, { key:'highlights', label:'Highlights' }, { key:'skills', label:'Skills' }, { key:'services', label:'Services' }, { key:'faq', label:'FAQ' }, { key:'quote', label:'Testimonial' }, { key:'hours', label:'Hours' }, { key:'contact', label:'Contact' }, { key:'message', label:'Message form' }, { key:'links', label:'Links' }
 ];
 function getSections() {
   const saved = Array.isArray(card.sections) ? card.sections : [], out = [];
@@ -95,6 +118,8 @@ const FALLBACK_CARD = {
   avatar:'', layout:'tap', profileStyle:'full', theme:{ ...THEME_FALLBACK },
   greeting:'\u{1F44B} Hey there,', intro:'It\u2019s', talkLabel:'Let\u2019s Talk',
   stats:[{ value:'8+', label:'Years' }, { value:'120+', label:'Projects' }, { value:'40+', label:'Clients' }],
+  video:'', videoCaption:'', banner:'', bannerUrl:'', mapOn:'', verified:'',
+  faq:[{ q:'How do I get in touch?', a:'Tap Call, WhatsApp or Email above and I will reply as soon as I can.' }, { q:'Where are you based?', a:'See the Directions button for the exact location.' }],
   skills:[{ name:'Brand strategy', level:92 }, { name:'Social media', level:85 }, { name:'Copywriting', level:78 }]
 };
 
@@ -134,6 +159,14 @@ const TEMPLATES = [
   { id:'brutal', name:'Brutalist', layout:'brutal', shape:'square', theme:'cream', pair:'modern' },
   { id:'spotlight', name:'Spotlight', layout:'spotlight', shape:'circle', theme:'blush', pair:'friendly' },
   { id:'spotlight2', name:'Spotlight Dark', layout:'spotlight', shape:'circle', theme:'midnight', pair:'modern' },
+  { id:'creator', name:'Creator', layout:'creator', shape:'circle', theme:'lavender', pair:'friendly' },
+  { id:'creator2', name:'Creator Dark', layout:'creator', shape:'circle', theme:'berry', pair:'modern' },
+  { id:'storefront', name:'Storefront', layout:'storefront', shape:'square', theme:'peach', pair:'friendly' },
+  { id:'cafe', name:'Cafe', layout:'storefront', shape:'circle', theme:'espresso', pair:'luxe' },
+  { id:'sunset', name:'Sunset', layout:'sunset', shape:'circle', theme:'sunset', pair:'modern' },
+  { id:'forestcard', name:'Forest', layout:'portfolio', shape:'circle', theme:'forest', pair:'inter' },
+  { id:'arcticcard', name:'Arctic', layout:'clinic', shape:'circle', theme:'arctic', pair:'inter' },
+  { id:'crimsoncard', name:'Crimson', layout:'aurora', shape:'circle', theme:'crimson', pair:'modern' },
   { id:'attorney', name:'Attorney', layout:'counsel', shape:'portrait', theme:'legal', pair:'classic' },
   { id:'lawfirm', name:'Law Ivory', layout:'counsel', shape:'square', theme:'gold', pair:'luxe' },
   { id:'doctor', name:'Doctor', layout:'clinic', shape:'circle', theme:'medical', pair:'modern' },

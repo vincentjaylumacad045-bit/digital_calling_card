@@ -53,6 +53,7 @@
   </header>
 
   <main class="sheet" id="sheet">
+    <a class="banner" id="banner" data-edit="more" hidden></a>
     <a class="cta" id="cta" data-edit="more" hidden></a>
     <nav class="quick" id="quick" aria-label="Quick actions"></nav>
     <div class="sections" id="sections">
@@ -64,6 +65,16 @@
       <section class="section" data-sec="stats" data-edit="more">
         <h2>Numbers</h2>
         <div class="stats" id="stats"></div>
+      </section>
+      <section class="section" data-sec="map" data-edit="more">
+        <h2>Find us</h2>
+        <div class="map" id="mapBox"></div>
+        <a class="map-open" id="mapOpen" target="_blank" rel="noopener">Open in Maps</a>
+      </section>
+      <section class="section" data-sec="video" data-edit="more">
+        <h2>Video</h2>
+        <div class="video" id="videoBox"></div>
+        <p class="video-cap" id="videoCap" hidden></p>
       </section>
       <section class="section" data-sec="highlights" data-edit="highlights">
         <h2>Highlights</h2>
@@ -77,6 +88,10 @@
         <h2>Services</h2>
         <div class="services" id="services"></div>
       </section>
+      <section class="section" data-sec="faq" data-edit="more">
+        <h2>Questions</h2>
+        <div class="faq" id="faqList"></div>
+      </section>
       <section class="section" data-sec="quote" data-edit="more">
         <h2>Kind words</h2>
         <blockquote class="quote" id="quoteText"></blockquote>
@@ -89,6 +104,14 @@
       <section class="section" data-sec="contact" id="contactWrap" data-edit="contact">
         <h2>Contact</h2>
         <div class="rows" id="rows"></div>
+      </section>
+      <section class="section" data-sec="message" id="messageWrap" data-edit="contact">
+        <h2>Send a message</h2>
+        <form class="msg" id="msgForm" autocomplete="off">
+          <label class="msg-f"><span>Your name</span><input type="text" id="msgName" maxlength="60" placeholder="Your name" autocomplete="name"></label>
+          <label class="msg-f"><span>Message</span><textarea id="msgText" rows="3" maxlength="600" placeholder="How can I help?"></textarea></label>
+          <div class="msg-btns"><button type="submit" class="msg-b wa" id="msgWa" data-via="wa"><span data-i="whatsapp"></span>WhatsApp</button><button type="submit" class="msg-b em" id="msgEm" data-via="em"><span data-i="mail"></span>Email</button></div>
+        </form>
       </section>
       <section class="section" data-sec="links" id="linkWrap" data-edit="links">
         <h2>Links</h2>
@@ -406,6 +429,24 @@
       <label for="f_hours">Business hours <span class="val">optional</span></label>
       <textarea id="f_hours" data-f="hours" placeholder="Mon-Fri 9:00 AM - 6:00 PM&#10;Sat 10:00 AM - 2:00 PM&#10;Sun Closed" style="min-height:96px"></textarea>
       <div class="hint">One line per day or range. Visitors see an "Open now" badge based on their own clock. Turn it on in the Layout tab.</div>
+
+      <label for="f_banner">Announcement banner <span class="val">optional</span></label>
+      <input type="text" id="f_banner" data-f="banner" placeholder="e.g. 20% off this week" autocomplete="off" maxlength="80">
+      <input type="text" id="f_bannerurl" data-f="bannerUrl" placeholder="Banner link (optional)" inputmode="url" autocomplete="off" style="margin-top:8px">
+
+      <label for="f_map">Map of your location</label>
+      <select id="f_map" data-f="mapOn"><option value="">Hidden</option><option value="1">Show map (uses your Location field)</option></select>
+
+      <label for="f_verified">Verified tick next to name</label>
+      <select id="f_verified" data-f="verified"><option value="">Off</option><option value="1">On</option></select>
+
+      <label>Video <span class="val">YouTube, Vimeo or .mp4 link</span></label>
+      <input type="text" id="f_video" data-f="video" placeholder="https://youtu.be/…" inputmode="url" autocomplete="off">
+      <input type="text" id="f_videocap" data-f="videoCaption" placeholder="Caption (optional)" autocomplete="off" style="margin-top:8px">
+
+      <label>Questions &amp; answers <span class="val">FAQ, drag to reorder</span></label>
+      <div id="faqEditor"></div>
+      <button class="ghost wide-btn" id="addFaq" type="button">+ Add question</button>
 
       <label>Numbers <span class="val">counts up on scroll</span></label>
       <div id="statEditor"></div>

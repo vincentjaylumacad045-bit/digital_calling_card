@@ -67,6 +67,9 @@ const LAYOUT_THUMBS = {
   counsel: '<rect width="60" height="80" fill="#fbfaf6"/><rect width="60" height="40" fill="#0f1a2e"/><rect x="21" y="6" width="18" height="23" fill="#c3cbd9" stroke="#c9a227" stroke-width="1"/><rect x="14" y="32" width="32" height="3.5" rx="1" fill="#fff"/><rect x="26" y="38" width="8" height="1.2" fill="#c9a227"/><rect x="6" y="48" width="48" height="1" fill="#c9a227"/><rect x="14" y="52" width="32" height="3" fill="#1a2233"/><rect x="6" y="60" width="48" height="8" fill="none" stroke="#e6e1d3"/><rect x="6" y="70" width="48" height="8" fill="none" stroke="#e6e1d3"/>',
   clinic: '<defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4f0f2"/><stop offset="1" stop-color="#fff"/></linearGradient></defs><rect width="60" height="80" fill="url(#cg)"/><circle cx="30" cy="22" r="13" fill="#c3cbd9" stroke="#fff" stroke-width="2.5"/><circle cx="40" cy="31" r="4.5" fill="#0e9aa7" stroke="#fff" stroke-width="1.5"/><path d="M38 31l1.6 1.6L42 29.6" fill="none" stroke="#fff" stroke-width="1.2"/><rect x="14" y="41" width="32" height="4" rx="2" fill="#0b2e33"/><rect x="21" y="47" width="18" height="2.5" rx="1" fill="#58767c"/><rect x="5" y="54" width="50" height="9" rx="4.5" fill="#0e9aa7"/><rect x="5" y="66" width="50" height="10" rx="4" fill="#fff" stroke="#d8ecee"/>',
   agent: '<rect width="60" height="80" fill="#e8edff"/><rect x="5" y="5" width="50" height="40" rx="8" fill="#c3cbd9"/><circle cx="30" cy="22" r="8" fill="#9aa6bd"/><rect x="9" y="36" width="42" height="18" rx="6" fill="#fff" stroke="#dde3ff"/><rect x="16" y="41" width="28" height="4" rx="2" fill="#0d1440"/><rect x="21" y="48" width="18" height="2.5" rx="1" fill="#55608f"/><rect x="5" y="60" width="50" height="8" rx="4" fill="#fff"/><rect x="5" y="70" width="50" height="8" rx="4" fill="#fff"/>',
+  swiss: '<rect width="60" height="80" fill="#f4f4f2"/><rect x="6" y="7" width="48" height="2.5" fill="#111"/><rect x="6" y="13" width="36" height="7" fill="#111"/><rect x="6" y="24" width="48" height="26" fill="#c3cbd9"/><rect x="6" y="55" width="48" height="1" fill="#111"/><rect x="6" y="60" width="20" height="3" fill="#111"/><rect x="6" y="67" width="48" height="1" fill="#111"/>',
+  luxe: '<rect width="60" height="80" fill="#0a0a0a"/><rect x="5" y="5" width="50" height="70" fill="none" stroke="#d4af37" stroke-width=".8"/><path d="M20 38V24a10 10 0 0 1 20 0v14z" fill="#c3cbd9" stroke="#d4af37" stroke-width=".8"/><rect x="18" y="46" width="24" height="4" rx="1" fill="#f5f0e1"/><rect x="22" y="54" width="16" height="2" fill="#d4af37"/><rect x="12" y="62" width="36" height="1" fill="#d4af37" opacity=".5"/>',
+  soft: '<rect width="60" height="80" fill="#e6e9ee"/><circle cx="30" cy="24" r="14" fill="#c3cbd9" stroke="#e6e9ee" stroke-width="3"/><rect x="18" y="44" width="24" height="5" rx="2.5" fill="#111827"/><rect x="8" y="54" width="44" height="11" rx="5" fill="#e6e9ee" stroke="#fff" stroke-width="1.5"/><rect x="8" y="68" width="44" height="8" rx="4" fill="#e6e9ee" stroke="#fff" stroke-width="1.5"/>',
   terminal: '<rect width="60" height="80" fill="#04100a"/><rect x="4" y="5" width="52" height="70" rx="4" fill="#07170f" stroke="#12402a"/><circle cx="9" cy="10" r="1.4" fill="#ff5f56"/><circle cx="14" cy="10" r="1.4" fill="#ffbd2e"/><circle cx="19" cy="10" r="1.4" fill="#27c93f"/><rect x="9" y="18" width="12" height="2.5" rx="1" fill="#34f58a"/><rect x="9" y="25" width="30" height="4" rx="1.5" fill="#d7ffe8"/><rect x="9" y="33" width="38" height="2.5" rx="1" fill="#86b79c"/><rect x="9" y="40" width="34" height="2.5" rx="1" fill="#86b79c"/><rect x="9" y="50" width="42" height="9" rx="2" fill="none" stroke="#34f58a" stroke-width=".8"/><rect x="9" y="63" width="6" height="3" fill="#34f58a"/>'
 };
 function renderLayoutPicker() {
@@ -126,7 +129,7 @@ function replayAll() {
 }
 ['nameAnim', 'titleAnim', 'revealAnim'].forEach((id) => $(id).addEventListener('change', () => { keepScrolls(() => { card[id] = $(id).value; render(); replayAll(); }); }));
 $('replayAnim').onclick = () => { if (card.motion === 'off') { card.motion = 'cinematic'; renderSegs(); render(); } replayAll(); };
-function replayIntro() { document.body.classList.remove('intro'); void document.body.offsetWidth; document.body.classList.add('intro'); clearTimeout(replayIntro.t); replayIntro.t = setTimeout(() => document.body.classList.remove('intro'), 3200); }
+function replayIntro() { document.body.classList.remove('intro'); void document.body.offsetWidth; document.body.classList.add('intro'); clearTimeout(replayIntro.t); replayIntro.t = setTimeout(() => document.body.classList.remove('intro'), introMs()); }
 
 /* ===== Themes + type pairs ===== */
 function renderThemeGrid() {
@@ -324,6 +327,10 @@ function listEditor(boxId, key, mk, blank, emptyMsg) {
 }
 const statRow = (x) => `<div class="svc-fields"><div class="two"><input type="text" data-k="value" placeholder="120+" aria-label="Number" value="${esc(x.value)}"><input type="text" data-k="label" placeholder="Projects" aria-label="Label" value="${esc(x.label)}"></div></div>`;
 const skillRow = (x) => `<div class="svc-fields"><input type="text" data-k="name" placeholder="Skill, e.g. Branding" aria-label="Skill" value="${esc(x.name)}"><label class="lv-row"><input type="range" min="0" max="100" step="1" data-k="level" aria-label="Level" value="${+x.level || 0}"><span class="lv-out">${+x.level || 0}%</span></label></div>`;
+const faqRow = (x) => `<div class="svc-fields"><input type="text" data-k="q" placeholder="Question" aria-label="Question" value="${esc(x.q)}"><textarea data-k="a" rows="2" placeholder="Answer" aria-label="Answer">${esc(x.a)}</textarea></div>`;
+const renderFaqEditor = () => listEditor('faqEditor', 'faq', faqRow, { q: '', a: '' }, 'No questions yet. Add the ones people ask most.');
+makeSortable($('faqEditor'), '.svc-row', (from, to) => { card.faq = moveItem(card.faq, from, to); renderFaqEditor(); render(); });
+$('addFaq').onclick = () => { card.faq = card.faq || []; if (card.faq.length >= 20) return toast('Up to 20 questions', true); card.faq.push({ q: '', a: '' }); renderFaqEditor(); const i = $('faqEditor').querySelectorAll('input'); if (i.length) i[i.length - 1].focus(); };
 const renderStatEditor = () => listEditor('statEditor', 'stats', statRow, { value: '', label: '' }, 'No numbers yet. Add things like “120+ Projects”.');
 const renderSkillEditor = () => listEditor('skillEditor', 'skills', skillRow, { name: '', level: 80 }, 'No skills yet. Add what you are best at.');
 makeSortable($('statEditor'), '.svc-row', (from, to) => { card.stats = moveItem(card.stats, from, to); renderStatEditor(); render(); });
@@ -332,7 +339,7 @@ $('addStat').onclick = () => { card.stats = card.stats || []; if (card.stats.len
 $('addSkill').onclick = () => { card.skills = card.skills || []; if (card.skills.length >= 12) return toast('Up to 12 skills', true); card.skills.push({ name: '', level: 80 }); renderSkillEditor(); const i = $('skillEditor').querySelectorAll('input[type=text]'); if (i.length) i[i.length - 1].focus(); };
 function fillMore() {
   const c = card.cta || {}, q = card.quote || {}; $('cta_label').value = c.label || ''; $('cta_url').value = c.url || ''; $('quote_text').value = q.text || ''; $('quote_by').value = q.by || '';
-  renderServiceEditor(); renderStatEditor(); renderSkillEditor();
+  renderServiceEditor(); renderStatEditor(); renderSkillEditor(); renderFaqEditor();
 }
 [['cta_label', 'cta', 'label'], ['cta_url', 'cta', 'url'], ['quote_text', 'quote', 'text'], ['quote_by', 'quote', 'by']].forEach(([id, obj, key]) => $(id).addEventListener('input', () => { card[obj] = card[obj] || {}; card[obj][key] = $(id).value; render(); }));
 

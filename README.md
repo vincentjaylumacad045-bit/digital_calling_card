@@ -46,3 +46,10 @@ Corner sizes are controlled by the Corner roundness slider (`--card-radius`).
 - Contrast guard: text, icons, buttons and accent-colored labels are automatically kept readable for every theme and layout (fixes invisible text/icons on Paper, Midnight and the light themes).
 - Professional layouts: **Counsel** (attorneys, advisors), **Clinic** (doctors, dentists, therapists), **Agent** (realtors, sales), with matching Legal and Medical themes and 6 templates.
 - Fixed: tapping anything in the editor panel (fonts, colors) scrolled it back to the top.
+
+## Added in v4.3
+- Fixed the name animation: the black block over the first letter (a text-gradient clip in the Aurora layout) is gone, the letter-flip is now a simple rise, and the intro lasts long enough for long names with typewriter/wave.
+- 3 new layouts: **Swiss** (numbered editorial), **Luxe** (black & gold arch portrait), **Soft** (gentle raised surfaces).
+- 9 new color themes: Sand, Aqua, Grape, Bubblegum, Graphite, Emerald, Ruby, Denim, Noir.
+- New features (More tab): announcement banner (with optional link), map of your Location, verified tick next to the name. The Map is also a reorderable section.
+- Replace the whole folder, including `api/card.js` (it lists the allowed layouts).

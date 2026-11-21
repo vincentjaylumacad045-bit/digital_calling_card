@@ -18,6 +18,7 @@ const PART_MAP = [
   [/^(photo|pv|zoom|bright|contrast|fade)/i, () => $('photoBox')]
 ];
 function partFor(el) {
+  if (el.closest('#faqEditor')) return document.querySelector('[data-sec=faq]');
   if (el.closest('#statEditor')) return document.querySelector('[data-sec=stats]');
   if (el.closest('#skillEditor')) return document.querySelector('[data-sec=skills]');
   if (el.closest('#serviceEditor')) return document.querySelector('[data-sec=services]');
@@ -66,7 +67,7 @@ const SEC_ICON = {
   edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 00-4-4L4 16v4z"/></svg>',
   hide: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.9 5.1A9.8 9.8 0 0112 5c5 0 8.5 4.2 9.5 7a11 11 0 01-3 4.2M6.2 6.3A11 11 0 002.5 12c1 2.8 4.5 7 9.5 7a9.6 9.6 0 004-.9"/></svg>'
 };
-const SEC_EDIT = { about: ['profile', 'f_about'], stats: ['more', 'statEditor'], skills: ['more', 'skillEditor'], highlights: ['profile', 'f_ach'], services: ['more', 'serviceEditor'], quote: ['more', 'quote_text'], hours: ['more', 'f_hours'], contact: ['contact', 'f_phone'], links: ['links'] };
+const SEC_EDIT = { about: ['profile', 'f_about'], stats: ['more', 'statEditor'], video: ['more', 'f_video'], map: ['more', 'f_map'], faq: ['more', 'faqEditor'], message: ['contact', 'f_email'], skills: ['more', 'skillEditor'], highlights: ['profile', 'f_ach'], services: ['more', 'serviceEditor'], quote: ['more', 'quote_text'], hours: ['more', 'f_hours'], contact: ['contact', 'f_phone'], links: ['links'] };
 function addSectionHandles() {
   document.querySelectorAll('.section').forEach((h) => {
     if (h.querySelector(':scope > .sec-tools')) return;

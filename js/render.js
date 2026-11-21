@@ -4,6 +4,9 @@ const digits = (s) => (s || '').replace(/[^\d]/g, '');
 const initialsOf = (name) => (name || '').split(/\s+/).filter(Boolean).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 const SERIF_NAME_FONTS = /Playfair|Cormorant|Baskerville|Georgia|Instrument/i;
 
+/* Intro length grows with the name so per-letter animations on long names are never cut off */
+function introMs() { const per = { letters:.04, flip:.05, typewriter:.08, wave:.04 }[card.nameAnim], n = (card.name || '').replace(/\s/g, '').length; return Math.max(3200, per ? Math.round((.5 + n * per + 1) * 1000) : 0); }
+
 function renderName() {
   const el = $('name'), text = (card.name || '').trim();
   el.className = 'name name-layout-' + (['natural', 'single', 'two', 'stacked'].includes(card.nameLayout) ? card.nameLayout : 'natural');
@@ -148,6 +151,72 @@ function renderSkills() {
   });
   return list.length > 0;
 }
+
+/* ---------- Video (YouTube / Vimeo / direct file), FAQ accordion, message form ---------- */
+function parseVideo(u) {
+  u = (u || '').trim(); if (!u) return null;
+  let m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/i);
+  if (m) return { t: 'yt', id: m[1] };
+  m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/i); if (m) return { t: 'vm', id: m[1] };
+  if (/^https?:\/\/.+\.(mp4|webm|mov)(\?.*)?$/i.test(u)) return { t: 'file', url: u };
+  return null;
+}
+function renderMap() {
+  const q = (card.location || '').trim(), on = card.mapOn === '1' && !!q, box = $('mapBox');
+  if (!on) { box.innerHTML = ''; return false; }
+  const src = 'https://maps.google.com/maps?q=' + encodeURIComponent(q) + '&output=embed';
+  let f = box.querySelector('iframe');
+  if (!f || f.dataset.q !== q) { box.innerHTML = ''; f = document.createElement('iframe'); f.dataset.q = q; f.loading = 'lazy'; f.title = 'Map'; f.referrerPolicy = 'no-referrer-when-downgrade'; f.src = src; box.appendChild(f); }
+  $('mapOpen').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+  return true;
+}
+function renderBanner() {
+  const b = $('banner'), t = (card.banner || '').trim(); b.hidden = !t; b.textContent = t;
+  const u = (card.bannerUrl || '').trim();
+  if (u && /^(https?:|tel:|mailto:)/i.test(u)) { b.href = u; b.removeAttribute('role'); } else { b.removeAttribute('href'); b.setAttribute('role', 'note'); }
+  const app = $('app'); if (app) app.dataset.verified = card.verified === '1' ? '1' : '';
+}
+function renderVideo() {
+  const v = parseVideo(card.video), box = $('videoBox'), cap = $('videoCap'); box.innerHTML = '';
+  const c = (card.videoCaption || '').trim(); cap.textContent = c; cap.hidden = !c;
+  if (!v) return false;
+  if (v.t === 'yt') {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vid-poster'; b.setAttribute('aria-label', 'Play video');
+    b.style.backgroundImage = `url(https://i.ytimg.com/vi/${v.id}/hqdefault.jpg)`; b.innerHTML = '<span class="vid-play"></span>';
+    b.onclick = () => { box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&playsinline=1" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`; };
+    box.appendChild(b);
+  } else if (v.t === 'vm') box.innerHTML = `<iframe src="https://player.vimeo.com/video/${v.id}?dnt=1" title="Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+  else { const el = document.createElement('video'); el.src = v.url; el.controls = true; el.preload = 'metadata'; el.playsInline = true; box.appendChild(el); }
+  return true;
+}
+function renderFaq() {
+  const list = (card.faq || []).filter((x) => (x.q || '').trim() && (x.a || '').trim()), box = $('faqList'); box.innerHTML = '';
+  list.slice(0, 20).forEach((x, i) => {
+    const it = document.createElement('div'); it.className = 'faq-i'; it.style.setProperty('--d', i * 60 + 'ms');
+    const q = document.createElement('button'); q.type = 'button'; q.className = 'faq-q'; q.setAttribute('aria-expanded', 'false');
+    const t = document.createElement('span'); t.textContent = x.q; q.append(t); q.insertAdjacentHTML('beforeend', '<i class="faq-pm" aria-hidden="true"></i>');
+    const a = document.createElement('div'); a.className = 'faq-a'; const ai = document.createElement('div'); ai.textContent = x.a; a.append(ai);
+    q.onclick = () => { const open = !it.classList.contains('open'); box.querySelectorAll('.faq-i.open').forEach((o) => { o.classList.remove('open'); o.firstChild.setAttribute('aria-expanded', 'false'); }); it.classList.toggle('open', open); q.setAttribute('aria-expanded', open); };
+    it.append(q, a); box.append(it);
+  });
+  return list.length > 0;
+}
+function messageAvailable() { return !!(card.email || digits(card.whatsapp)); }
+function setupMessageForm() {
+  const f = $('msgForm'); if (!f || f.__ready) return; f.__ready = true;
+  f.addEventListener('submit', (e) => {
+    e.preventDefault(); const via = e.submitter && e.submitter.dataset.via, name = $('msgName').value.trim(), text = $('msgText').value.trim();
+    if (!text) { $('msgText').focus(); $('msgText').classList.add('bad'); setTimeout(() => $('msgText').classList.remove('bad'), 900); return; }
+    const body = (name ? 'Hi, I’m ' + name + '. ' : 'Hi, ') + text;
+    if (via === 'wa' && digits(card.whatsapp)) window.open('https://wa.me/' + digits(card.whatsapp) + '?text=' + encodeURIComponent(body), '_blank', 'noopener');
+    else if (card.email) location.href = 'mailto:' + card.email + '?subject=' + encodeURIComponent('Message from ' + (name || 'your digital card')) + '&body=' + encodeURIComponent(body);
+  });
+}
+function renderMessage() {
+  const wa = !!digits(card.whatsapp), em = !!card.email; $('msgWa').hidden = !wa; $('msgEm').hidden = !em; setupMessageForm();
+  return wa || em;
+}
+
 /* Count-up for the Numbers section: runs when the section scrolls into view */
 function countUp(sec) {
   sec.querySelectorAll('.stat-v[data-to]').forEach((el) => {
@@ -254,8 +323,8 @@ function renderCore() {
 
   renderTopbar(); renderHeroSocials(links);
   /* Sections: owner-controlled order and visibility, hidden when empty */
-  const ex = renderExtras(), hasStats = renderStats(), hasSkills = renderSkills();
-  const has = { stats: hasStats, skills: hasSkills, services: ex.services, quote: ex.quote, about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, hours: renderHours(), links: links.length > 0 };
+  const ex = renderExtras(), hasStats = renderStats(), hasSkills = renderSkills(), hasVideo = renderVideo(), hasFaq = renderFaq(), hasMsg = renderMessage(), hasMap = renderMap(); renderBanner();
+  const has = { map: hasMap, video: hasVideo, faq: hasFaq, message: hasMsg, stats: hasStats, skills: hasSkills, services: ex.services, quote: ex.quote, about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, hours: renderHours(), links: links.length > 0 };
   getSections().forEach((s, idx) => {
     const el = document.querySelector(`[data-sec="${s.key}"]`); if (!el) return;
     el.style.order = idx; el.hidden = !(s.visible && has[s.key]);

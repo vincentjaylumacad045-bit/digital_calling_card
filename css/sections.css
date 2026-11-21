@@ -100,3 +100,12 @@ body.editing .mini { display:none; }
 .quote::before { content:'\201C'; display:block; font-size:3.6rem; line-height:.62; margin-bottom:8px; color:var(--accent-s); }
 .quote-by { display:block; margin-top:12px; font-size:.84rem; font-style:normal; font-weight:650; color:var(--s-muted); }
 .quote-by:empty { display:none; }
+
+/* Announcement banner, map, verified tick */
+.banner { display:block; margin:0 var(--pad,16px) 12px; padding:10px 14px; border-radius:12px; text-align:center; font-size:.84rem; font-weight:650; background:var(--accent); color:var(--ink); text-decoration:none; }
+.banner[hidden] { display:none; }
+a.banner:active { transform:scale(.98); }
+.map { border-radius:14px; overflow:hidden; aspect-ratio:16/10; background:var(--s-soft,#eee); }
+.map iframe { width:100%; height:100%; border:0; display:block; }
+.map-open { display:inline-block; margin-top:10px; font-size:.84rem; font-weight:650; color:var(--accent-s,var(--s-text)); text-decoration:underline; text-underline-offset:3px; }
+#app[data-verified="1"] .name::after { content:'\2713'; display:inline-grid; place-items:center; width:.5em; height:.5em; margin-left:.18em; border-radius:50%; background:#2f8cff; color:#fff; font-size:.5em; line-height:1; font-family:system-ui,sans-serif; vertical-align:.45em; -webkit-text-fill-color:#fff; }

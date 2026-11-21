@@ -1,8 +1,8 @@
 /* textfx.css — text animations, scroll reveals, availability pill, business hours */
-.name .c { display:inline-block; }
+.name .c { display:inline-block; padding:0 .02em; margin:0 -.02em; }
 @keyframes blurIn { from { opacity:0; filter:blur(14px); transform:translateY(10px); } to { opacity:1; filter:none; transform:none; } }
 @keyframes charRise { from { transform:translateY(115%); } to { transform:none; } }
-@keyframes charFlip { from { opacity:0; transform:perspective(400px) rotateX(-95deg) translateY(30%); } to { opacity:1; transform:none; } }
+@keyframes charFlip { from { opacity:0; transform:translateY(55%) scaleY(.2); } to { opacity:1; transform:none; } }
 @keyframes typeIn { from { opacity:0; } to { opacity:1; } }
 @keyframes wave { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-.07em); } }
 @keyframes shimmer { from { background-position:150% 0; } to { background-position:-150% 0; } }
@@ -19,6 +19,7 @@
 .anim-wave:not(.motion-off) .name .c { animation:wave 2.8s ease-in-out infinite; animation-delay:calc(var(--ci,0) * .09s); }
 .intro .anim-wave:not(.motion-off) .name .c { animation:charRise .8s var(--out-expo) calc(.5s + var(--ci,0) * .04s) both, wave 2.8s ease-in-out calc(1.6s + var(--ci,0) * .09s) infinite; }
 .anim-shimmer:not(.motion-off) .name .w > span { background:linear-gradient(100deg,var(--hero-text) 38%,color-mix(in srgb,var(--hero-text) 25%,var(--accent)) 50%,var(--hero-text) 62%) 0 0/250% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; animation:shimmer 3.6s linear infinite; }
+.anim-shimmer:not(.motion-off) .name .w > span { padding:.06em .1em; margin:-.06em -.1em; }
 .intro .anim-shimmer:not(.motion-off) .name .w > span { animation:wordRise .95s var(--out-expo) calc(.55s + var(--i,0) * .09s) both, shimmer 3.6s linear 1.5s infinite; }
 .anim-none .name .w > span, .anim-none .name .c { animation:none !important; }
 
