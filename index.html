@@ -105,14 +105,6 @@
         <h2>Contact</h2>
         <div class="rows" id="rows"></div>
       </section>
-      <section class="section" data-sec="message" id="messageWrap" data-edit="contact">
-        <h2>Send a message</h2>
-        <form class="msg" id="msgForm" autocomplete="off">
-          <label class="msg-f"><span>Your name</span><input type="text" id="msgName" maxlength="60" placeholder="Your name" autocomplete="name"></label>
-          <label class="msg-f"><span>Message</span><textarea id="msgText" rows="3" maxlength="600" placeholder="How can I help?"></textarea></label>
-          <div class="msg-btns"><button type="submit" class="msg-b wa" id="msgWa" data-via="wa"><span data-i="whatsapp"></span>WhatsApp</button><button type="submit" class="msg-b em" id="msgEm" data-via="em"><span data-i="mail"></span>Email</button></div>
-        </form>
-      </section>
       <section class="section" data-sec="links" id="linkWrap" data-edit="links">
         <h2>Links</h2>
         <div class="socials" id="socials"></div>
@@ -132,12 +124,41 @@
 <button class="preview-pill" id="previewBack" type="button"><span data-i="pencil"></span>Back to editing</button>
 
 <div class="overlay" id="qrModal" aria-label="QR code">
-  <div class="modal qr-modal">
-    <div class="qr-head"><span class="qr-av" id="qrAv"></span><div><strong id="qrName"></strong><small id="qrRole"></small></div></div>
-    <div class="qr-box"><img id="qrImg" alt="QR code that opens this card"></div>
-    <p class="qr-hint">Point a phone camera at the code to open this card.</p>
-    <div class="qr-actions"><button type="button" id="qrCopy"><span data-i="copy"></span>Copy link</button><button type="button" id="qrDl"><span data-i="download"></span>Save image</button></div>
+  <div class="modal qr-modal" role="dialog" aria-modal="true" aria-labelledby="qrName">
     <button class="qr-close" id="qrClose" type="button" aria-label="Close" data-i="close"></button>
+    <div class="qr-pass">
+      <div class="qr-id"><span class="qr-av" id="qrAv"></span><div><strong id="qrName"></strong><small id="qrRole"></small></div></div>
+      <div class="qr-stage">
+        <i class="qr-c tl"></i><i class="qr-c tr"></i><i class="qr-c bl"></i><i class="qr-c br"></i>
+        <div class="qr-tile">
+          <div class="qr-code" id="qrCode"></div>
+          <span class="qr-logo" id="qrLogo"></span>
+          <i class="qr-scan"></i>
+        </div>
+      </div>
+      <p class="qr-hint" id="qrHint"></p>
+    </div>
+    <div class="qr-tabs" id="qrTabs" role="tablist" aria-label="What the code does">
+      <button type="button" role="tab" data-mode="link" aria-selected="true"><span data-i="link"></span>Open card</button>
+      <button type="button" role="tab" data-mode="contact" aria-selected="false"><span data-i="userplus"></span>Save contact</button>
+    </div>
+    <div class="qr-style">
+      <div class="qr-shapes" id="qrShapes" role="radiogroup" aria-label="Code style">
+        <button type="button" role="radio" data-shape="soft" aria-label="Soft squares"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2.6"/><rect x="13" y="3" width="8" height="8" rx="2.6"/><rect x="3" y="13" width="8" height="8" rx="2.6"/><rect x="13" y="13" width="8" height="8" rx="2.6"/></svg></button>
+        <button type="button" role="radio" data-shape="dots" aria-label="Dots"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="4"/><circle cx="17" cy="7" r="4"/><circle cx="7" cy="17" r="4"/><circle cx="17" cy="17" r="4"/></svg></button>
+        <button type="button" role="radio" data-shape="classic" aria-label="Classic squares"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg></button>
+      </div>
+      <div class="qr-colors" id="qrColors" role="radiogroup" aria-label="Code color">
+        <button type="button" role="radio" data-color="theme" aria-label="Card color"></button>
+        <button type="button" role="radio" data-color="ink" aria-label="Dark blue-gray"></button>
+        <button type="button" role="radio" data-color="black" aria-label="Black"></button>
+      </div>
+    </div>
+    <div class="qr-actions">
+      <button type="button" id="qrCopy"><span data-i="copy"></span>Copy link</button>
+      <button type="button" id="qrShare"><span data-i="share"></span>Share</button>
+      <button type="button" id="qrDl"><span data-i="download"></span>Save image</button>
+    </div>
   </div>
 </div>
 
@@ -212,7 +233,7 @@
       <label for="f_email">Email</label><input type="text" id="f_email" inputmode="email" data-f="email" autocapitalize="off">
       <label for="f_web">Website</label><input type="text" id="f_web" inputmode="url" data-f="website" autocapitalize="off">
       <label for="f_loc">Location</label><input type="text" id="f_loc" data-f="location">
-      <div class="hint">Visitors can tap a row to call, message or open it, and copy any value with the copy button.</div>
+      <div class="hint">Visitors can tap a row to call, email or open it, and copy any value with the copy button.</div>
     </div>
 
     <div class="pane" data-pane="photo">
@@ -487,6 +508,7 @@
 <script src="js/state.js" defer></script>
 <script src="js/photo.js" defer></script>
 <script src="js/render.js" defer></script>
+<script src="js/qr.js" defer></script>
 <script src="js/dock.js" defer></script>
 <script src="js/studio.js" defer></script>
 <script src="js/editor.js" defer></script>

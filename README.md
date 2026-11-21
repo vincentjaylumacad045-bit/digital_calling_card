@@ -8,7 +8,7 @@ An animated one-page contact card. Everyone can view it. Only you (with your pas
 ```
 index.html   card markup + Design Studio editor
 css/         base · hero · sections · layouts · dock · overlays · editor · textfx · focus
-js/          icons → state → photo → render → dock → studio → editor → upload → focus → actions → motion → boot
+js/          icons → state → photo → render → qr → dock → studio → editor → upload → focus → actions → motion → boot
 api/         card.js (read/save card) · upload.js (photo upload)
 ```
 
@@ -53,3 +53,18 @@ Corner sizes are controlled by the Corner roundness slider (`--card-radius`).
 - 9 new color themes: Sand, Aqua, Grape, Bubblegum, Graphite, Emerald, Ruby, Denim, Noir.
 - New features (More tab): announcement banner (with optional link), map of your Location, verified tick next to the name. The Map is also a reorderable section.
 - Replace the whole folder, including `api/card.js` (it lists the allowed layouts).
+
+## v5
+- **Removed** the "Send a message" form. Old saved cards that still list it load normally; the section is simply ignored.
+- **New QR sheet** (`js/qr.js`, `js/dock.js`, `css/overlays.css`): the code is now made on the visitor's device (no `api.qrserver.com`), so it works offline and never sends your link to a third party.
+  A "pass" in your card colors with your photo in the middle, three code styles (soft, dots, classic), three colors, and two modes:
+  **Open card** (your link) and **Save contact** (a small contact file, so the phone offers "Add contact" right away).
+  **Save image** makes a branded 1080×1350 picture (photo, name, code) for printing or sharing; **Share** sends that picture on phones that support it.
+  Eye corners are only slightly rounded on purpose, so every scanner finds them.
+- **Fixes**
+  - The card no longer stays blank when the browser blocks storage (some in-app browsers and private modes).
+  - A slow or stuck server no longer leaves visitors on the loading screen (falls back after 8 seconds).
+  - The link used for sharing and the QR code drops a trailing `index.html`.
+  - Contact file: long lines are folded as the vCard format requires, a name is always present, and the file is sent as UTF-8.
+  - Wrong-password attempts on `/api/card` and `/api/upload` are slowed down; uploads accept only JPG, PNG and WebP and reject oversized photos with a clear message.
+- Replace the whole folder, including `api/card.js` and `api/upload.js`, then redeploy.

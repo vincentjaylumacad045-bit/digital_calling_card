@@ -68,7 +68,7 @@ export default async function handler(req, res) {
 
   // Only the OWNER (with the password) can SAVE
   if (req.method === 'POST') {
-    if (!authorized(req)) return res.status(401).json({ error: 'Wrong password' });
+    if (!authorized(req)) { await new Promise((ok) => setTimeout(ok, 600)); return res.status(401).json({ error: 'Wrong password' }); }   // slows down password guessing
     if (req.query.verify) return res.status(200).json({ ok: true });
     try {
       const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;

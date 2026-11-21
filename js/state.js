@@ -1,7 +1,7 @@
 /* js/state.js */
 /* ---------- State ---------- */
 let card = null;
-let password = sessionStorage.getItem('adminpw') || '';
+let password = ''; try { password = sessionStorage.getItem('adminpw') || ''; } catch (e) { /* storage blocked: the card still loads for visitors */ }
 const $ = (id) => document.getElementById(id);
 const THEMES = {
   lime: { bg:'#0b1437', accent:'#c6f432', ink:'#0b1437', text:'#ffffff', surface:'#ffffff', sectionText:'#171717', muted:'#687080', buttonBg:'#0b1437', buttonText:'#ffffff', border:'#e5e7eb' },
@@ -84,7 +84,7 @@ const PROFILE_STYLES = ['full', 'circle', 'portrait', 'square', 'side', 'arch', 
 
 /* ---------- Sections and quick actions ---------- */
 const SECTION_DEFS = [
-  { key:'about', label:'About' }, { key:'stats', label:'Numbers' }, { key:'video', label:'Video' }, { key:'map', label:'Map' }, { key:'highlights', label:'Highlights' }, { key:'skills', label:'Skills' }, { key:'services', label:'Services' }, { key:'faq', label:'FAQ' }, { key:'quote', label:'Testimonial' }, { key:'hours', label:'Hours' }, { key:'contact', label:'Contact' }, { key:'message', label:'Message form' }, { key:'links', label:'Links' }
+  { key:'about', label:'About' }, { key:'stats', label:'Numbers' }, { key:'video', label:'Video' }, { key:'map', label:'Map' }, { key:'highlights', label:'Highlights' }, { key:'skills', label:'Skills' }, { key:'services', label:'Services' }, { key:'faq', label:'FAQ' }, { key:'quote', label:'Testimonial' }, { key:'hours', label:'Hours' }, { key:'contact', label:'Contact' }, { key:'links', label:'Links' }
 ];
 function getSections() {
   const saved = Array.isArray(card.sections) ? card.sections : [], out = [];
@@ -124,7 +124,7 @@ const FALLBACK_CARD = {
 };
 
 /* Owner mode: edit button shows only on devices where the owner logged in, or via yoursite.com/#edit */
-const isOwner = () => localStorage.getItem('owner') === '1';
+const isOwner = () => { try { return localStorage.getItem('owner') === '1'; } catch (e) { return false; } };
 const applyOwner = () => document.body.classList.toggle('owner', isOwner());
 applyOwner();
 

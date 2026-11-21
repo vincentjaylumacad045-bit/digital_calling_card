@@ -53,7 +53,7 @@ async function lockEditor() {
     if (!confirm('Save your changes and lock the editor?')) return;
     const ok = await saveCard(true); if (!ok) return;
   }
-  localStorage.removeItem('owner'); sessionStorage.removeItem('adminpw'); password = '';
+  try { localStorage.removeItem('owner'); sessionStorage.removeItem('adminpw'); } catch (e) {} password = '';
   finishClose(); applyOwner(); toast('Changes saved. Editor locked.');
 }
 $('lockBtn').onclick = lockEditor;
@@ -70,6 +70,6 @@ $('adminLoginForm').addEventListener('submit', async (e) => {
     const r = await fetch('/api/card?verify=1', { method: 'POST', headers: { 'x-admin-password': pw, 'content-type': 'application/json' }, body: '{}' });
     if (!r.ok) return toast('Wrong password', true);
   } catch (err) { return toast('No connection. Try again.', true); }
-  password = pw; sessionStorage.setItem('adminpw', pw); localStorage.setItem('owner', '1'); applyOwner();
+  password = pw; try { sessionStorage.setItem('adminpw', pw); localStorage.setItem('owner', '1'); } catch (e) {} applyOwner();
   $('login').classList.remove('show'); $('pw').value = ''; openPanel();
 });

@@ -10,7 +10,8 @@ function start(c) {
     checkEditLink();
   }, 350);
 }
-fetch('/api/card').then((r) => { if (!r.ok) throw new Error('bad response'); return r.json(); }).then(start)
+const _ac = new AbortController(), _t = setTimeout(() => _ac.abort(), 8000);   // a slow or stuck server must not leave visitors on the loading screen
+fetch('/api/card', { signal: _ac.signal }).then((r) => { if (!r.ok) throw new Error('bad response'); return r.json(); }).then((c) => { clearTimeout(_t); start(c); })
   .catch(() => start(JSON.parse(JSON.stringify(FALLBACK_CARD))));
 // Secret owner link: https://your-site.vercel.app/#edit
 function checkEditLink() {

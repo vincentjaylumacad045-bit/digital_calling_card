@@ -152,7 +152,7 @@ function renderSkills() {
   return list.length > 0;
 }
 
-/* ---------- Video (YouTube / Vimeo / direct file), FAQ accordion, message form ---------- */
+/* ---------- Video (YouTube / Vimeo / direct file) and FAQ accordion ---------- */
 function parseVideo(u) {
   u = (u || '').trim(); if (!u) return null;
   let m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/i);
@@ -200,21 +200,6 @@ function renderFaq() {
     it.append(q, a); box.append(it);
   });
   return list.length > 0;
-}
-function messageAvailable() { return !!(card.email || digits(card.whatsapp)); }
-function setupMessageForm() {
-  const f = $('msgForm'); if (!f || f.__ready) return; f.__ready = true;
-  f.addEventListener('submit', (e) => {
-    e.preventDefault(); const via = e.submitter && e.submitter.dataset.via, name = $('msgName').value.trim(), text = $('msgText').value.trim();
-    if (!text) { $('msgText').focus(); $('msgText').classList.add('bad'); setTimeout(() => $('msgText').classList.remove('bad'), 900); return; }
-    const body = (name ? 'Hi, I’m ' + name + '. ' : 'Hi, ') + text;
-    if (via === 'wa' && digits(card.whatsapp)) window.open('https://wa.me/' + digits(card.whatsapp) + '?text=' + encodeURIComponent(body), '_blank', 'noopener');
-    else if (card.email) location.href = 'mailto:' + card.email + '?subject=' + encodeURIComponent('Message from ' + (name || 'your digital card')) + '&body=' + encodeURIComponent(body);
-  });
-}
-function renderMessage() {
-  const wa = !!digits(card.whatsapp), em = !!card.email; $('msgWa').hidden = !wa; $('msgEm').hidden = !em; setupMessageForm();
-  return wa || em;
 }
 
 /* Count-up for the Numbers section: runs when the section scrolls into view */
@@ -323,8 +308,8 @@ function renderCore() {
 
   renderTopbar(); renderHeroSocials(links);
   /* Sections: owner-controlled order and visibility, hidden when empty */
-  const ex = renderExtras(), hasStats = renderStats(), hasSkills = renderSkills(), hasVideo = renderVideo(), hasFaq = renderFaq(), hasMsg = renderMessage(), hasMap = renderMap(); renderBanner();
-  const has = { map: hasMap, video: hasVideo, faq: hasFaq, message: hasMsg, stats: hasStats, skills: hasSkills, services: ex.services, quote: ex.quote, about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, hours: renderHours(), links: links.length > 0 };
+  const ex = renderExtras(), hasStats = renderStats(), hasSkills = renderSkills(), hasVideo = renderVideo(), hasFaq = renderFaq(), hasMap = renderMap(); renderBanner();
+  const has = { map: hasMap, video: hasVideo, faq: hasFaq, stats: hasStats, skills: hasSkills, services: ex.services, quote: ex.quote, about: !!((card.about || '').trim() || (titleInAbout && card.title)), highlights: chips.length > 0, contact: contactCount > 0, hours: renderHours(), links: links.length > 0 };
   getSections().forEach((s, idx) => {
     const el = document.querySelector(`[data-sec="${s.key}"]`); if (!el) return;
     el.style.order = idx; el.hidden = !(s.visible && has[s.key]);
